@@ -1,127 +1,196 @@
-<svg width="1100" height="720" viewBox="0 0 1100 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1100" height="720" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#05070F"/>
-      <stop offset="100%" stop-color="#0C1225"/>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
     </linearGradient>
-    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="rgba(243,183,92,0.25)"/>
-      <stop offset="100%" stop-color="rgba(62,126,171,0.25)"/>
+    
+    <!-- Service box styles -->
+    <linearGradient id="serviceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#21262d"/>
+      <stop offset="100%" stop-color="#161b22"/>
     </linearGradient>
-    <linearGradient id="cardLight" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#252C46"/>
-      <stop offset="100%" stop-color="#1B2034"/>
+    
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#238636"/>
+      <stop offset="100%" stop-color="#1a7f37"/>
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="130%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="rgba(0,0,0,0.35)"/>
+    
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f6feb"/>
+      <stop offset="100%" stop-color="#1158c7"/>
+    </linearGradient>
+    
+    <linearGradient id="warnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d29922"/>
+      <stop offset="100%" stop-color="#bb8009"/>
+    </linearGradient>
+    
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
     </filter>
-    <style>
-      .label { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #E6EBFF; font-weight: 600; }
-      .sub { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #A9B8F5; font-size: 15px; }
-      .caption { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #8EA2FF; font-size: 16px; font-weight: 600; }
-      .section-title { font-size: 20px; }
-      .box { fill: url(#cardLight); stroke: rgba(255,255,255,0.08); stroke-width: 1; rx: 18; }
-      .accent-box { fill: url(#card); stroke: rgba(243,183,92,0.4); stroke-width: 1.5; rx: 18; }
-      .connector { stroke: #7EA8FF; stroke-width: 2; marker-end: url(#arrow); }
-      .connector-alt { stroke: #F3B75C; stroke-width: 2; stroke-dasharray: 6 6; marker-end: url(#arrowAccent); }
-    </style>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-      <path d="M0 0 L10 3 L0 6" fill="#7EA8FF"/>
+    
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8b949e"/>
     </marker>
-    <marker id="arrowAccent" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-      <path d="M0 0 L10 3 L0 6" fill="#F3B75C"/>
+    
+    <marker id="arrowheadOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#d29922"/>
     </marker>
   </defs>
-
-  <rect width="1100" height="720" fill="url(#bg)" rx="32"/>
-
-  <!-- Audience -->
+  
+  <!-- Background -->
+  <rect width="1100" height="720" fill="url(#bgGrad)" rx="12"/>
+  
+  <!-- Title -->
+  <text x="550" y="40" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600">Archetype System Architecture</text>
+  
+  <!-- USERS LAYER -->
+  <text x="50" y="95" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">USERS</text>
+  
+  <!-- Viewers -->
   <g filter="url(#shadow)">
-    <rect x="50" y="40" width="240" height="120" class="box"/>
-    <text x="70" y="90" class="label">Researchers · Editors</text>
+    <rect x="350" y="70" width="160" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="430" y="105" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Viewers</text>
   </g>
-
-  <!-- Ingress -->
+  
+  <!-- Editors -->
   <g filter="url(#shadow)">
-    <rect x="330" y="40" width="320" height="120" class="accent-box"/>
-    <text x="350" y="90" class="label">Nginx Gateway</text>
+    <rect x="590" y="70" width="160" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="670" y="105" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Editors</text>
   </g>
-
-  <!-- Compose -->
+  
+  <!-- EDGE LAYER -->
+  <text x="50" y="195" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">EDGE</text>
+  
+  <!-- Nginx -->
   <g filter="url(#shadow)">
-    <rect x="700" y="40" width="330" height="120" class="box"/>
-    <text x="720" y="85" class="label">Docker Compose / Infrastructure</text>
+    <rect x="400" y="170" width="300" height="60" rx="8" fill="url(#primaryGrad)" stroke="#238636" stroke-width="1"/>
+    <text x="550" y="205" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Nginx</text>
   </g>
-
+  
+  <!-- APPLICATION LAYER -->
+  <text x="50" y="310" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">APPLICATION</text>
+  
   <!-- Frontend -->
   <g filter="url(#shadow)">
-    <rect x="80" y="220" width="320" height="150" class="box"/>
-    <text x="100" y="260" class="label">Next.js Frontend</text>
+    <rect x="200" y="285" width="180" height="80" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="290" y="330" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Frontend</text>
+    <text x="290" y="350" text-anchor="middle" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">Next.js</text>
   </g>
-
+  
   <!-- API -->
   <g filter="url(#shadow)">
-    <rect x="430" y="220" width="320" height="180" class="accent-box"/>
-    <text x="450" y="260" class="label">Django REST API</text>
+    <rect x="460" y="285" width="180" height="80" rx="8" fill="url(#accentGrad)" stroke="#1f6feb" stroke-width="1"/>
+    <text x="550" y="330" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="14" font-weight="600">API</text>
+    <text x="550" y="350" text-anchor="middle" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Django REST</text>
   </g>
-
-  <!-- Data layer -->
+  
+  <!-- Celery -->
   <g filter="url(#shadow)">
-    <rect x="50" y="430" width="260" height="180" class="box"/>
-    <text x="70" y="470" class="label">Postgres</text>
+    <rect x="720" y="285" width="180" height="80" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="810" y="330" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Workers</text>
+    <text x="810" y="350" text-anchor="middle" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">Celery</text>
   </g>
-
+  
+  <!-- DATA LAYER -->
+  <text x="50" y="450" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">DATA</text>
+  
+  <!-- Postgres -->
   <g filter="url(#shadow)">
-    <rect x="340" y="430" width="240" height="180" class="box"/>
-    <text x="360" y="470" class="label">Elasticsearch</text>
+    <rect x="150" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="220" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Postgres</text>
   </g>
-
+  
+  <!-- Elasticsearch -->
   <g filter="url(#shadow)">
-    <rect x="610" y="430" width="210" height="180" class="box"/>
-    <text x="630" y="470" class="label">Redis</text>
+    <rect x="320" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="390" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Elasticsearch</text>
   </g>
-
+  
+  <!-- Redis -->
   <g filter="url(#shadow)">
-    <rect x="850" y="430" width="220" height="180" class="box"/>
-    <text x="870" y="470" class="label">SIPI IIIF Server</text>
+    <rect x="490" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="560" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Redis</text>
   </g>
-
-  <!-- Workers -->
+  
+  <!-- SIPI -->
   <g filter="url(#shadow)">
-    <rect x="780" y="220" width="250" height="180" class="accent-box"/>
-    <text x="800" y="260" class="label">Celery Workers</text>
+    <rect x="660" y="425" width="140" height="70" rx="8" fill="url(#warnGrad)" stroke="#d29922" stroke-width="1"/>
+    <text x="730" y="465" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="13" font-weight="600">SIPI IIIF</text>
   </g>
-
-  <!-- Compose footer -->
-  <text x="70" y="665" class="caption">GitHub Actions ➔ GitHub Container Registry ➔ docker compose deploy</text>
-  <line x1="60" y1="640" x2="1040" y2="640" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="6 4"/>
-
-  <!-- Connectors -->
-  <path d="M290 160 L410 160" class="connector"/>
-  <path d="M660 160 L700 160" class="connector"/>
-
-  <path d="M170 160 L170 220" class="connector"/>
-  <path d="M490 160 L490 220" class="connector"/>
-
-  <path d="M240 370 L240 430" class="connector"/>
-  <path d="M560 400 L460 430" class="connector"/>
-  <path d="M590 400 L720 430" class="connector"/>
-  <path d="M620 250 L610 200 L860 200" class="connector" opacity="0.6"/>
-  <path d="M600 250 L960 430" class="connector"/>
-
-  <path d="M900 400 L940 430" class="connector"/>
-  <path d="M900 370 L900 430" class="connector"/>
-
-  <path d="M890 360 L720 360" class="connector-alt"/>
-  <path d="M520 370 L520 430" class="connector"/>
-  <path d="M680 370 L900 430" class="connector"/>
-
-  <!-- Labels on connectors -->
-  <text x="300" y="150" class="sub">HTTPS</text>
-  <text x="510" y="150" class="sub">Docker network</text>
-  <text x="190" y="405" class="sub">SQL</text>
-  <text x="370" y="405" class="sub">Query API</text>
-  <text x="640" y="405" class="sub">Cache + jobs</text>
-  <text x="940" y="405" class="sub">IIIF</text>
+  
+  <!-- Shared Storage -->
+  <g filter="url(#shadow)">
+    <rect x="830" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="900" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Storage</text>
+  </g>
+  
+  <!-- INFRASTRUCTURE LAYER -->
+  <text x="50" y="565" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">INFRASTRUCTURE</text>
+  
+  <!-- Docker Compose -->
+  <g filter="url(#shadow)">
+    <rect x="250" y="545" width="280" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="390" y="580" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Docker Compose</text>
+  </g>
+  
+  <!-- GitHub Actions -->
+  <g filter="url(#shadow)">
+    <rect x="570" y="545" width="280" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
+    <text x="710" y="580" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">GitHub Actions / GHCR</text>
+  </g>
+  
+  <!-- CONNECTIONS -->
+  <!-- Users to Nginx -->
+  <line x1="430" y1="130" x2="480" y2="170" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="670" y1="130" x2="620" y2="170" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Nginx to Application -->
+  <line x1="470" y1="230" x2="340" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="230" x2="550" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="630" y1="230" x2="760" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Frontend to API -->
+  <line x1="380" y1="325" x2="460" y2="325" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to Workers -->
+  <line x1="640" y1="325" x2="720" y2="325" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to Data -->
+  <line x1="500" y1="365" x2="250" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="530" y1="365" x2="390" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="560" y1="365" x2="560" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="590" y1="365" x2="700" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Workers to Redis -->
+  <line x1="780" y1="365" x2="590" y2="425" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"/>
+  
+  <!-- Workers to Postgres -->
+  <line x1="750" y1="365" x2="250" y2="425" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"/>
+  
+  <!-- SIPI to Storage -->
+  <line x1="800" y1="460" x2="830" y2="460" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Legend -->
+  <rect x="50" y="640" width="1000" height="60" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+  <text x="80" y="675" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">LEGEND:</text>
+  
+  <line x1="170" y1="670" x2="210" y2="670" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="220" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Sync request</text>
+  
+  <line x1="340" y1="670" x2="380" y2="670" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"/>
+  <text x="390" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Async job</text>
+  
+  <rect x="500" y="660" width="20" height="20" rx="4" fill="url(#primaryGrad)"/>
+  <text x="530" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Entry point</text>
+  
+  <rect x="640" y="660" width="20" height="20" rx="4" fill="url(#accentGrad)"/>
+  <text x="670" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Core service</text>
+  
+  <rect x="780" y="660" width="20" height="20" rx="4" fill="url(#warnGrad)"/>
+  <text x="810" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Media service</text>
 </svg>
-
