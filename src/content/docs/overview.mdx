@@ -1,0 +1,30 @@
+---
+title: Overview
+description: The story, mission, and goals behind Archetype’s reboot of the DigiPal framework.
+---
+
+Archetype is the new name for the DigiPal Framework, a platform that has helped palaeographers search, annotate, and teach with manuscript evidence since 2011. The blog archive captures how researchers used DigiPal to model codicological structures, experiment with [“digital dating” approaches](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/), and guide new users through its feature set in [“A Quick Introduction to the DigiPal Framework.”](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/) Those posts, along with showcases like the Exon Domesday and Models of Authority projects, proved that the original framework could power rigorous scholarship at scale.
+
+## Why the rebuild?
+
+1. **Architecture headroom.** The original monolithic Django codebase blended search, editorial tools, and the public site. That was perfect for 2014, but it makes modern deployments—Kubernetes, serverless search, multi-tenant hosting—unnecessarily brittle for 2025.
+2. **API-first expectations.** Partner projects want composable APIs, GraphQL or REST SDKs, and direct hooks into IIIF image services instead of screen-scraping HTML views.
+3. **Editorial UX.** Researchers now expect collaborative editing, instant previews, and structured validation that can be surfaced in React dashboards or even Jupyter notebooks.
+
+## Guiding principles
+
+- **Continuity with DigiPal’s scholarship.** Features prioritise the workflows highlighted in long-standing blog conversations such as [sequence modelling for gatherings and folia](https://www.digipal.eu/blog/modelling-codicology-i-sequence-in-gatherings-folios-and-pages/) and [codicological data design](https://www.digipal.eu/blog/modelling-codicology-ii-a-partial-draft-implementation/).
+- **Separation of concerns.** Backend services, the public frontend, and deployment scripts live in independent repos inside the `archetype-pal` organisation, making upgrades and security patches safer.
+- **Portable infrastructure.** Everything runs via Docker Compose for local hacking, with the same images promoted into staging and production clusters.
+- **Docs-first onboarding.** This site (built with Astro Starlight) doubles as the marketing landing page and the evergreen handbook for contributors.
+
+## Feature goals for MVP
+
+- Research-grade search across Postgres and Elasticsearch with the ability to facet by script, scribe, location, or IIIF manifest metadata.
+- IIIF-native viewers that can display SIPI streaming endpoints alongside annotation layers.
+- Rich manuscript and charter modelling, including the codicological hierarchies described in the [Modelling Codicology](https://www.digipal.eu/blog/modelling-codicology-i-sequence-in-gatherings-folios-and-pages/) series.
+- Storytelling hubs for projects like VisigothicPal, ScandiPal, and SephardiPal, complete with curated collections and editorial timelines.
+- Clear contribution pathways for both code (backend, frontend, infrastructure) and data (metadata corrections, transcriptions, tagging).
+
+Head over to the [Architecture](/architecture/) section for a closer look at the stack, or jump straight to the [Roadmap](/roadmap/) if you want to see how we’ll ship these goals.
+

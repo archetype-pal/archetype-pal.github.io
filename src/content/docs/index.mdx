@@ -1,0 +1,48 @@
+---
+title: Archetype
+description: Rebuilding the DigiPal experience with a modern, API-first stack.
+template: splash
+hero:
+  tagline: Rebuilding fifteen years of palaeographical research tools for the next generation.
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: See the vision
+      link: /overview/
+      icon: right-arrow
+    - text: Browse the repos
+      link: https://github.com/archetype-pal
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+> “Archetype (formerly DigiPal) lets us search, annotate, and teach with the same manuscripts that inspired the project’s earliest blogs and conference papers. The reboot keeps that spirit alive with state-of-the-art tooling.”
+
+## Why a reboot?
+
+- DigiPal has supported landmark research topics such as [digital dating models](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/) and [codicological sequence modelling](https://www.digipal.eu/blog/modelling-codicology-i-sequence-in-gatherings-folios-and-pages/).
+- The original Django monolith served scholars for over a decade, but new projects now expect composable APIs, IIIF-native viewers, and realtime editorial workflows.
+- Archetype keeps the proven methodology while rebuilding the app as independent services (Django REST API, React/Next.js frontend, Docker-first infrastructure, and a GitHub Pages knowledge base).
+
+## Explore the new stack
+
+<CardGrid>
+	<Card title="Overview" href="/overview/">
+		See how Archetype extends DigiPal’s research story, the problems we’re solving,
+		and the guiding product principles for the project.
+	</Card>
+	<Card title="Architecture" href="/architecture/">
+		Dive into the backend, frontend, and infrastructure layers that power the new
+		system, plus the shared services (Postgres, Elasticsearch, IIIF).
+	</Card>
+	<Card title="Roadmap" href="/roadmap/">
+		Follow our milestone-driven plan to reach feature parity and unlock new
+		experiences along the way.
+	</Card>
+	<Card title="Community" href="/community/">
+		Learn how to contribute code, content, and datasets or embed the platform inside
+		your own manuscript project.
+	</Card>
+</CardGrid>

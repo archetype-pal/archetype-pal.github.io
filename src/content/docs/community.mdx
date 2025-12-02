@@ -1,0 +1,33 @@
+---
+title: Community & Involvement
+description: How to participate in the Archetype reboot through code, content, or outreach.
+---
+
+## Where the work happens
+
+- **GitHub organisation:** [`archetype-pal`](https://github.com/archetype-pal) hosts the backend, frontend, infrastructure, and this documentation site.
+- **Discussions & issues:** Each repo has Discussions enabled for UX suggestions, data model debates, and “help wanted” posts.
+- **Legacy context:** The DigiPal blog archive is still the best way to see how scholars used the framework in practice—start with posts like [“Using DigiPal: A Quick Introduction to the Framework.”](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/)
+
+## Contribution areas
+
+| Area | What we need | Suggested starting points |
+| --- | --- | --- |
+| Backend & API | DRF serializers, ingest scripts, data migration helpers, search optimisations. | Issues labelled `good first issue` or `help wanted` in `backend/`. |
+| Frontend | React/Next.js components, IIIF viewers, state management, accessibility QA. | Ship small UX fixes, work on Storybook entries, or wire up new filters. |
+| Infrastructure | Compose enhancements, CI/CD pipelines, Nginx + TLS hardening, monitoring. | Improve Make targets, add health checks, or write deployment runbooks. |
+| Data & research | Metadata review, tagging consistency, reproducing studies like [digital dating](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/). | Help validate migrated datasets or contribute new corpora. |
+
+## Working agreements
+
+1. **Docs or it didn’t happen.** Every change should include updates to READMEs, API docs, or this site to keep new contributors oriented.
+2. **Reproducible environments.** Docker Compose is the source of truth; changes to service definitions must ship with updated `.env` examples.
+3. **Accessibility is a first-class feature.** The old framework already championed teaching and outreach. The new UI must work with screen readers, keyboard navigation, and high-contrast themes from day one.
+4. **Credit the scholarship.** Blog posts, conference papers, and project partners that inspired features should be cited in code comments or docs whenever possible.
+
+## Getting support
+
+- Join the DigiPal/Archetype conversation on [Twitter](https://twitter.com/DigiPalProject) for lightweight updates.
+- Watch the repositories that matter to you and enable security alerts so you can respond quickly.
+- If you’re reviving or launching a derivative project (e.g., SephardiPal, VisigothicPal), open an issue to document your deployment so others can learn from it.
+

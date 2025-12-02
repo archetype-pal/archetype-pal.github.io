@@ -1,0 +1,40 @@
+---
+title: Roadmap
+description: The phased plan for rebuilding DigiPal as Archetype.
+---
+
+We are targeting feature parity with the historical DigiPal instance while layering on new APIs, UI polish, and infrastructure safety nets. The timeline below focuses on scope rather than strict calendar dates—each milestone is shippable independently.
+
+## Milestone 0 — Foundations (in flight)
+
+- ✅ Split the codebase into **backend**, **frontend**, **infrastructure**, and **docs** repos.
+- ✅ Scaffold this Starlight knowledge base and publish early messaging for stakeholders.
+- 🔄 Finalise Compose-based local environments with Postgres, Elasticsearch, SIPI, and Redis.
+- 🔄 Harden authentication (Django Allauth + token-based API access) and seed fixtures for developer logins.
+- 🔜 Set up automated image builds in GitHub Actions and push them to GitHub Packages on every main-branch merge.
+
+## Milestone 1 — Feature parity with DigiPal
+
+| Track | Scope | Notes |
+| --- | --- | --- |
+| Data migration | Import manuscripts, hands, and annotations from the legacy DB along with IIIF manifests. | Write repeatable Django management commands, run checksums. |
+| Search & browse | Restore advanced search facets (script, date range, geo, repository). | Elasticsearch + Postgres hybrid queries with DRF serializers. |
+| Annotation UI | Deliver the classic “detail viewer” experience with zoom, tagging, and exports. | Uses SIPI tiles + modern React canvas overlays. |
+| Collections & teaching | Rebuild “My Collection” workflows for classroom use. | Adds shareable URLs and export to IIIF Presentation 3. |
+| Docs & release notes | Publish migration guides and changelog entries here. | Keep blog-inspired storytelling alive for every launch. |
+
+## Milestone 2 — Modern enhancements
+
+1. **Realtime collaboration.** Optional websockets layer to broadcast annotation updates and keep editors in sync.
+2. **Linked data exports.** Generate JSON-LD and IIIF Collection artifacts for partners like VisigothicPal.
+3. **Workflow automation.** Background workers (Celery) for OCR imports, quality checks, and scheduled IIIF cache invalidation.
+4. **Observability + SLOs.** Instrument the stack with OpenTelemetry, aggregate dashboards, and on-call docs.
+
+## Milestone 3 — Community ecosystem
+
+- Launch “project templates” so institutions can fork Archetype and bring their own theming without touching core code.
+- Expand documentation, including a tutorial inspired by the classic [“Using DigiPal” quick start](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/).
+- Host quarterly community calls where teams demo builds, focusing on topics like [digital dating research](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/).
+
+Progress across these milestones will be tracked in GitHub Projects and reflected in this documentation site as soon as goals ship.
+
