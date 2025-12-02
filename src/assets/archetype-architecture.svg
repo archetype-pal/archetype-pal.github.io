@@ -39,73 +39,57 @@
   <g filter="url(#shadow)">
     <rect x="50" y="40" width="240" height="120" class="box"/>
     <text x="70" y="90" class="label">Researchers · Editors</text>
-    <text x="70" y="120" class="sub">Browsers, teaching labs, API clients</text>
   </g>
 
   <!-- Ingress -->
   <g filter="url(#shadow)">
     <rect x="330" y="40" width="320" height="120" class="accent-box"/>
     <text x="350" y="90" class="label">Nginx Gateway</text>
-    <text x="350" y="120" class="sub">TLS termination · routing · security headers</text>
   </g>
 
   <!-- Compose -->
   <g filter="url(#shadow)">
     <rect x="700" y="40" width="330" height="120" class="box"/>
     <text x="720" y="85" class="label">Docker Compose / Infrastructure</text>
-    <text x="720" y="115" class="sub">Manages container lifecycle, shared volumes, secrets</text>
   </g>
 
   <!-- Frontend -->
   <g filter="url(#shadow)">
     <rect x="80" y="220" width="320" height="150" class="box"/>
     <text x="100" y="260" class="label">Next.js Frontend</text>
-    <text x="100" y="290" class="sub">React UI · IIIF viewers · search UI</text>
-    <text x="100" y="320" class="sub">Static assets served via Nginx, API calls proxied</text>
   </g>
 
   <!-- API -->
   <g filter="url(#shadow)">
     <rect x="430" y="220" width="320" height="180" class="accent-box"/>
     <text x="450" y="260" class="label">Django REST API</text>
-    <text x="450" y="292" class="sub">Authentication · editorial workflows · IIIF manifest generation</text>
-    <text x="450" y="324" class="sub">Graph orchestration · metadata ingestion · admin</text>
-    <text x="450" y="355" class="sub">Exposes `/api/v1` + OpenAPI docs</text>
   </g>
 
   <!-- Data layer -->
   <g filter="url(#shadow)">
     <rect x="50" y="430" width="260" height="180" class="box"/>
     <text x="70" y="470" class="label">Postgres</text>
-    <text x="70" y="500" class="sub">Canonical manuscripts · people · places</text>
-    <text x="70" y="530" class="sub">Audit trails · workflow state</text>
   </g>
 
   <g filter="url(#shadow)">
     <rect x="340" y="430" width="240" height="180" class="box"/>
     <text x="360" y="470" class="label">Elasticsearch</text>
-    <text x="360" y="500" class="sub">Full-text search · faceting · relevance tuning</text>
   </g>
 
   <g filter="url(#shadow)">
     <rect x="610" y="430" width="210" height="180" class="box"/>
     <text x="630" y="470" class="label">Redis</text>
-    <text x="630" y="500" class="sub">Caches · rate limits</text>
-    <text x="630" y="530" class="sub">Celery broker / result backend</text>
   </g>
 
   <g filter="url(#shadow)">
     <rect x="850" y="430" width="220" height="180" class="box"/>
     <text x="870" y="470" class="label">SIPI IIIF Server</text>
-    <text x="870" y="500" class="sub">Tile delivery · annotations · media storage</text>
   </g>
 
   <!-- Workers -->
   <g filter="url(#shadow)">
     <rect x="780" y="220" width="250" height="180" class="accent-box"/>
     <text x="800" y="260" class="label">Celery Workers</text>
-    <text x="800" y="292" class="sub">Ingestion · IIIF sync · notifications</text>
-    <text x="800" y="324" class="sub">Share code + settings with Django API</text>
   </g>
 
   <!-- Compose footer -->
