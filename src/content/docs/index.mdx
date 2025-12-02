@@ -16,7 +16,8 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { CardGrid } from '@astrojs/starlight/components';
+import FeatureCard from '../../components/FeatureCard.astro';
 
 > “Archetype (formerly DigiPal) lets us search, annotate, and teach with the same manuscripts that inspired the project’s earliest blogs and conference papers. The reboot keeps that spirit alive with state-of-the-art tooling.”
 
@@ -29,20 +30,20 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Explore the new stack
 
 <CardGrid>
-	<Card title="Overview" href="/overview/">
+	<FeatureCard title="Overview" href="/overview/" tagline="Vision">
 		See how Archetype extends DigiPal’s research story, the problems we’re solving,
 		and the guiding product principles for the project.
-	</Card>
-	<Card title="Architecture" href="/architecture/">
+	</FeatureCard>
+	<FeatureCard title="Architecture" href="/architecture/" tagline="Stack">
 		Dive into the backend, frontend, and infrastructure layers that power the new
 		system, plus the shared services (Postgres, Elasticsearch, IIIF).
-	</Card>
-	<Card title="Roadmap" href="/roadmap/">
+	</FeatureCard>
+	<FeatureCard title="Roadmap" href="/roadmap/" tagline="Delivery">
 		Follow our milestone-driven plan to reach feature parity and unlock new
 		experiences along the way.
-	</Card>
-	<Card title="Community" href="/community/">
+	</FeatureCard>
+	<FeatureCard title="Community" href="/community/" tagline="Contribute">
 		Learn how to contribute code, content, and datasets or embed the platform inside
 		your own manuscript project.
-	</Card>
+	</FeatureCard>
 </CardGrid>

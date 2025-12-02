@@ -1,0 +1,103 @@
+---
+interface Props {
+	title: string;
+	href: string;
+	tagline?: string;
+}
+
+const { title, href, tagline } = Astro.props;
+---
+
+<a class="feature-card" href={href}>
+	<div class="feature-card__title">
+		<span>{title}</span>
+		{tagline && <small>{tagline}</small>}
+	</div>
+	<div class="feature-card__body">
+		<slot />
+	</div>
+	<div class="feature-card__arrow" aria-hidden="true">↗</div>
+</a>
+
+<style>
+	:global(.card-grid) {
+		gap: clamp(1rem, 2vw, 2rem);
+	}
+
+	.feature-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: clamp(1.5rem, 2vw, 2.25rem);
+		border-radius: 1.25rem;
+		border: 1px solid transparent;
+		text-decoration: none;
+		color: inherit;
+		position: relative;
+		background:
+			linear-gradient(135deg, rgba(243, 183, 92, 0.18), rgba(62, 126, 171, 0.18)),
+			var(--sl-color-gray-6);
+		box-shadow: 0 20px 45px rgba(5, 7, 15, 0.35);
+		backdrop-filter: blur(12px);
+		transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+	}
+
+	:global([data-theme='light']) .feature-card {
+		background:
+			linear-gradient(135deg, rgba(243, 183, 92, 0.22), rgba(62, 126, 171, 0.12)),
+			#ffffff;
+		box-shadow: 0 15px 30px rgba(15, 23, 42, 0.12);
+	}
+
+	.feature-card:hover,
+	.feature-card:focus-visible {
+		transform: translateY(-6px);
+		border-color: rgba(243, 183, 92, 0.55);
+		box-shadow: 0 30px 55px rgba(5, 7, 15, 0.45);
+	}
+
+	.feature-card__title {
+		font-family: var(--sl-font-headings);
+		font-size: 1.25rem;
+		font-weight: 600;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		color: var(--sl-color-gray-1);
+	}
+
+	:global([data-theme='light']) .feature-card__title {
+		color: var(--sl-color-gray-6);
+	}
+
+	.feature-card__title small {
+		font-size: 0.9rem;
+		color: var(--sl-color-gray-3);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.feature-card__body {
+		color: var(--sl-color-gray-2);
+		line-height: 1.5;
+	}
+
+	:global([data-theme='light']) .feature-card__body {
+		color: var(--sl-color-gray-4);
+	}
+
+	.feature-card__arrow {
+		position: absolute;
+		bottom: 1.25rem;
+		right: 1.5rem;
+		font-size: 1.5rem;
+		color: var(--sl-color-accent-high);
+		transition: transform 200ms ease;
+	}
+
+	.feature-card:hover .feature-card__arrow,
+	.feature-card:focus-visible .feature-card__arrow {
+		transform: translate(4px, -4px);
+	}
+</style>
+
