@@ -28,9 +28,11 @@ Starlight automatically turns every `.md`/`.mdx` file in `src/content/docs/` int
 
 ## Deploying to GitHub Pages
 
-1. Set the `site`/`base` options in `astro.config.mjs` to match the final Pages URL (e.g. `https://archetype-pal.github.io/archetype-site`).
-2. Run `npm run build` to generate the `dist/` folder.
-3. Publish `dist/` to the `gh-pages` branch (either via `npx astro deploy --site <url>` or a GitHub Actions workflow that uploads the artifact).
-4. Enable GitHub Pages for the repo and point it at the `gh-pages` branch (or `docs/` folder if you prefer).
+This repo ships with `.github/workflows/deploy.yml`, a GitHub Actions workflow that builds the site and deploys it to Pages whenever `main` changes.
 
-Once deployed, pushes to `main` can trigger Actions to rebuild and publish automatically.
+1. Ensure the `site` field in `astro.config.mjs` matches the final URL (it is already set to `https://archetype-pal.github.io`).
+2. In the GitHub UI, go to **Settings → Pages** and select **GitHub Actions** as the source (the first deploy will publish automatically after the workflow finishes).
+3. Push to `main` or click **Run workflow** from the Actions tab. The CI job runs `npm ci`, `npm run build`, and uploads `dist/` as the Pages artifact.
+4. Monitor the “Deploy Starlight site to GitHub Pages” workflow for success; the deployment summary lists the live URL.
+
+If you prefer manual deployment, you can still run `npm run build` locally and publish the `dist/` folder with `npx astro deploy --site <url>`, but the automated workflow keeps `main` as the single source of truth.
