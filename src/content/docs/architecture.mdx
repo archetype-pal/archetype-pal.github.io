@@ -5,6 +5,8 @@ description: Service-by-service breakdown of the new Archetype platform.
 
 The reboot splits the platform into clear layers that can be deployed independently or as a full stack via Docker Compose.
 
+![High-level architecture for Archetype showing browsers flowing through Nginx into the Next.js frontend and Django API, which orchestrate Postgres, Elasticsearch, Redis, Celery and the SIPI IIIF image server, all managed by Docker Compose.](../../assets/archetype-architecture.svg)
+
 ## High-level view
 
 | Layer | Responsibilities | Tech choices |

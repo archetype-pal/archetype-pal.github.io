@@ -1,0 +1,143 @@
+<svg width="1100" height="720" viewBox="0 0 1100 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#05070F"/>
+      <stop offset="100%" stop-color="#0C1225"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(243,183,92,0.25)"/>
+      <stop offset="100%" stop-color="rgba(62,126,171,0.25)"/>
+    </linearGradient>
+    <linearGradient id="cardLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#252C46"/>
+      <stop offset="100%" stop-color="#1B2034"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="rgba(0,0,0,0.35)"/>
+    </filter>
+    <style>
+      .label { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #E6EBFF; font-weight: 600; }
+      .sub { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #A9B8F5; font-size: 15px; }
+      .caption { font-family: 'Space Grotesk', 'Inter', sans-serif; fill: #8EA2FF; font-size: 16px; font-weight: 600; }
+      .section-title { font-size: 20px; }
+      .box { fill: url(#cardLight); stroke: rgba(255,255,255,0.08); stroke-width: 1; rx: 18; }
+      .accent-box { fill: url(#card); stroke: rgba(243,183,92,0.4); stroke-width: 1.5; rx: 18; }
+      .connector { stroke: #7EA8FF; stroke-width: 2; marker-end: url(#arrow); }
+      .connector-alt { stroke: #F3B75C; stroke-width: 2; stroke-dasharray: 6 6; marker-end: url(#arrowAccent); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L10 3 L0 6" fill="#7EA8FF"/>
+    </marker>
+    <marker id="arrowAccent" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L10 3 L0 6" fill="#F3B75C"/>
+    </marker>
+  </defs>
+
+  <rect width="1100" height="720" fill="url(#bg)" rx="32"/>
+
+  <!-- Audience -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="40" width="240" height="120" class="box"/>
+    <text x="70" y="90" class="label">Researchers · Editors</text>
+    <text x="70" y="120" class="sub">Browsers, teaching labs, API clients</text>
+  </g>
+
+  <!-- Ingress -->
+  <g filter="url(#shadow)">
+    <rect x="330" y="40" width="320" height="120" class="accent-box"/>
+    <text x="350" y="90" class="label">Nginx Gateway</text>
+    <text x="350" y="120" class="sub">TLS termination · routing · security headers</text>
+  </g>
+
+  <!-- Compose -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="40" width="330" height="120" class="box"/>
+    <text x="720" y="85" class="label">Docker Compose / Infrastructure</text>
+    <text x="720" y="115" class="sub">Manages container lifecycle, shared volumes, secrets</text>
+  </g>
+
+  <!-- Frontend -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="220" width="320" height="150" class="box"/>
+    <text x="100" y="260" class="label">Next.js Frontend</text>
+    <text x="100" y="290" class="sub">React UI · IIIF viewers · search UI</text>
+    <text x="100" y="320" class="sub">Static assets served via Nginx, API calls proxied</text>
+  </g>
+
+  <!-- API -->
+  <g filter="url(#shadow)">
+    <rect x="430" y="220" width="320" height="180" class="accent-box"/>
+    <text x="450" y="260" class="label">Django REST API</text>
+    <text x="450" y="292" class="sub">Authentication · editorial workflows · IIIF manifest generation</text>
+    <text x="450" y="324" class="sub">Graph orchestration · metadata ingestion · admin</text>
+    <text x="450" y="355" class="sub">Exposes `/api/v1` + OpenAPI docs</text>
+  </g>
+
+  <!-- Data layer -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="430" width="260" height="180" class="box"/>
+    <text x="70" y="470" class="label">Postgres</text>
+    <text x="70" y="500" class="sub">Canonical manuscripts · people · places</text>
+    <text x="70" y="530" class="sub">Audit trails · workflow state</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="340" y="430" width="240" height="180" class="box"/>
+    <text x="360" y="470" class="label">Elasticsearch</text>
+    <text x="360" y="500" class="sub">Full-text search · faceting · relevance tuning</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="610" y="430" width="210" height="180" class="box"/>
+    <text x="630" y="470" class="label">Redis</text>
+    <text x="630" y="500" class="sub">Caches · rate limits</text>
+    <text x="630" y="530" class="sub">Celery broker / result backend</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="850" y="430" width="220" height="180" class="box"/>
+    <text x="870" y="470" class="label">SIPI IIIF Server</text>
+    <text x="870" y="500" class="sub">Tile delivery · annotations · media storage</text>
+  </g>
+
+  <!-- Workers -->
+  <g filter="url(#shadow)">
+    <rect x="780" y="220" width="250" height="180" class="accent-box"/>
+    <text x="800" y="260" class="label">Celery Workers</text>
+    <text x="800" y="292" class="sub">Ingestion · IIIF sync · notifications</text>
+    <text x="800" y="324" class="sub">Share code + settings with Django API</text>
+  </g>
+
+  <!-- Compose footer -->
+  <text x="70" y="665" class="caption">GitHub Actions ➔ GitHub Container Registry ➔ docker compose deploy</text>
+  <line x1="60" y1="640" x2="1040" y2="640" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- Connectors -->
+  <path d="M290 160 L410 160" class="connector"/>
+  <path d="M660 160 L700 160" class="connector"/>
+
+  <path d="M170 160 L170 220" class="connector"/>
+  <path d="M490 160 L490 220" class="connector"/>
+
+  <path d="M240 370 L240 430" class="connector"/>
+  <path d="M560 400 L460 430" class="connector"/>
+  <path d="M590 400 L720 430" class="connector"/>
+  <path d="M620 250 L610 200 L860 200" class="connector" opacity="0.6"/>
+  <path d="M600 250 L960 430" class="connector"/>
+
+  <path d="M900 400 L940 430" class="connector"/>
+  <path d="M900 370 L900 430" class="connector"/>
+
+  <path d="M890 360 L720 360" class="connector-alt"/>
+  <path d="M520 370 L520 430" class="connector"/>
+  <path d="M680 370 L900 430" class="connector"/>
+
+  <!-- Labels on connectors -->
+  <text x="300" y="150" class="sub">HTTPS</text>
+  <text x="510" y="150" class="sub">Docker network</text>
+  <text x="190" y="405" class="sub">SQL</text>
+  <text x="370" y="405" class="sub">Query API</text>
+  <text x="640" y="405" class="sub">Cache + jobs</text>
+  <text x="940" y="405" class="sub">IIIF</text>
+</svg>
+
