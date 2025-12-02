@@ -14,6 +14,7 @@ export default defineConfig({
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/archetype-pal' },
 				{ icon: 'twitter', label: 'Twitter', href: 'https://twitter.com/DigiPalProject' },
 			],
+			customCss: ['./src/styles/theme.css'],
 			sidebar: [
 				{
 					label: 'About Archetype',
