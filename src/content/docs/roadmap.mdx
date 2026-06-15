@@ -9,7 +9,7 @@ We are targeting feature parity with the historical DigiPal instance while layer
 
 - ✅ Split the codebase into **backend**, **frontend**, **infrastructure**, and **docs** repos.
 - ✅ Scaffold this Starlight knowledge base and publish early messaging for stakeholders.
-- 🔄 Finalise Compose-based local environments with Postgres, Elasticsearch, SIPI, and Redis.
+- 🔄 Finalise Compose-based local environments with Postgres, Meilisearch, SIPI, and Redis.
 - 🔄 Harden authentication (Django Allauth + token-based API access) and seed fixtures for developer logins.
 - 🔜 Set up automated image builds in GitHub Actions and push them to GitHub Packages on every main-branch merge.
 
@@ -18,7 +18,7 @@ We are targeting feature parity with the historical DigiPal instance while layer
 | Track | Scope | Notes |
 | --- | --- | --- |
 | Data migration | Import manuscripts, hands, and annotations from the legacy DB along with IIIF manifests. | Write repeatable Django management commands, run checksums. |
-| Search & browse | Restore advanced search facets (script, date range, geo, repository). | Elasticsearch + Postgres hybrid queries with DRF serializers. |
+| Search & browse | Restore advanced search facets (script, date range, geo, repository). | Meilisearch + Postgres queries with DRF serializers. |
 | Annotation UI | Deliver the classic “detail viewer” experience with zoom, tagging, and exports. | Uses SIPI tiles + modern React canvas overlays. |
 | Collections & teaching | Rebuild “My Collection” workflows for classroom use. | Adds shareable URLs and export to IIIF Presentation 3. |
 | Docs & release notes | Publish migration guides and changelog entries here. | Keep blog-inspired storytelling alive for every launch. |

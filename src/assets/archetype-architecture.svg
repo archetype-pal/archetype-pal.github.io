@@ -105,10 +105,10 @@
     <text x="220" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Postgres</text>
   </g>
   
-  <!-- Elasticsearch -->
+  <!-- Meilisearch -->
   <g filter="url(#shadow)">
     <rect x="320" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d" stroke-width="1"/>
-    <text x="390" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Elasticsearch</text>
+    <text x="390" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Meilisearch</text>
   </g>
   
   <!-- Redis -->

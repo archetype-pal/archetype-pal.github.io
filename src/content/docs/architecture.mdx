@@ -5,14 +5,14 @@ description: Service-by-service breakdown of the new Archetype platform.
 
 The reboot splits the platform into clear layers that can be deployed independently or as a full stack via Docker Compose.
 
-![High-level architecture for Archetype showing browsers flowing through Nginx into the Next.js frontend and Django API, which orchestrate Postgres, Elasticsearch, Redis, Celery and the SIPI IIIF image server, all managed by Docker Compose.](../../assets/archetype-architecture.svg)
+![High-level architecture for Archetype showing browsers flowing through Nginx into the Next.js frontend and Django API, which orchestrate Postgres, Meilisearch, Redis, Celery and the SIPI IIIF image server, all managed by Docker Compose.](../../assets/archetype-architecture.svg)
 
 ## High-level view
 
 | Layer | Responsibilities | Tech choices |
 | --- | --- | --- |
 | Backend APIs | Canonical data model, search endpoints, ingestion pipelines, authentication | Django + Django REST Framework, Poetry-managed dependencies, Celery-ready |
-| Data services | Persistent storage, full-text search, media delivery | Postgres, Elasticsearch, Redis (optional), SIPI IIIF image server |
+| Data services | Persistent storage, full-text search, media delivery | Postgres, Meilisearch, Redis (optional), SIPI IIIF image server |
 | Frontend | Scholar- and public-facing UI, IIIF viewers, editorial tooling | React + Next.js App Router, TypeScript, modern component libraries |
 | Infrastructure | Local dev + prod orchestration, TLS termination, monitoring hooks | Docker Compose, Make targets, GitHub Packages for OCI images, Nginx, Certbot |
 | Knowledge base | Docs, roadmap, marketing, release notes | Astro + Starlight (this repo), GitHub Pages deployment |
@@ -20,7 +20,7 @@ The reboot splits the platform into clear layers that can be deployed independen
 ## Backend services
 
 - **Framework:** The backend repo ships a modern Django/DRF application (Python 3, Poetry). API documentation lives at `/api/v1/docs`, so integrators can self-serve.
-- **Datastores:** Postgres remains the source of truth for manuscripts, people, places, hands, annotations, and taxonomy metadata. Elasticsearch powers deep filtering and fuzzy matching. SIPI streams IIIF-compliant imagery so we can display tiles and annotations without custom servers.
+- **Datastores:** Postgres remains the source of truth for manuscripts, people, places, hands, annotations, and taxonomy metadata. Meilisearch powers deep filtering and fuzzy matching. SIPI streams IIIF-compliant imagery so we can display tiles and annotations without custom servers.
 - **Dev workflow:** `docker compose up` spins up the API plus supporting services. Make targets (`make up-bg`, `make migrate`) reduce the boilerplate for database migrations or hot reload.
 - **Config:** Secrets live in `config/.env` files. A `config/test.env` is provided for quick setups.
 
@@ -42,7 +42,7 @@ The reboot splits the platform into clear layers that can be deployed independen
 
 1. Editors load the Next.js app, authenticate against the Django API, and fetch manuscript data via REST endpoints.
 2. The frontend requests IIIF manifests and tiles from SIPI; annotations or highlights are handled via shared IDs stored in Postgres.
-3. Search queries hit Elasticsearch through the API layer, which applies permissions and aggregates.
+3. Search queries hit Meilisearch through the API layer, which applies permissions and aggregates.
 4. Docker Compose wires the services together locally; in production the same containers run under the infrastructure repo’s orchestration, complete with TLS and CDN-friendly headers.
 
 Check the [Roadmap](/roadmap/) for milestone-specific upgrades (IIIF auth, background workers, monitoring) that will build on this foundation.
