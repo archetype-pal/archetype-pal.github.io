@@ -1,0 +1,224 @@
+---
+// Stakeholder-first formal homepage. Uses the global --f-* tokens from theme.css,
+// which switch with Starlight's [data-theme]. Rendered inside a `template: splash` page.
+---
+
+<div class="home">
+  <section class="hero shell">
+    <div class="herogrid">
+      <div>
+        <p class="eyebrow">An open platform for palaeography</p>
+        <h1>Read the hands<br />of the past.</h1>
+        <p class="lead">Archetype lets scholars search, view, annotate, and teach with manuscript images and the texts they carry &mdash; built for researchers, libraries, and museums.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="/overview/">Explore the platform <span class="arw">&rarr;</span></a>
+          <a class="btn ghost" href="/architecture/">For developers <span class="arw">&rarr;</span></a>
+        </div>
+      </div>
+      <aside class="creds" aria-label="Why Archetype is built to last">
+        <h2 class="creds-h">Open &middot; standards-based &middot; enduring</h2>
+        <ul>
+          <li><span class="di"></span><span><b>Open source.</b> Free to use, inspect, and self-host on your own infrastructure.</span></li>
+          <li><span class="di"></span><span><b>Standards at the core.</b> IIIF imaging, TEI text, and W3C Web Annotations &mdash; no lock-in.</span></li>
+          <li><span class="di"></span><span><b>Your collection stays yours.</b> Runs on your servers, over your own manuscripts.</span></li>
+          <li><span class="di"></span><span><b>Rooted in scholarship.</b> Fifteen years of the DigiPal research method, rebuilt.</span></li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="block shell">
+    <div class="sechead">
+      <p class="eyebrow">What it does today</p>
+      <h2>A working platform for manuscript study</h2>
+      <p class="sub">Everything here is live in the platform now &mdash; the tools scholars use to work closely with the written record.</p>
+    </div>
+    <div class="feat-grid">
+      <article class="feat"><h3>Search the corpus</h3><p>Find manuscripts by script, scribe, date or repository with fast, faceted search across an entire collection.</p></article>
+      <article class="feat"><h3>Examine every stroke</h3><p>Standards-based IIIF deep-zoom renders high-resolution images down to the finest detail of the pen.</p></article>
+      <article class="feat"><h3>Annotate the hand</h3><p>Mark up glyphs, allographs and scribal features directly on the image, and browse them in a gallery.</p></article>
+      <article class="feat"><h3>Describe hands &amp; scribes</h3><p>Catalogue scribal hands, allographs and their components as structured, searchable data.</p></article>
+      <article class="feat"><h3>Tie text to image</h3><p>Link transcriptions to the exact region they describe, on a TEI-canonical model of the text.</p></article>
+      <article class="feat"><h3>Compare hands side by side</h3><p>Assemble worksets and set scribal hands next to one another in a digital lightbox, with notes and shareable views.</p></article>
+      <article class="feat"><h3>Edit with an audit trail</h3><p>Move transcriptions from draft to reviewed to published &mdash; every change attributed and dated.</p></article>
+      <article class="feat"><h3>Publish to standards</h3><p>Export images and annotations as IIIF manifests, TEI, and W3C Web Annotations for reuse anywhere.</p></article>
+      <article class="feat"><h3>Teach and share</h3><p>Build curated worksets for the seminar room and share them without exposing your working files.</p></article>
+    </div>
+  </section>
+
+  <section class="block shell">
+    <div class="roadband">
+      <div class="rb-text">
+        <p class="eyebrow">Where it's headed</p>
+        <h2>The road ahead</h2>
+        <p class="sub">Beyond today's platform, the roadmap sets out the goals we're working toward &mdash; annotation analytics and quality control, real-time collaborative editing, richer interoperability, and an AI-assisted research programme with the scholar always the author of record.</p>
+      </div>
+      <a class="btn ghost rb-cta" href="/roadmap/">See the full roadmap <span class="arw">&rarr;</span></a>
+    </div>
+  </section>
+
+  <section class="block shell">
+    <div class="sechead"><p class="eyebrow">Two ways in</p><h2>Where would you like to start?</h2></div>
+    <div class="lanes">
+      <a class="lane" href="/overview/">
+        <p class="eyebrow">Researchers &amp; institutions</p>
+        <h3>Explore the platform</h3>
+        <p class="sub">See what Archetype offers for manuscript research and teaching, the scholarship behind it, and where the project is headed.</p>
+        <span class="go">Discover more <span class="arw">&rarr;</span></span>
+      </a>
+      <a class="lane" href="/architecture/">
+        <p class="eyebrow">Developers</p>
+        <h3>Run your own instance</h3>
+        <p class="sub">Quickstart with Docker, bring your own corpus, configure the services and build on the API &mdash; on your server, your data.</p>
+        <span class="go">Start deploying <span class="arw">&rarr;</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="block shell">
+    <div class="sechead">
+      <p class="eyebrow">Under the hood</p>
+      <h2>How it's built</h2>
+      <p class="sub">For the technically minded: the same open stack runs whether you host one charter or a national collection &mdash; nothing here assumes a particular deployment.</p>
+    </div>
+    <figure class="plate">
+      <div class="frame">
+        <svg viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Archetype system architecture: users reach an Nginx edge, which fronts a Next.js frontend, a Django REST API and Celery workers; the API talks to Postgres, Meilisearch, Redis and a SIPI IIIF image server with shared storage; everything runs under Docker Compose with GitHub Actions and GHCR.">
+          <defs>
+            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0d1117"></stop><stop offset="100%" stop-color="#161b22"></stop></linearGradient>
+            <linearGradient id="serviceGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#21262d"></stop><stop offset="100%" stop-color="#161b22"></stop></linearGradient>
+            <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#238636"></stop><stop offset="100%" stop-color="#1a7f37"></stop></linearGradient>
+            <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1f6feb"></stop><stop offset="100%" stop-color="#1158c7"></stop></linearGradient>
+            <linearGradient id="warnGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d29922"></stop><stop offset="100%" stop-color="#bb8009"></stop></linearGradient>
+            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"></feDropShadow></filter>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8b949e"></polygon></marker>
+            <marker id="arrowheadOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#d29922"></polygon></marker>
+          </defs>
+          <rect width="1100" height="720" fill="url(#bgGrad)" rx="12"></rect>
+          <text x="550" y="40" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="24" font-weight="600">Archetype System Architecture</text>
+          <text x="50" y="95" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">USERS</text>
+          <g filter="url(#shadow)"><rect x="350" y="70" width="160" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="430" y="105" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Viewers</text></g>
+          <g filter="url(#shadow)"><rect x="590" y="70" width="160" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="670" y="105" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Editors</text></g>
+          <text x="50" y="195" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">EDGE</text>
+          <g filter="url(#shadow)"><rect x="400" y="170" width="300" height="60" rx="8" fill="url(#primaryGrad)" stroke="#238636"></rect><text x="550" y="205" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Nginx</text></g>
+          <text x="50" y="310" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">APPLICATION</text>
+          <g filter="url(#shadow)"><rect x="200" y="285" width="180" height="80" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="290" y="330" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Frontend</text><text x="290" y="350" text-anchor="middle" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">Next.js</text></g>
+          <g filter="url(#shadow)"><rect x="460" y="285" width="180" height="80" rx="8" fill="url(#accentGrad)" stroke="#1f6feb"></rect><text x="550" y="330" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="14" font-weight="600">API</text><text x="550" y="350" text-anchor="middle" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Django REST</text></g>
+          <g filter="url(#shadow)"><rect x="720" y="285" width="180" height="80" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="810" y="330" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Workers</text><text x="810" y="350" text-anchor="middle" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">Celery</text></g>
+          <text x="50" y="450" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">DATA</text>
+          <g filter="url(#shadow)"><rect x="150" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="220" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Postgres</text></g>
+          <g filter="url(#shadow)"><rect x="320" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="390" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Meilisearch</text></g>
+          <g filter="url(#shadow)"><rect x="490" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="560" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Redis</text></g>
+          <g filter="url(#shadow)"><rect x="660" y="425" width="140" height="70" rx="8" fill="url(#warnGrad)" stroke="#d29922"></rect><text x="730" y="465" text-anchor="middle" fill="#fff" font-family="system-ui, sans-serif" font-size="13" font-weight="600">SIPI IIIF</text></g>
+          <g filter="url(#shadow)"><rect x="830" y="425" width="140" height="70" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="900" y="465" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Storage</text></g>
+          <text x="50" y="565" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="2">INFRASTRUCTURE</text>
+          <g filter="url(#shadow)"><rect x="250" y="545" width="280" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="390" y="580" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">Docker Compose</text></g>
+          <g filter="url(#shadow)"><rect x="570" y="545" width="280" height="60" rx="8" fill="url(#serviceGrad)" stroke="#30363d"></rect><text x="710" y="580" text-anchor="middle" fill="#f0f6fc" font-family="system-ui, sans-serif" font-size="14" font-weight="500">GitHub Actions / GHCR</text></g>
+          <line x1="430" y1="130" x2="480" y2="170" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="670" y1="130" x2="620" y2="170" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="470" y1="230" x2="340" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="550" y1="230" x2="550" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="630" y1="230" x2="760" y2="285" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="380" y1="325" x2="460" y2="325" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="640" y1="325" x2="720" y2="325" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="500" y1="365" x2="250" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="530" y1="365" x2="390" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="560" y1="365" x2="560" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="590" y1="365" x2="700" y2="425" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <line x1="780" y1="365" x2="590" y2="425" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"></line>
+          <line x1="750" y1="365" x2="250" y2="425" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"></line>
+          <line x1="800" y1="460" x2="830" y2="460" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line>
+          <rect x="50" y="640" width="1000" height="60" rx="8" fill="#21262d" stroke="#30363d"></rect>
+          <text x="80" y="675" fill="#8b949e" font-family="system-ui, sans-serif" font-size="11">LEGEND:</text>
+          <line x1="170" y1="670" x2="210" y2="670" stroke="#8b949e" stroke-width="2" marker-end="url(#arrowhead)"></line><text x="220" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Sync request</text>
+          <line x1="340" y1="670" x2="380" y2="670" stroke="#d29922" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowheadOrange)"></line><text x="390" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Async job</text>
+          <rect x="500" y="660" width="20" height="20" rx="4" fill="url(#primaryGrad)"></rect><text x="530" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Entry point</text>
+          <rect x="640" y="660" width="20" height="20" rx="4" fill="url(#accentGrad)"></rect><text x="670" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Core service</text>
+          <rect x="780" y="660" width="20" height="20" rx="4" fill="url(#warnGrad)"></rect><text x="810" y="675" fill="#c9d1d9" font-family="system-ui, sans-serif" font-size="11">Media service</text>
+        </svg>
+      </div>
+      <figcaption><b>Fig. 1</b> The Archetype service architecture &mdash; one open stack, deployable over any collection.</figcaption>
+    </figure>
+  </section>
+</div>
+
+<style>
+  .home { color: var(--f-text); font-family: var(--sl-font); line-height: 1.6; letter-spacing: -0.005em; }
+  .home .shell { max-width: 1120px; margin-inline: auto; padding-inline: clamp(1.2rem, 4vw, 2.6rem); }
+  .home a { text-decoration: none; color: inherit; }
+  .home h1, .home h2, .home h3 { font-family: var(--sl-font-headings); font-weight: 600; letter-spacing: -0.012em; margin: 0; text-wrap: balance; }
+  .home .eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.19em; text-transform: uppercase; color: var(--f-dim); display: inline-flex; align-items: center; margin: 0; }
+  .home .eyebrow::before { content: ""; width: 24px; height: 2px; background: var(--f-accent); margin-right: 0.7rem; flex: none; }
+
+  .home .btn { font-weight: 600; font-size: 0.94rem; border-radius: 8px; padding: 0.72rem 1.2rem; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid transparent; transition: transform 0.16s, background 0.16s, border-color 0.16s, color 0.16s; }
+  .home .btn .arw { transition: transform 0.18s; }
+  .home .btn:hover .arw { transform: translateX(3px); }
+  .home .btn.primary { background: var(--f-btn-bg); color: var(--f-btn-fg); }
+  .home .btn.primary:hover { background: var(--f-btn-bg-hi); }
+  .home .btn.ghost { border-color: var(--f-border-strong); color: var(--f-text); }
+  .home .btn.ghost:hover { border-color: var(--f-accent); color: var(--f-accent); }
+
+  /* hero */
+  .home .hero { padding: clamp(2.4rem, 5vw, 4rem) 0 clamp(1.6rem, 3vw, 2.4rem); }
+  .home .hero .eyebrow { margin-bottom: 1.3rem; }
+  .home .herogrid { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(1.8rem, 4vw, 3.4rem); align-items: center; }
+  .home .hero h1 { font-size: clamp(2.9rem, 6.4vw, 4.6rem); line-height: 1; }
+  .home .hero .lead { max-width: 40ch; color: var(--f-muted); font-size: clamp(1.08rem, 1.55vw, 1.26rem); margin: 1.5rem 0 0; font-family: var(--sl-font-headings); font-weight: 400; line-height: 1.5; }
+  .home .cta-row { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.9rem; }
+
+  .home .creds { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: 1.7rem 1.8rem; box-shadow: var(--f-shadow); }
+  .home .creds-h { font-family: var(--sl-font); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--f-dim); margin: 0 0 1.3rem; font-weight: 600; padding-bottom: 0.9rem; border-bottom: 1px solid var(--f-border); }
+  .home .creds ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.05rem; }
+  .home .creds li { display: flex; gap: 0.8rem; align-items: flex-start; font-size: 0.92rem; color: var(--f-muted); line-height: 1.45; }
+  .home .creds li b { color: var(--f-text); font-weight: 600; }
+  .home .creds .di { flex: none; width: 7px; height: 7px; background: var(--f-accent); transform: rotate(45deg); margin-top: 0.42rem; }
+
+  /* sections */
+  .home .block { padding: clamp(2.4rem, 4.5vw, 3.6rem) 0; }
+  .home .sechead { margin-bottom: 2rem; max-width: 62ch; }
+  .home .sechead h2 { font-size: clamp(1.85rem, 3vw, 2.4rem); margin-top: 0.7rem; }
+  .home .sechead .sub { margin: 0.7rem 0 0; color: var(--f-muted); font-size: 1.02rem; font-family: var(--sl-font-headings); }
+
+  /* capabilities grid */
+  .home .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--f-border); border: 1px solid var(--f-border); border-radius: 12px; overflow: hidden; }
+  .home .feat { background: var(--f-surface); padding: 1.5rem 1.55rem; transition: background 0.18s; }
+  .home .feat:hover { background: var(--f-surface-2); }
+  .home .feat h3 { font-size: 1.3rem; margin: 0 0 0.55rem; }
+  .home .feat h3::before { content: ""; display: block; width: 26px; height: 2px; background: var(--f-accent); margin-bottom: 0.85rem; opacity: 0.85; }
+  .home .feat p { color: var(--f-muted); font-size: 0.92rem; margin: 0; line-height: 1.55; }
+
+  /* roadmap band */
+  .home .roadband { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; box-shadow: var(--f-shadow); padding: clamp(1.8rem, 3.4vw, 2.8rem); display: grid; grid-template-columns: 1.6fr auto; gap: clamp(1.4rem, 3vw, 2.6rem); align-items: center; }
+  .home .roadband .eyebrow { margin-bottom: 0.8rem; }
+  .home .roadband h2 { font-size: clamp(1.6rem, 2.6vw, 2.05rem); }
+  .home .roadband .sub { color: var(--f-muted); margin: 0.7rem 0 0; max-width: 64ch; font-size: 1rem; font-family: var(--sl-font-headings); }
+  .home .roadband .rb-cta { justify-self: end; }
+
+  /* lanes */
+  .home .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .home .lane { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: 1.9rem 1.9rem 1.6rem; box-shadow: var(--f-shadow); transition: border-color 0.18s, box-shadow 0.18s; }
+  .home .lane:hover { border-color: var(--f-accent); box-shadow: var(--f-shadow-lift); }
+  .home .lane .eyebrow { margin-bottom: 0.9rem; }
+  .home .lane h3 { font-size: 1.55rem; }
+  .home .lane .sub { color: var(--f-muted); margin: 0.6rem 0 1.1rem; font-size: 0.95rem; font-family: var(--sl-font-headings); }
+  .home .lane .go { color: var(--f-accent); font-weight: 600; display: inline-flex; gap: 0.45rem; align-items: center; font-size: 0.92rem; }
+  .home .lane .go .arw { transition: transform 0.18s; }
+  .home .lane:hover .go .arw { transform: translateX(3px); }
+
+  /* architecture plate */
+  .home .plate { margin: 0; border: 1px solid var(--f-border); border-radius: 12px; overflow: hidden; box-shadow: var(--f-shadow); }
+  .home .plate .frame { background: #0d1117; padding: 0.9rem; overflow-x: auto; }
+  .home .plate svg { width: 100%; height: auto; display: block; min-width: 640px; }
+  .home .plate figcaption { color: var(--f-dim); font-size: 0.85rem; padding: 0.9rem 1.1rem; background: var(--f-surface); border-top: 1px solid var(--f-border); font-family: var(--sl-font-headings); }
+  .home .plate figcaption b { color: var(--f-muted); font-family: var(--sl-font); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 0.6rem; }
+
+  @media (max-width: 860px) {
+    .home .herogrid { grid-template-columns: 1fr; }
+    .home .roadband { grid-template-columns: 1fr; }
+    .home .roadband .rb-cta { justify-self: start; }
+    .home .lanes { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home .btn:hover, .home .lane:hover { transform: none; }
+  }
+</style>
