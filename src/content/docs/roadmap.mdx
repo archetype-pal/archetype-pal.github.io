@@ -1,40 +1,47 @@
 ---
 title: Roadmap
-description: The phased plan for rebuilding DigiPal as Archetype.
+description: The phased plan for rebuilding DigiPal as Archetype — and where each milestone stands today.
 ---
 
-We are targeting feature parity with the historical DigiPal instance while layering on new APIs, UI polish, and infrastructure safety nets. The timeline below focuses on scope rather than strict calendar dates—each milestone is shippable independently.
+We are targeting feature parity with the historical DigiPal instance while layering on new APIs, UI polish, and infrastructure safety nets. The timeline below focuses on scope rather than strict calendar dates — each milestone is shippable independently.
 
-## Milestone 0 — Foundations (in flight)
+As of **mid-2026, the foundations and most of the DigiPal-parity work have shipped** and power the live "Models of Authority" instance; modern enhancements are now the active frontier. Status markers below: ✅ shipped · 🔄 in progress · 🔜 planned. _Last reviewed against the codebase: 2026-07-05._
+
+## Milestone 0 — Foundations ✅ Shipped
 
 - ✅ Split the codebase into **backend**, **frontend**, **infrastructure**, and **docs** repos.
 - ✅ Scaffold this Starlight knowledge base and publish early messaging for stakeholders.
-- 🔄 Finalise Compose-based local environments with Postgres, Meilisearch, SIPI, and Redis.
-- 🔄 Harden authentication (Django Allauth + token-based API access) and seed fixtures for developer logins.
-- 🔜 Set up automated image builds in GitHub Actions and push them to GitHub Packages on every main-branch merge.
+- ✅ Compose-based local environments with Postgres, Meilisearch, SIPI, and Redis.
+- ✅ Token-based API authentication (DRF tokens + Djoser account flows) with seed fixtures for developer logins.
+- ✅ Automated image builds in GitHub Actions that push to GitHub Packages (`ghcr.io/archetype-pal/*`) on every main-branch merge, with a staging-promotion workflow.
 
-## Milestone 1 — Feature parity with DigiPal
+## Milestone 1 — Feature parity with DigiPal ✅ Largely shipped
 
-| Track | Scope | Notes |
+| Track | Scope | Status |
 | --- | --- | --- |
-| Data migration | Import manuscripts, hands, and annotations from the legacy DB along with IIIF manifests. | Write repeatable Django management commands, run checksums. |
-| Search & browse | Restore advanced search facets (script, date range, geo, repository). | Meilisearch + Postgres queries with DRF serializers. |
-| Annotation UI | Deliver the classic “detail viewer” experience with zoom, tagging, and exports. | Uses SIPI tiles + modern React canvas overlays. |
-| Collections & teaching | Rebuild “My Collection” workflows for classroom use. | Adds shareable URLs and export to IIIF Presentation 3. |
-| Docs & release notes | Publish migration guides and changelog entries here. | Keep blog-inspired storytelling alive for every launch. |
+| Data migration | Import manuscripts, hands, and annotations from the legacy DB along with IIIF manifests. | ✅ Done — repeatable Django management commands with integrity checks; the Models of Authority corpus is imported and live. |
+| Search & browse | Restore advanced search facets (script, date range, repository). | ✅ Done — registry-driven Meilisearch adapters + DRF serializers with faceted browse. |
+| Annotation UI | Deliver the classic "detail viewer" experience with zoom, tagging, and exports. | ✅ Done — SIPI/IIIF tiles + React canvas overlays, plus a per-image annotation gallery with filtering and export. |
+| Collections & teaching | Rebuild "My Collection" workflows for classroom use. | ✅ Done — the Digital Lightbox (persistent workspaces, sticky notes, side-by-side comparison) with shareable state and IIIF Presentation 3 manifests. |
+| Docs & release notes | Publish migration guides and changelog entries here. | 🔄 Ongoing — this site is live; changelog storytelling continues per launch. |
 
-## Milestone 2 — Modern enhancements
+> IIIF **Presentation 3 manifests** and **content search** ship today; a IIIF **Collection** export endpoint is still pending.
 
-1. **Realtime collaboration.** Optional websockets layer to broadcast annotation updates and keep editors in sync.
-2. **Linked data exports.** Generate JSON-LD and IIIF Collection artifacts for partners like VisigothicPal.
-3. **Workflow automation.** Background workers (Celery) for OCR imports, quality checks, and scheduled IIIF cache invalidation.
-4. **Observability + SLOs.** Instrument the stack with OpenTelemetry, aggregate dashboards, and on-call docs.
+## Milestone 2 — Modern enhancements 🔄 In progress
 
-## Milestone 3 — Community ecosystem
+1. 🔜 **Realtime collaboration.** Optional websockets layer to broadcast annotation updates and keep editors in sync. _(Not started — the backend runs a standard ASGI app with no channels layer yet.)_
+2. ✅ **Linked-data exports.** W3C Web Annotations (JSON-LD) and IIIF Presentation 3 artifacts are generated for partners like VisigothicPal. _(Reverse W3C→graph create and IIIF Collection endpoints remain deferred.)_
+3. 🔄 **Workflow automation.** Celery workers are live and an HTR/transcription import path (PAGE-XML / ALTO → TEI) has shipped; scheduled quality checks and IIIF cache invalidation are still to come.
+4. 🔜 **Observability + SLOs.** Instrument the stack with OpenTelemetry, aggregate dashboards, and on-call docs. _(Not started.)_
 
-- Launch “project templates” so institutions can fork Archetype and bring their own theming without touching core code.
-- Expand documentation, including a tutorial inspired by the classic [“Using DigiPal” quick start](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/).
-- Host quarterly community calls where teams demo builds, focusing on topics like [digital dating research](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/).
+## Milestone 3 — Community ecosystem 🔜 Planned
 
-Progress across these milestones will be tracked in GitHub Projects and reflected in this documentation site as soon as goals ship.
+- 🔜 Launch "project templates" so institutions can fork Archetype and bring their own theming without touching core code.
+- 🔄 Expand documentation, including a tutorial inspired by the classic ["Using DigiPal" quick start](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/).
+- 🔜 Host quarterly community calls where teams demo builds, focusing on topics like [digital dating research](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/).
 
+## Beyond parity — research directions 🔜 Exploratory
+
+AI-assisted palaeography — handwritten-text-recognition assistance, scribe attribution, and computational dating — is a **future, grant-funded research direction**, not a committed near-term feature. Any such capability would keep a human as the author of record and route every machine suggestion through the existing editorial review workflow. Today the platform ships the *import* side only (bringing externally-produced HTR transcriptions into TEI); no recognition or inference models run in the stack.
+
+Progress across these milestones is tracked in GitHub Projects and reflected in this documentation site as soon as goals ship.
