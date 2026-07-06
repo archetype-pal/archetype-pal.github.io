@@ -97,7 +97,7 @@
 :root {
   --sl-font: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --sl-font-headings: 'Newsreader', Georgia, 'Times New Roman', serif;
-  --sl-content-width: 50rem;
+  --sl-content-width: 56rem;
 }
 
 /* ---- chrome refinements (formal) ---- */
