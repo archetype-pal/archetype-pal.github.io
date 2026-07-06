@@ -23,14 +23,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Establishes the Pages deployment context and reconciles the site's
       # configuration for this run. Omitting this left the deploy relying on
       # stale repo-level Pages state (a vestigial branch source), which is what
       # caused the intermittent "Deployment failed, try again later" failures.
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -45,7 +45,7 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -66,17 +66,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy1
         continue-on-error: true
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
       - if: steps.deploy1.outcome == 'failure'
         run: sleep 25
       - name: Deploy to GitHub Pages (retry 1)
         id: deploy2
         if: steps.deploy1.outcome == 'failure'
         continue-on-error: true
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
       - if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
         run: sleep 25
       - name: Deploy to GitHub Pages (retry 2)
         id: deploy3
         if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
