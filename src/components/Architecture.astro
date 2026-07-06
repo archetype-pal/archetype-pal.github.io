@@ -1,0 +1,131 @@
+---
+// Clean, theme-aware system-architecture diagram. Inline SVG so it inherits the
+// site's fonts and palette (via CSS custom properties) and adapts to light/dark.
+// Used by the homepage and the Platform → Architecture page.
+---
+
+<figure class="arch not-content">
+  <div class="arch-canvas">
+    <svg viewBox="0 0 840 512" role="img" xmlns="http://www.w3.org/2000/svg"
+      aria-label="Archetype system architecture: viewers and editors reach an Nginx edge, which fronts a Next.js frontend, a Django REST API and Celery workers; the API talks to PostgreSQL, Meilisearch, Redis and a SIPI IIIF image server with file storage; the whole stack runs under Docker Compose with images built by GitHub Actions and GHCR.">
+      <defs>
+        <marker id="arrhead" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+          <path class="arrowhead" d="M0 0 L7.5 3.2 L0 6.4 Z"></path>
+        </marker>
+      </defs>
+
+      <!-- lane labels -->
+      <text class="lane" x="14" y="48">USERS</text>
+      <text class="lane" x="14" y="144">EDGE</text>
+      <text class="lane" x="14" y="240">APPLICATION</text>
+      <text class="lane" x="14" y="354">DATA</text>
+      <text class="lane" x="14" y="456">RUNS ON</text>
+
+      <!-- flows (drawn first, boxes sit on top) -->
+      <path class="flow" d="M375 76 L452 117" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M569 76 L492 117" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M440 165 L266 208" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M472 165 L472 206" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M335 238 L385 238" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M559 238 L607 238" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M452 270 L196 325" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M462 270 L330 325" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M472 270 L472 325" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M492 270 L606 325" marker-end="url(#arrhead)"></path>
+      <path class="flow flow-async" d="M694 270 L502 325" marker-end="url(#arrhead)"></path>
+      <path class="flow" d="M679 352 L698 352" marker-end="url(#arrhead)"></path>
+
+      <!-- USERS -->
+      <g><rect class="box" x="300" y="30" width="150" height="46" rx="8"></rect><text class="lbl" x="375" y="58">Viewers</text></g>
+      <g><rect class="box" x="494" y="30" width="150" height="46" rx="8"></rect><text class="lbl" x="569" y="58">Editors</text></g>
+
+      <!-- EDGE -->
+      <g><rect class="box" x="382" y="118" width="180" height="46" rx="8"></rect><text class="lbl" x="472" y="146">Nginx</text></g>
+
+      <!-- APPLICATION -->
+      <g><rect class="box" x="165" y="208" width="170" height="60" rx="8"></rect><text class="lbl" x="250" y="234">Frontend</text><text class="sub" x="250" y="252">Next.js</text></g>
+      <g><rect class="box box-accent" x="389" y="208" width="170" height="60" rx="8"></rect><text class="lbl" x="474" y="234">API</text><text class="sub" x="474" y="252">Django REST</text></g>
+      <g><rect class="box" x="613" y="208" width="170" height="60" rx="8"></rect><text class="lbl" x="698" y="234">Workers</text><text class="sub" x="698" y="252">Celery</text></g>
+
+      <!-- DATA -->
+      <g><rect class="box" x="120" y="325" width="124" height="54" rx="8"></rect><text class="lbl sm" x="182" y="348">PostgreSQL</text><text class="sub" x="182" y="365">source of truth</text></g>
+      <g><rect class="box" x="265" y="325" width="124" height="54" rx="8"></rect><text class="lbl sm" x="327" y="348">Meilisearch</text><text class="sub" x="327" y="365">search index</text></g>
+      <g><rect class="box" x="410" y="325" width="124" height="54" rx="8"></rect><text class="lbl sm" x="472" y="348">Redis</text><text class="sub" x="472" y="365">cache · broker</text></g>
+      <g><rect class="box" x="555" y="325" width="124" height="54" rx="8"></rect><text class="lbl sm" x="617" y="348">SIPI</text><text class="sub" x="617" y="365">IIIF images</text></g>
+      <g><rect class="box" x="700" y="325" width="124" height="54" rx="8"></rect><text class="lbl sm" x="762" y="348">Storage</text><text class="sub" x="762" y="365">media files</text></g>
+
+      <!-- RUNS ON -->
+      <rect class="band" x="120" y="432" width="704" height="46" rx="8"></rect>
+      <text class="band-lbl" x="472" y="460">Docker Compose&#160;&#160;&#160;·&#160;&#160;&#160;GitHub Actions&#160;→&#160;GHCR</text>
+    </svg>
+  </div>
+  <figcaption>
+    <b>Fig. 1</b> The Archetype service architecture. Solid arrows are requests; dashed are asynchronous jobs. One open stack, deployable over any collection.
+  </figcaption>
+</figure>
+
+<style>
+  .arch {
+    margin: 0;
+    border: 1px solid var(--f-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--f-shadow);
+    background: var(--f-surface);
+  }
+  .arch-canvas { overflow-x: auto; padding: clamp(1rem, 2.4vw, 1.7rem); }
+  .arch svg { display: block; width: 100%; min-width: 660px; max-width: 800px; height: auto; margin: 0 auto; }
+
+  .lane {
+    font-family: var(--sl-font);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    fill: var(--f-dim);
+    dominant-baseline: middle;
+  }
+  .box { fill: var(--f-surface); stroke: var(--f-border-strong); stroke-width: 1.25; }
+  .box-accent { fill: var(--f-accent-soft); stroke: var(--f-accent); stroke-width: 1.5; }
+  .lbl {
+    font-family: var(--sl-font);
+    font-size: 16px;
+    font-weight: 600;
+    fill: var(--f-text);
+    text-anchor: middle;
+  }
+  .lbl.sm { font-size: 14px; }
+  .sub {
+    font-family: var(--sl-font);
+    font-size: 11px;
+    fill: var(--f-dim);
+    text-anchor: middle;
+  }
+  .flow { stroke: var(--f-dim); stroke-width: 1.5; fill: none; opacity: 0.85; }
+  .flow-async { stroke-dasharray: 5 4; }
+  .arrowhead { fill: var(--f-dim); }
+  .band { fill: var(--f-surface-2); stroke: var(--f-border); stroke-width: 1; }
+  .band-lbl {
+    font-family: var(--sl-font);
+    font-size: 13px;
+    font-weight: 500;
+    fill: var(--f-muted);
+    text-anchor: middle;
+  }
+
+  figcaption {
+    color: var(--f-dim);
+    font-size: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--f-surface-2);
+    border-top: 1px solid var(--f-border);
+    font-family: var(--sl-font-headings);
+  }
+  figcaption b {
+    color: var(--f-muted);
+    font-family: var(--sl-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+  }
+</style>
