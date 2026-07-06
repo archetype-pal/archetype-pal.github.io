@@ -54,8 +54,29 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy3.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy1.outputs.page_url }}
     steps:
+      # GitHub Pages' deployment backend intermittently returns "Deployment
+      # failed, try again later" for a perfectly healthy artifact — it deploys
+      # fine on a plain re-run of the same artifact. The canonical-workflow setup
+      # above removed the config-level causes and cut the rate sharply, but a
+      # platform-side flake cannot be fully configured away, so retry a couple of
+      # times (with a cool-down) before failing the job. If all attempts fail the
+      # job still fails, so a genuine, persistent problem is not hidden.
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: deploy1
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - if: steps.deploy1.outcome == 'failure'
+        run: sleep 25
+      - name: Deploy to GitHub Pages (retry 1)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
+        run: sleep 25
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deploy3
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
         uses: actions/deploy-pages@v4
