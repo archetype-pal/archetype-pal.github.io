@@ -1,0 +1,37 @@
+---
+title: "From DigiPal to Archetype"
+description: "How Archetype inherits DigiPal's scholarly method for modelling scripts and manuscripts while rebuilding the framework as a deployment-agnostic, API-first, IIIF- and TEI-native platform."
+---
+
+Archetype is a modern rebuild of the **DigiPal** framework, and it is worth being precise about what that inheritance is — and is not. This page separates the intellectual method Archetype deliberately preserves from the engineering it deliberately replaces.
+
+## What DigiPal was
+
+DigiPal (Digital Resource and Database of Palaeography, Manuscripts and Diplomatic) began at King's College London and grew, over roughly fifteen years, into a general framework rather than a single database. Its lasting contribution was not any one corpus but a **method for describing handwriting formally**: a way to break a script into a hierarchy of allographs, letter-forms, components, and features, and to anchor each descriptive term to an actual region of a manuscript image. The [introduction to the framework](https://www.digipal.eu/blog/a-quick-introduction-to-the-digipal-framework/) frames it well — DigiPal set out to let palaeographers make and defend claims about script visually and at scale, rather than in prose alone.
+
+That model was extended beyond the letter. The project's work on [modelling codicology](https://www.digipal.eu/blog/modelling-codicology-i-sequence-in-gatherings-folios-and-pages/) tackled the structure of the book itself — the sequence of gatherings, folios, and pages — and a follow-up [partial draft implementation](https://www.digipal.eu/blog/modelling-codicology-ii-a-partial-draft-implementation/) showed how genuinely hard it is to represent physical structure faithfully in a data model. DigiPal was honest about its open problems, too: the [DH2015 paper on digital dating](https://www.digipal.eu/blog/the-problem-of-digital-dating-dh2015-paper/) confronted how uncertain, ranged, and contested dates resist tidy database fields. Several projects (ScandiPal, ExhiPal, and others) reused the framework, which both proved its generality and exposed the friction of adapting a codebase built in an earlier web era.
+
+## What Archetype preserves
+
+The rebuild treats DigiPal's **descriptive model as the durable core**. The vocabulary of allographs and components, the practice of grounding every term in an image annotation, and the scholarly workflows — annotating, describing hands, comparing letter-forms side by side, and building an argument from evidence — carry over largely intact. See the [Data model](/platform/data-model/) for how these entities are structured today.
+
+What is preserved is a way of working, not a screen layout. Where DigiPal's original assumptions no longer serve scholarship well, Archetype revises rather than reproduces them.
+
+## What is genuinely new
+
+The rebuild is an engineering reset, not a reskin. The relevant differences:
+
+| Concern | DigiPal | Archetype |
+|---|---|---|
+| Architecture | Server-rendered Django monolith | API-first: Django/DRF backend, React/Next.js frontend |
+| Imaging | Bundled image server | IIIF-native, with a standards-based presentation layer |
+| Text | Project-specific encoding | TEI-canonical, editable as XML |
+| Deployment | Effectively one hosted site per project | Deployment-agnostic — run it over your own corpus |
+
+The most consequential change is the last one. DigiPal deployments tended to be bespoke installations, each maintained by its own project. Archetype is built so that the platform and the corpus are separable: an institution can stand up its own instance over its own manuscripts without inheriting anyone else's data or hosting. Whatever corpus an instance holds is an example of what the platform can do, never the subject of the platform itself.
+
+Two further shifts follow from being API-first. Text is held as [TEI](/platform/annotation/), so transcriptions remain portable and standards-compliant rather than locked to the application. And images are served through IIIF, so viewers, annotation stores, and deep-zoom all speak a shared protocol instead of a private one.
+
+> **In short:** Archetype keeps DigiPal's answer to *how do we describe a hand rigorously* and replaces its answer to *how do we build and run the software*. The scholarship is inherited; the plumbing is new.
+
+For the current shape of the system, see [The Platform](/platform/); for what remains unfinished — the codicological and dating problems DigiPal named are not fully solved here either — see the [Roadmap](/roadmap/).

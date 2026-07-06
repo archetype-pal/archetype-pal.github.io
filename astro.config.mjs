@@ -76,8 +76,10 @@ export default defineConfig({
 				{
 					label: 'About',
 					items: [
-						{ label: 'Overview', slug: 'overview' },
-						{ label: 'Community', slug: 'community' },
+						{ label: 'About Archetype', slug: 'about' },
+						{ label: 'Palaeography on Archetype', slug: 'about/palaeography' },
+						{ label: 'From DigiPal to Archetype', slug: 'about/lineage' },
+						{ label: 'Community & governance', slug: 'about/community' },
 					],
 				},
 			],

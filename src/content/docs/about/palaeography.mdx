@@ -1,0 +1,30 @@
+---
+title: "Palaeography on Archetype"
+description: "A domain primer on how Archetype models historical handwriting — script, hand, allograph, component and feature — turning palaeographical description into searchable evidence."
+---
+
+Palaeography is the study of historical handwriting: how letters were formed, by whom, in what tradition, and how those forms changed across time and place. A palaeographer reads a manuscript not only for its text but for the *shapes* of its script — the ductus of a stroke, the treatment of an ascender, the way one scribe closes an **a** where another leaves it open. Traditionally these observations live in prose: catalogue entries, plate commentary, footnotes comparing one hand to another. That prose is authoritative but hard to query. You cannot ask a paragraph "show me every open-headed **a** written by hands trained in the same tradition."
+
+Archetype descends from the **DigiPal** framework, developed at King's College London to make such questions answerable. Its central move is to treat script not as a description but as a *structured model* — a hierarchy of nested concepts, each recorded as data, so that a letter-form becomes evidence that can be indexed, counted, and compared.
+
+## The model of script
+
+The framework decomposes handwriting into a small set of related concepts. Working from the abstract down to the concrete:
+
+- **Character** — the abstract letter or sign a reader recognises, independent of how it is drawn (the idea of "the letter a", or a numeral, punctuation mark, or accent). Characters carry a type, such as *Majuscule Letter*, *Minuscule Letter*, *Numeral*, *Punctuation*, *Symbol*, or *Accent*.
+- **Allograph** — a specific *way of writing* a character: a recognised variant form. A single character may have several allographs (for example, distinct realisations of Caroline versus Insular **a**). The allograph is where palaeographical variation becomes namable.
+- **Component** — a meaningful part of a letter-form: an ascender, a bowl, a limb, a headstroke. Allographs are defined by the components they contain.
+- **Feature** — a property a component can exhibit: closed, split, wedged, looped, approaching. Features attach to components, and an allograph records which features are *expected by default* for each of its components.
+- **Position** — where a form sits or how it is placed, recorded per allograph.
+
+These pieces form a controlled vocabulary — a taxonomy edited once and reused everywhere — rather than free text. Describing a hand then becomes a matter of selecting from shared terms, which is what makes description comparable across scribes, manuscripts, and projects.
+
+## From the page: hands and glyphs
+
+Two further concepts anchor the abstract model to real evidence. A **Scribe** is a person (with a period and, where known, a scriptorium); a **Hand** is that scribe's writing as it appears in a particular manuscript part, optionally classified by **Script** (the broader writing system or style, such as a variety of Caroline minuscule). One scribe may be responsible for several hands; a manuscript may carry several hands.
+
+The point of contact between the model and the image is the **Graph** — an annotated instance of a letter-form at a specific location on a manuscript image. A graph records *where* it sits on the page and links it to the allograph it realises and the hand that wrote it. Crucially, it can also carry its own components, with the features actually observed *in that instance* — which may confirm or depart from the allograph's defaults. A graph is therefore a single, dated, positioned datum: this letter, here, of this form, by this hand, with these features.
+
+Because every graph resolves to shared vocabulary terms, the whole corpus becomes searchable evidence. A query can gather all instances of an allograph, filter by a feature, group by hand or scribe, and return image regions rather than citations — script as data, not prose. This same annotation layer also carries editorial and text-region annotations, linking the palaeographical evidence to the transcribed text.
+
+For how these concepts are stored and related, see the [Data model](/platform/data-model/); for how graphs connect to transcription and encoding, see [Annotation & TEI](/platform/annotation/). Both sit within [The Platform](/platform/), and planned work is tracked on the [Roadmap](/roadmap/).
