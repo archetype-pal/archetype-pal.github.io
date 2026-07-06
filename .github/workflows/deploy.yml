@@ -10,9 +10,13 @@ permissions:
   pages: write
   id-token: write
 
+# Allow one concurrent deployment; do NOT cancel an in-progress one — cancelling a
+# Pages deployment mid-lifecycle corrupts the environment's single-active-deployment
+# state and makes the next deploy fail with "Deployment failed, try again later".
+# (This mirrors GitHub's official Pages workflow.)
 concurrency:
   group: 'pages'
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -21,10 +25,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      # Establishes the Pages deployment context and reconciles the site's
+      # configuration for this run. Omitting this left the deploy relying on
+      # stale repo-level Pages state (a vestigial branch source), which is what
+      # caused the intermittent "Deployment failed, try again later" failures.
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 26
+          node-version: '24'
           cache: npm
 
       - name: Install dependencies
@@ -48,4 +59,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
