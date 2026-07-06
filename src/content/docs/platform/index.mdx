@@ -1,0 +1,27 @@
+---
+title: The Platform
+description: What Archetype can do — the capabilities of the open palaeography platform, subsystem by subsystem.
+---
+
+Archetype is an open platform for studying manuscripts as evidence: searching a collection, examining images down to the stroke, annotating the hand, linking transcriptions to the page, and publishing the results in open formats. This section describes what the **codebase** can do, subsystem by subsystem — true for any deployment, over any corpus.
+
+## Capabilities at a glance
+
+| Capability | What it gives scholars | Built on |
+| --- | --- | --- |
+| [Search & Browse](/platform/search/) | Faceted search across a whole collection by script, scribe, date or repository | Meilisearch, a registry-driven index model |
+| [Imaging & IIIF](/platform/imaging/) | Deep-zoom examination of high-resolution manuscript images | IIIF Image & Presentation, a SIPI image server |
+| [Annotation & TEI](/platform/annotation/) | Marking up glyphs and scribal features, and linking transcription to image | An annotation graph and a TEI-canonical text model |
+| [Editorial Workflow](/platform/workflow/) | Moving transcriptions from draft to reviewed to published, with provenance | Status transitions and a dated audit trail |
+| [Lightbox & Collections](/platform/lightbox/) | Comparing hands side by side and building teaching worksets | Persistent, shareable client-side workspaces |
+| [Data Model](/platform/data-model/) | The structured vocabulary of manuscripts, hands, glyphs and texts | The domain model shared by every subsystem |
+| [Interoperability & Standards](/platform/interoperability/) | Exporting and importing work in open, citable formats | W3C Web Annotations, IIIF, TEI |
+| [Architecture](/platform/architecture/) | How the pieces fit together | A layered, containerised open stack |
+
+## Built on open standards
+
+Archetype is deliberately standards-first, so the scholarship it produces is not locked inside one tool. Images are served and described with **IIIF**; texts are encoded in **TEI**; annotations can be exported as **W3C Web Annotations** in JSON-LD. Anything you create can be cited, re-used, and read by other systems. See [Interoperability & Standards](/platform/interoperability/).
+
+## Deployment-agnostic by design
+
+Nothing in this section assumes a particular dataset or a particular server. Archetype is software you run over *your own* manuscripts: the same capabilities apply whether an instance holds a single charter or a national collection. For how to stand one up, see the developer guides; for how it is assembled, see [Architecture](/platform/architecture/).

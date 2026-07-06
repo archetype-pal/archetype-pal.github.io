@@ -1,0 +1,33 @@
+---
+title: "Interoperability & Standards"
+description: "How an Archetype instance exports and imports scholarly data through open standards — W3C Web Annotations, IIIF, and TEI — so a corpus is portable, citable, and never locked in."
+---
+
+A digital manuscript project is only as durable as the formats it commits to. An Archetype instance is built so that the scholarly work it holds — image regions, transcriptions, palaeographic classifications, and the links between them — can leave the platform in the standard vocabularies that libraries, viewers, and other research tools already understand. Nothing is trapped in a proprietary schema. The same data that powers [search and browse](/platform/search/) inside the platform is served, on demand, as W3C Web Annotations, IIIF resources, and TEI documents.
+
+Interoperability here is a *derived view* over the canonical [data model](/platform/data-model/), not a second copy. An image region is a `Graph`; a text-to-region link is a reference embedded in the transcription markup. The standards endpoints translate those canonical objects into open formats at read time, so an export is always faithful to the live corpus rather than a stale dump.
+
+## W3C Web Annotations (JSON-LD)
+
+The [annotation model](/platform/annotations/) — glyphs boxed on a page image, classified against an allograph taxonomy, and linked to points in a transcription — is exposed as [W3C Web Annotations](https://www.w3.org/TR/annotation-model/), the standard the whole annotation ecosystem shares.
+
+- A single region is served as an `Annotation` whose target carries both a `FragmentSelector` (a `xywh=` bounding box) and an `SvgSelector` (the exact polygon), with a motivation chosen by annotation type — `describing` for a palaeographic glyph, `identifying` for a text anchor, `commenting` for an editorial note. Classifications appear as a `SpecificResource` body pointing back to the allograph.
+- A whole transcription is served as an `AnnotationPage`, one annotation per linked element, combining a `TextQuoteSelector` (the exact phrase in the text) with the image region it corresponds to.
+
+These endpoints are public and read-only, so external scholarly tools can consume a corpus's annotations directly over HTTP. One deliberate detail worth noting for reuse: stored geometry uses a legacy bottom-left origin, and the converters flip it into the top-left origin that IIIF and Media Fragments expect, so selectors land in the right place in any standard viewer.
+
+## IIIF: manifests and search-within
+
+Every manuscript part can be requested as a [IIIF Presentation 3.0](https://iiif.io/api/presentation/3.0/) Manifest — one `Canvas` per image, a `painting` annotation referencing the IIIF image service, and, where a transcription exists, a supplementary `AnnotationPage` whose text is anchored to the correct image regions. This is what lets a page from your corpus open in Mirador, Universal Viewer, or any IIIF-compliant client, side by side with material from other institutions.
+
+Each manifest also advertises a [IIIF Content Search 2.0](https://iiif.io/api/search/2.0/) service, so a viewer can search *within* a manuscript and have matching passages boxed on the page image.
+
+> Search-within resolves to transcription phrases an editor has manually linked to a region. Prose that carries no region link has no coordinates to return — arbitrary word-level search would require word coordinates the platform does not yet store. This is a documented boundary of the feature, not a defect.
+
+## TEI import and export
+
+Transcriptions are convertible to and from [TEI P5](https://tei-c.org/), the scholarly standard for encoded text. Any transcription can be downloaded as a standalone, titled TEI document. Internally, the platform can migrate its stored markup to canonical TEI storage through a round-trip-verified process: a row is only converted if it converts back to its original form byte-for-canonical-byte, and rows that fail are left untouched and reported rather than silently mangled. A well-formedness validation endpoint is also exposed for editing tools.
+
+## HTR import (PAGE-XML / ALTO)
+
+Output from handwritten-text-recognition engines can be imported directly. The platform parses both [PAGE-XML](https://github.com/PRImA-Research-Lab/PAGE-XML) and [ALTO](https://www.loc.gov/standards/alto/) — the two formats HTR tools such as Transkribus and eScriptorium emit — into a draft transcription. Each recognised line becomes a TEI `<seg type="line">`, and where the engine supplies a line polygon, the platform materialises a region and wires the `corresp` link automatically, so an HTR pass arrives already connected to the page image. See [annotations](/platform/annotations/) for how those regions then behave in the editor.

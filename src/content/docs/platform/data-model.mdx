@@ -1,0 +1,50 @@
+---
+title: "Data Model"
+description: "How Archetype models the palaeographer's world — manuscripts and their parts, hands and scribes, a glyph-and-allograph taxonomy, annotation graphs, and TEI-encoded texts."
+---
+
+Archetype's data model is built around the distinctions a manuscript scholar actually makes: between a text as an intellectual work and the physical book that now carries it; between a scribe and the individual stint of writing they produced; between an abstract letter-form and a single inked instance of it on the page. Getting these separations right is what lets a corpus support rigorous palaeographical argument rather than just a gallery of images. This page describes the domain entities and how they connect. For how you interrogate them, see [Search & Browse](/platform/search/); for the open standards they export to, see [Interoperability](/platform/interoperability/).
+
+## Manuscripts, items, and images
+
+The manuscript layer deliberately splits one physical book into several records:
+
+- A **Historical Item** is the intellectual object — a charter, a codex — with its type, language, support (hair type), and a scholarly **date**. Dates are shared lookup rows carrying numeric weight bounds, so uncertain datings like "1150×1200" still sort correctly, and can hold multiple competing **date assessments** with dating notes.
+- A **Current Item** is where a witness physically lives now: a **Repository** plus a shelfmark. The same intellectual text can survive in several current items, and a book can be broken across repositories.
+- An **Item Part** bridges the two. It is the working unit palaeographers annotate — a coherent portion of a historical item, located at a locus within its current item. This lets composite manuscripts and dismembered charters be modelled honestly.
+
+Each item part holds **Item Images**, which reference the page image through an IIIF identifier rather than storing pixels. Scholarly apparatus — catalogue numbers keyed to bibliographic sources, and full descriptions transcribed from those catalogues — attaches at the historical-item level.
+
+## Scribes, hands, and scripts
+
+A **Scribe** is a person (with an optional active period and scriptorium). A **Hand** is far more specific: it is one scribe's writing *in one item part*, in a given **Script**, with its own date, place, and description. A hand can be linked to the exact item images where it appears. This scribe/hand separation is essential — it is what allows the claim "the same scribe worked in two manuscripts" to be stated as a relationship between distinct, individually datable hands rather than an assertion buried in prose.
+
+## The glyph taxonomy
+
+The symbol structure is a reusable, corpus-wide vocabulary describing letter-forms independently of any manuscript:
+
+| Entity | Meaning |
+| --- | --- |
+| **Character** | An abstract grapheme (e.g. the letter *a*). |
+| **Allograph** | A specific realisation of a character — a distinct letter-form. |
+| **Component** | A constituent stroke or part of an allograph. |
+| **Feature** | A describable property a component can carry. |
+| **Position** | Where a component sits within the form. |
+
+Components and features are joined to allographs through explicit link tables (with sensible defaults), so the descriptive grammar of the script is defined once and applied consistently everywhere.
+
+## Annotation graphs
+
+The **Graph** is where image, taxonomy, and text meet. Each graph annotates a region of an item image, storing the region geometry as JSON. Graphs are typed:
+
+- **Image** graphs are the palaeographical core — a single inked glyph instance, required to carry both an **allograph** and a **hand**, and optionally annotated with components, features, and positions drawn from the taxonomy. Those descriptive links are *protected*: the taxonomy cannot be deleted out from under the research data that cites it.
+- **Text** graphs are regions referenced from a transcription, linking a word or clause in the text to its place on the page.
+- **Editorial** graphs support review and commentary.
+
+Authorship of an annotation is recorded through an append-only **edit-event** audit log rather than an owner field on the graph itself, so provenance is tracked as history — who changed what, when.
+
+## TEI-encoded texts
+
+Every item image can carry an **Image Text** — a transcription or translation — moving through an editorial status workflow (Draft → Review → Live/Reviewed) with a full transition log. Text content is held as [TEI](https://tei-c.org/) markup: inline spans for clauses, personal and place names, editorial expansions and supplied text, and line breaks. The link between a word in the text and its region on the image round-trips as a TEI `@corresp` reference to the annotation. Any text can be exported as a standalone, valid TEI P5 document openable in standard TEI tooling — see [Interoperability](/platform/interoperability/) for the full export surface.
+
+> This model reflects the DigiPal lineage the platform rebuilds. The separations it enforces — item vs. part, scribe vs. hand, character vs. allograph vs. glyph instance — are the ones that make a corpus queryable and its palaeographical claims defensible.

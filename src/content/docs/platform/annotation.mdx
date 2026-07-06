@@ -1,0 +1,32 @@
+---
+title: "Annotation & TEI"
+description: "How Archetype records glyph and allograph annotations on manuscript images and links them bidirectionally to a TEI-canonical transcription."
+---
+
+Archetype treats a manuscript image and its text as two views of the same evidence. Scholars can mark individual letter-forms on the image, describe them against a controlled palaeographic vocabulary, and tie any region of the image to the exact word or phrase it represents in a TEI transcription. The result is a corpus where a claim about a scribe's hand, a specific allograph, or a disputed reading is anchored to a pixel region *and* to a point in the edited text — not asserted in prose alone.
+
+This page describes what the platform can record and how the underlying model works. It is true of any Archetype instance regardless of the dataset it hosts.
+
+## Annotating letter-forms on the image
+
+The core annotation unit is a **Graph**: one instance of a written form at a location on an image. A Graph carries a geometry (stored as a GeoJSON-style polygon) and, for image annotations, links to a **scribal hand** and an **allograph** drawn from the instance's palaeographic taxonomy. The taxonomy itself lives separately in `symbols_structure`: a `Character` (an abstract letter) has one or more `Allograph`s (distinct realisations of that letter), which are described by reusable `Component`s and `Feature`s, and situated by `Position`s. Because these are shared lookup definitions, the relationship from a Graph to its allograph and hand is protected — deleting a taxonomy entry can never silently cascade away the research annotations that cite it.
+
+Graphs come in three types, enforced by a database constraint: `image` (a glyph instance, which must have an allograph and a hand), `text` (a region linked to the transcription — see below), and `editorial` (a curatorial region visible only to signed-in editors). Non-editorial annotations are public; editorial ones are gated in the API so anonymous readers never receive them.
+
+On the frontend, images are delivered over **IIIF** and rendered with OpenSeadragon; annotation is handled by Annotorious. Each region round-trips as a **W3C Web Annotation** with a media-fragment (`xywh=pixel:…`) selector, so the drawn shape is expressed in an open, interoperable vocabulary rather than a private format. The annotation gallery lets scholars browse, filter, and export the glyphs of a corpus by allograph, component, feature, position, or hand — the foundation of the comparative palaeography the platform exists to support (see [Search & Browse](/platform/search/)).
+
+## A TEI-canonical transcription
+
+Each image can carry transcriptions and translations, stored as `ImageText` rows with an editorial status workflow (Draft → Review → Live → Reviewed). The stored `content` is a **TEI P5** body fragment: phrase-level elements such as `seg`, `persName`, `placeName`, `ex`, and `supplied` mark up the reading directly. A minimal, valid standalone `.tei` document can be generated on demand — wrapped with a `teiHeader` so it opens in standard TEI tooling (OxGarage, Roma, TEI Publisher). Content is checked for XML well-formedness; full ODD/RNG schema validation is a planned addition rather than a current guarantee.
+
+Making TEI the canonical form is a deliberate commitment to a durable, portable standard. See [Interoperability](/platform/interoperability/) for the export surface.
+
+## Bidirectional text ↔ image linking
+
+The link between a marked-up text element and an image region needs no separate table: it lives *in the TEI itself*, as a `corresp="#gid-N"` attribute on the element pointing at a `text`-typed Graph. Pure helper functions add, remove, parse, and renumber these references over the stored markup, so a region and its reading stay connected through re-imports and id remapping.
+
+In the viewer this becomes a two-way workflow. An editor can arm a phrase and then draw its region, or draw a region first and then click the phrase it belongs to; hovering a region highlights its linked phrase, and vice versa. A single region can be linked to more than one element — for example, the same clause in both a transcription and its translation — by attaching a second reference to the same Graph. Because the link is an attribute on standard TEI, the connection survives export intact.
+
+> Legacy content migrated from the earlier DigiPal-style markup uses `data-graph-id` spans instead of `corresp`; the link helpers read and write both forms, and the original HTML is retained during migration so the cutover to TEI is reversible.
+
+For how these annotations feed discovery and comparison across a corpus, see [Search & Browse](/platform/search/) and the [Data model](/platform/data-model/).

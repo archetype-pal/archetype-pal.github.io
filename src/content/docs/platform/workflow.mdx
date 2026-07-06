@@ -1,0 +1,29 @@
+---
+title: "Editorial Workflow"
+description: "How Archetype moves manuscript texts from draft to review to published behind an attributed, dated audit trail."
+---
+
+Scholarly editions are built, not published in one stroke. A transcription or translation begins as a working draft, is checked by a second pair of eyes, and only then becomes something a reader should cite. Archetype models that discipline directly: every text attached to a manuscript image carries an explicit editorial status, moves between states through recorded transitions, and never loses the record of who changed what and when. For a research project, a library, or a museum, this is the difference between a database of assertions and a defensible scholarly edition — the provenance of each reading is part of the data, not a matter of institutional memory.
+
+## The lifecycle of a text
+
+Each transcription or translation (an `ImageText`, bound to one manuscript image) holds a status drawn from four states: **Draft**, **Review**, **Live**, and **Reviewed**. The two publication states carry a deliberate distinction — *Live* marks a text released for public reading, while *Reviewed* records that it has additionally passed a formal editorial check. Both are publicly visible; **Draft and Review are not**. Public and anonymous API callers only ever receive Live and Reviewed texts, so unfinished work stays private to the editorial team while remaining fully editable. Staff see every state.
+
+A text advances through an explicit transition endpoint rather than a bare status field, so no state change is silent. When an editor sends a draft for checking, they may nominate a reviewer; that assignment is cleared automatically once the text leaves the Review state, so the queue never misrepresents who is expected to look at a given entry. Assignment is advisory — it makes the queue honest about intent, but any staff reviewer may act on any text.
+
+> Archetype records transitions rather than enforcing a fixed graph of permitted moves. The platform tracks the full history of state changes; it does not currently forbid, for example, a jump straight from Draft to Live. Editorial policy about *which* moves are legitimate is left to the team, not hard-coded.
+
+## The review queue
+
+Texts in the Review state surface in a dedicated queue, ordered oldest-pending-first so the long tail never gets lost. Each entry arrives with the context a reviewer needs in a single view: the last transition (who submitted it, when, and any accompanying note) and the nominated assignee. From there a reviewer can **approve** a text — promoting it to Live — or **send it back** to Draft, where a note explaining what needs changing is required. Both actions run through the same audited transition path, so an approval and a rejection leave equally complete records. For corpus-scale cleanup, the same transition, plus language tagging and deletion, can be applied to many texts at once as an all-or-nothing batch that still writes one transition record per text.
+
+## An attributed, dated audit trail
+
+Two complementary logs sit underneath the workflow, and both are append-only.
+
+- A **status-transition log** records every editorial move on a text — `from_status`, `to_status`, the acting user, a free-text note, and a timestamp. This is what powers the "who sent this for review, when, and why" view in the queue and the per-text history timeline.
+- A general **edit-event log**, decoupled from any single table, records creations, updates, deletions, status changes, and comments across audited models (transcriptions and image annotations alike). It answers project-management questions such as "what changed since last week" independently of any one workflow.
+
+Attribution survives the loss of a contributor's account: actor references are nulled rather than cascade-deleted, so an event's *what* and *when* remain even if the *who* is later removed. The acting user is captured at the point of the write, so attribution reflects who actually performed the change rather than who owns the record.
+
+Because published texts can be exported as standalone TEI P5 documents (see [Interoperability](/platform/interoperability/)), the editorial state that gates public visibility also governs what leaves the platform as citable scholarship. For how these texts relate to images and regions, see the [Data model](/platform/data-model/); for how published work becomes findable, see [Search & Browse](/platform/search/).

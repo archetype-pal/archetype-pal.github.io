@@ -1,0 +1,37 @@
+---
+title: "Search & Browse"
+description: "How Archetype lets scholars search a manuscript collection by script, scribe, date, place and text — and the registry-driven Meilisearch design underneath."
+---
+
+A manuscript collection is only as useful as the questions you can ask of it. Archetype turns a corpus into something interrogable: a scholar can move from "show me every charter in this repository" to "show me every instance of this letter-form, written in this position, dated before 1200" without writing a query or leaving the browser. Search is the entry point to the whole platform — every result links back to the image, the hand, the transcription and the annotation that produced it.
+
+## What you can search
+
+An Archetype instance does not offer one flat search box over "documents." It exposes several distinct, purpose-built collections, each with its own fields, filters and facets. In the current codebase these are:
+
+| Collection | What a scholar searches for |
+| --- | --- |
+| Manuscripts (item parts) | Physical volumes and booklets by repository, shelfmark, date, format |
+| Images | Individual folios/pages, including which scripts and features they carry |
+| Scribes / Hands | Identified scribes and the hands attributed to manuscripts |
+| Graphs | Annotated glyphs — searchable by allograph, character, component, feature and position |
+| Texts / Clauses | Transcribed text and its diplomatic sub-units |
+| People / Places | Named entities extracted from the transcriptions |
+
+The Graphs collection is what distinguishes palaeographic search from ordinary catalogue search: because every annotated letter records its allograph, its constituent components, their features, and where the glyph sits, you can retrieve script *evidence* directly — every surviving example of a form — rather than the documents that happen to mention it. See [Annotation & TEI](/platform/annotation/) for how that evidence is created and the [Data model](/platform/data-model/) for the vocabulary behind these fields.
+
+## Filtering, faceting and browsing
+
+Every collection is browsable through faceted filters computed live from the current result set, so each choice narrows the others and counts always reflect what is actually there. Facets cover repository and city, manuscript type and format, script components and features, named people and places, and editorial status. Palaeographic facets (component → feature) are presented as a collapsible tree, so a broad category can be opened to its specific forms.
+
+Dates are first-class. Results carry a normalised numeric range (`date_min`/`date_max`), which powers a decade **timeline view** — click a bar to filter to that decade — and range filters with precision options (spans "at most" or "at least" a given number of years). A **geographic distribution view** plots results by repository city, and results can be shown as a table or an image grid. Filter state lives in the URL, so any search is a shareable, citable link, and searches can be saved for reuse.
+
+## Full-text and advanced query
+
+Free-text search runs across the fields that matter for each collection (transcribed content, labels, shelfmarks, names). Matching can require all terms or tolerate the last one, and an exact-phrase mode is available. For transcribed text, keyword-in-context snippets are returned — the matched passage cropped and highlighted around the hit. An **advanced query builder** composes nested AND/OR groups of conditions (`is`, `is not`, greater/less than, between, contains, starts-with, is-empty) over a collection's filterable fields, and a global suggestion endpoint offers grouped type-ahead across every collection at once.
+
+## How it works
+
+Search is backed by [Meilisearch](https://www.meilisearch.com/) and is **registry-driven**: a single declarative registry (`api/apps/search/registry.py`) is the source of truth for every collection — its model, document builder, and its filterable, sortable, facetable and searchable attribute lists. Adding or changing an index is a one-entry edit; nothing about an index lives anywhere else. Indexes are built and kept current by background workers, with superuser-only management actions to reindex, clear or rebuild, plus in-sync statistics (see `api/docs/search-operations.md`).
+
+Any result set can be exported for downstream research — CSV, JSON, or **BibTeX** for manuscripts, scribes and hands — either the current page or the full set. For the standards that make exported work portable, see [Interoperability & Standards](/platform/interoperability/).

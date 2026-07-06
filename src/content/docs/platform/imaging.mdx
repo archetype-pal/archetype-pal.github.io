@@ -1,0 +1,28 @@
+---
+title: "Imaging & IIIF"
+description: "How Archetype delivers deep-zoom manuscript images, portable IIIF Presentation 3.0 manifests, and region-anchored search using open IIIF and W3C Web Annotation standards."
+---
+
+Manuscript scholarship depends on the image. Archetype treats the page image as a first-class, standards-based research object: every manuscript surface is delivered as a deep-zoomable IIIF image, described by a portable IIIF manifest, and — where an editor has linked transcription to the page — searchable region by region. Because the platform speaks the International Image Interoperability Framework (IIIF), the images and their descriptions are not locked inside one website. Any conformant viewer, and any other IIIF-aware repository, can consume them.
+
+## Deep-zoom images (IIIF Image API 3.0)
+
+Page images are served by an embedded IIIF image server (SIPI), which exposes each scan through the IIIF Image API 3.0. A reader can pan and zoom to the level of individual pen strokes without the platform ever shipping a full-resolution file: the viewer requests only the tiles and resolutions it currently needs. In the frontend, OpenSeadragon reads each image's `info.json` and renders a tiled pyramid; where a server advertises no explicit tiles, the client synthesises a legacy resolution pyramid from the declared `sizes` so zoom still works.
+
+This design has practical consequences for institutions. Bandwidth scales with what a reader actually looks at, arbitrary crops and sizes are generated on demand (`region/size/rotation/quality`), and derivative images for thumbnails, comparison strips, or figures in a publication are all just IIIF URLs. The image server runs behind a reverse proxy restricted to read-only image delivery; its control and upload routes are never exposed publicly.
+
+## Portable descriptions (IIIF Presentation 3.0)
+
+Each manuscript part is described by a **IIIF Presentation 3.0 Manifest**, generated on demand at `/api/v1/iiif/item-parts/{id}/manifest`. The manifest lays out one `Canvas` per image, in folio order, each carrying a painting annotation that points at the deep-zoom image service. Drop that manifest URL into Mirador, the Universal Viewer, or a colleague's own IIIF workspace and the manuscript opens — no account, no export, no bespoke integration.
+
+Where an image carries an editorial transcription or translation, the manifest also attaches a **transcription `AnnotationPage`**. These follow the W3C Web Annotation model: each annotation uses the `supplementing` motivation, carries the transcribed phrase as a `TextualBody`, and targets a specific rectangle of the page via a `#xywh=` media fragment. The regions come from transcription text that an editor has explicitly linked to an image region (a TEXT-typed annotation), resolved through the TEI references in the transcription. Canvas dimensions are read from each image's `info.json` (cached, resolved concurrently, with a safe fallback), and legacy bottom-left coordinates are flipped into IIIF's top-left origin so every box lands where it should. See [Annotation & transcription](/platform/annotation/) for how those regions are authored, and the [Data model](/platform/data-model/) for how images, texts, and graphs relate.
+
+## Search within the page (IIIF Content Search 2.0)
+
+The manifest advertises a **SearchService2** endpoint, so a IIIF viewer's "search this manuscript" box works out of the box. A query returns an `AnnotationPage` of highlighting annotations, each boxing the region on the page whose linked transcription phrase matches — the reader sees the hit drawn directly on the parchment.
+
+This is deliberately scoped, and worth stating plainly: matches are limited to transcription phrases an editor has manually linked to an image region. There are no per-word coordinates for unlinked prose, because the platform does not currently store HTR/ALTO word-level geometry, so an arbitrary word outside a linked phrase has no region to return. Full-text discovery across the corpus is handled separately by the search index — see [Search & browse](/platform/search/).
+
+> All IIIF endpoints are public and read-only, and honour the same visibility rules as the rest of the platform: an anonymous request sees only published transcription content. This makes a manuscript's manifest safe to share and cite while editorial work in progress stays private.
+
+Because these are open standards end to end — IIIF for images and structure, W3C Web Annotations for the region-anchored text — an Archetype instance is a good citizen of the wider manuscript ecosystem rather than a silo. See [Interoperability](/platform/interoperability/) for the full picture.

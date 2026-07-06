@@ -28,11 +28,27 @@ export default defineConfig({
 			customCss: ['./src/styles/theme.css'],
 			sidebar: [
 				{
-					label: 'About Archetype',
+					label: 'Platform',
+					items: [
+						{ label: 'Overview', slug: 'platform' },
+						{ label: 'Architecture', slug: 'platform/architecture' },
+						{ label: 'Search & Browse', slug: 'platform/search' },
+						{ label: 'Imaging & IIIF', slug: 'platform/imaging' },
+						{ label: 'Annotation & TEI', slug: 'platform/annotation' },
+						{ label: 'Editorial Workflow', slug: 'platform/workflow' },
+						{ label: 'Lightbox & Collections', slug: 'platform/lightbox' },
+						{ label: 'Data Model', slug: 'platform/data-model' },
+						{ label: 'Interoperability', slug: 'platform/interoperability' },
+					],
+				},
+				{
+					label: 'Project',
+					items: [{ label: 'Roadmap', slug: 'roadmap' }],
+				},
+				{
+					label: 'About',
 					items: [
 						{ label: 'Overview', slug: 'overview' },
-						{ label: 'Architecture', slug: 'architecture' },
-						{ label: 'Roadmap', slug: 'roadmap' },
 						{ label: 'Community', slug: 'community' },
 					],
 				},

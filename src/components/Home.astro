@@ -11,8 +11,8 @@
         <h1>Read the hands<br />of the past.</h1>
         <p class="lead">Archetype lets scholars search, view, annotate, and teach with manuscript images and the texts they carry &mdash; built for researchers, libraries, and museums.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/overview/">Explore the platform <span class="arw">&rarr;</span></a>
-          <a class="btn ghost" href="/architecture/">For developers <span class="arw">&rarr;</span></a>
+          <a class="btn primary" href="/platform/">Explore the platform <span class="arw">&rarr;</span></a>
+          <a class="btn ghost" href="/platform/architecture/">For developers <span class="arw">&rarr;</span></a>
         </div>
       </div>
       <aside class="creds" aria-label="Why Archetype is built to last">
@@ -34,15 +34,15 @@
       <p class="sub">Everything here is live in the platform now &mdash; the tools scholars use to work closely with the written record.</p>
     </div>
     <div class="feat-grid">
-      <article class="feat"><h3>Search the corpus</h3><p>Find manuscripts by script, scribe, date or repository with fast, faceted search across an entire collection.</p></article>
-      <article class="feat"><h3>Examine every stroke</h3><p>Standards-based IIIF deep-zoom renders high-resolution images down to the finest detail of the pen.</p></article>
-      <article class="feat"><h3>Annotate the hand</h3><p>Mark up glyphs, allographs and scribal features directly on the image, and browse them in a gallery.</p></article>
-      <article class="feat"><h3>Describe hands &amp; scribes</h3><p>Catalogue scribal hands, allographs and their components as structured, searchable data.</p></article>
-      <article class="feat"><h3>Tie text to image</h3><p>Link transcriptions to the exact region they describe, on a TEI-canonical model of the text.</p></article>
-      <article class="feat"><h3>Compare hands side by side</h3><p>Assemble worksets and set scribal hands next to one another in a digital lightbox, with notes and shareable views.</p></article>
-      <article class="feat"><h3>Edit with an audit trail</h3><p>Move transcriptions from draft to reviewed to published &mdash; every change attributed and dated.</p></article>
-      <article class="feat"><h3>Publish to standards</h3><p>Export images and annotations as IIIF manifests, TEI, and W3C Web Annotations for reuse anywhere.</p></article>
-      <article class="feat"><h3>Teach and share</h3><p>Build curated worksets for the seminar room and share them without exposing your working files.</p></article>
+      <a class="feat" href="/platform/search/"><h3>Search the corpus</h3><p>Find manuscripts by script, scribe, date or repository with fast, faceted search across an entire collection.</p></a>
+      <a class="feat" href="/platform/imaging/"><h3>Examine every stroke</h3><p>Standards-based IIIF deep-zoom renders high-resolution images down to the finest detail of the pen.</p></a>
+      <a class="feat" href="/platform/annotation/"><h3>Annotate the hand</h3><p>Mark up glyphs, allographs and scribal features directly on the image, and browse them in a gallery.</p></a>
+      <a class="feat" href="/platform/data-model/"><h3>Describe hands &amp; scribes</h3><p>Catalogue scribal hands, allographs and their components as structured, searchable data.</p></a>
+      <a class="feat" href="/platform/annotation/"><h3>Tie text to image</h3><p>Link transcriptions to the exact region they describe, on a TEI-canonical model of the text.</p></a>
+      <a class="feat" href="/platform/lightbox/"><h3>Compare hands side by side</h3><p>Assemble worksets and set scribal hands next to one another in a digital lightbox, with notes and shareable views.</p></a>
+      <a class="feat" href="/platform/workflow/"><h3>Edit with an audit trail</h3><p>Move transcriptions from draft to reviewed to published &mdash; every change attributed and dated.</p></a>
+      <a class="feat" href="/platform/interoperability/"><h3>Publish to standards</h3><p>Export images and annotations as IIIF manifests, TEI, and W3C Web Annotations for reuse anywhere.</p></a>
+      <a class="feat" href="/platform/lightbox/"><h3>Teach and share</h3><p>Build curated worksets for the seminar room and share them without exposing your working files.</p></a>
     </div>
   </section>
 
@@ -60,13 +60,13 @@
   <section class="block shell">
     <div class="sechead"><p class="eyebrow">Two ways in</p><h2>Where would you like to start?</h2></div>
     <div class="lanes">
-      <a class="lane" href="/overview/">
+      <a class="lane" href="/platform/">
         <p class="eyebrow">Researchers &amp; institutions</p>
         <h3>Explore the platform</h3>
         <p class="sub">See what Archetype offers for manuscript research and teaching, the scholarship behind it, and where the project is headed.</p>
         <span class="go">Discover more <span class="arw">&rarr;</span></span>
       </a>
-      <a class="lane" href="/architecture/">
+      <a class="lane" href="/platform/architecture/">
         <p class="eyebrow">Developers</p>
         <h3>Run your own instance</h3>
         <p class="sub">Quickstart with Docker, bring your own corpus, configure the services and build on the API &mdash; on your server, your data.</p>
@@ -183,7 +183,8 @@
   .home .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--f-border); border: 1px solid var(--f-border); border-radius: 12px; overflow: hidden; }
   .home .feat { background: var(--f-surface); padding: 1.5rem 1.55rem; transition: background 0.18s; }
   .home .feat:hover { background: var(--f-surface-2); }
-  .home .feat h3 { font-size: 1.3rem; margin: 0 0 0.55rem; }
+  .home .feat:hover h3 { color: var(--f-accent); }
+  .home .feat h3 { font-size: 1.3rem; margin: 0 0 0.55rem; transition: color 0.18s; }
   .home .feat h3::before { content: ""; display: block; width: 26px; height: 2px; background: var(--f-accent); margin-bottom: 0.85rem; opacity: 0.85; }
   .home .feat p { color: var(--f-muted); font-size: 0.92rem; margin: 0; line-height: 1.55; }
 
