@@ -43,7 +43,10 @@ export default defineConfig({
 				},
 				{
 					label: 'Project',
-					items: [{ label: 'Roadmap', slug: 'roadmap' }],
+					items: [
+						{ label: 'Roadmap', slug: 'roadmap' },
+						{ label: "What's shipped", slug: 'status' },
+					],
 				},
 				{
 					label: 'Deploy',

@@ -138,3 +138,18 @@ main:has(.home) > .content-panel { border-top: 0; }
   border-radius: 0 8px 8px 0;
   font-style: italic;
 }
+
+/* semantic status colours (distinct from the claret accent) — used by roadmap/status badges */
+:root,
+:root[data-theme='light'] {
+  --st-shipped: #2f7d4f;      --st-shipped-bg: rgba(47, 125, 79, 0.11);
+  --st-progress: #9a6a12;     --st-progress-bg: rgba(154, 106, 18, 0.12);
+  --st-planned: #6b6252;      --st-planned-bg: rgba(107, 98, 80, 0.11);
+  --st-exploratory: #6b45b8;  --st-exploratory-bg: rgba(107, 69, 184, 0.11);
+}
+:root[data-theme='dark'] {
+  --st-shipped: #6bc48d;      --st-shipped-bg: rgba(107, 196, 141, 0.15);
+  --st-progress: #d8a24a;     --st-progress-bg: rgba(216, 162, 74, 0.15);
+  --st-planned: #a09a8f;      --st-planned-bg: rgba(160, 154, 143, 0.14);
+  --st-exploratory: #b794f6;  --st-exploratory-bg: rgba(183, 148, 246, 0.16);
+}

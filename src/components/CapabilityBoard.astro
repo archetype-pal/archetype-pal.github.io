@@ -1,0 +1,112 @@
+---
+import { capabilities, maturityMeta, lastVerified, type Maturity } from '../data/roadmap';
+import Badge from './Badge.astro';
+
+interface Props {
+  /** Which maturities to show, in the order the groups should appear. */
+  filter: Maturity[];
+}
+const { filter } = Astro.props;
+
+const groups = filter
+  .map((m) => ({ m, items: capabilities.filter((c) => c.maturity === m) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<div class="board not-content">
+  {
+    groups.map((g) => (
+      <section class="grp">
+        <div class="grp-head">
+          <h2 class="grp-title">
+            {maturityMeta[g.m].label}
+            <span class="grp-count">{g.items.length}</span>
+          </h2>
+          <p class="grp-blurb">{maturityMeta[g.m].blurb}</p>
+        </div>
+        <div class="grid">
+          {g.items.map((c) => (
+            <article class={`card m-${c.maturity}`}>
+              <div class="card-top">
+                <h3 class="card-title">{c.area}</h3>
+                <Badge maturity={c.maturity} />
+              </div>
+              <p class="card-sum">{c.summary}</p>
+              {c.detail && (
+                <ul class="card-detail">
+                  {c.detail.map((d) => (
+                    <li>{d}</li>
+                  ))}
+                </ul>
+              )}
+              {c.platform && (
+                <a class="card-link" href={c.platform}>
+                  Learn more <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+  <p class="verified">Reviewed against the codebase · <span class="mono">{lastVerified}</span></p>
+</div>
+
+<style>
+  .board { margin-top: 1.5rem; }
+  .grp { margin-bottom: 2.6rem; }
+  .grp-head { border-bottom: 1px solid var(--f-border); padding-bottom: 0.7rem; margin-bottom: 1.2rem; }
+  .grp-title {
+    font-family: var(--sl-font-headings);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .grp-count {
+    font-family: var(--sl-font);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--f-dim);
+  }
+  .grp-blurb { margin: 0.35rem 0 0; color: var(--f-muted); font-size: 0.95rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .card {
+    position: relative;
+    background: var(--f-surface);
+    border: 1px solid var(--f-border);
+    border-radius: 12px;
+    padding: 1.25rem 1.35rem;
+    box-shadow: var(--f-shadow);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 1.25rem; bottom: 1.25rem;
+    width: 3px; border-radius: 3px;
+    background: var(--stripe, var(--f-border-strong));
+  }
+  .card.m-shipped { --stripe: var(--st-shipped); }
+  .card.m-in-progress { --stripe: var(--st-progress); }
+  .card.m-planned { --stripe: var(--st-planned); }
+  .card.m-exploratory { --stripe: var(--st-exploratory); }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.7rem; }
+  .card-title { font-family: var(--sl-font-headings); font-size: 1.18rem; font-weight: 600; margin: 0; }
+  .card-sum { color: var(--f-muted); font-size: 0.92rem; margin: 0.55rem 0 0; line-height: 1.5; }
+  .card-detail { margin: 0.7rem 0 0; padding-left: 1.1rem; color: var(--f-muted); font-size: 0.88rem; line-height: 1.5; }
+  .card-detail li { margin: 0.2rem 0; }
+  .card-link { display: inline-block; margin-top: 0.85rem; color: var(--f-accent); font-weight: 600; font-size: 0.82rem; text-decoration: none; }
+  .card-link:hover { color: var(--f-accent-hi); }
+
+  .verified { color: var(--f-dim); font-size: 0.82rem; margin-top: 0.5rem; }
+  .verified .mono { font-family: var(--mono); }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

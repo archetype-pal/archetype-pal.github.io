@@ -1,0 +1,28 @@
+---
+import { maturityMeta, type Maturity } from '../data/roadmap';
+interface Props {
+  maturity: Maturity;
+}
+const { maturity } = Astro.props;
+---
+
+<span class={`badge badge-${maturity}`}>{maturityMeta[maturity].label}</span>
+
+<style>
+  .badge {
+    font-family: var(--sl-font);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.24rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1.4;
+  }
+  .badge-shipped { color: var(--st-shipped); background: var(--st-shipped-bg); }
+  .badge-in-progress { color: var(--st-progress); background: var(--st-progress-bg); }
+  .badge-planned { color: var(--st-planned); background: var(--st-planned-bg); }
+  .badge-exploratory { color: var(--st-exploratory); background: var(--st-exploratory-bg); }
+</style>
