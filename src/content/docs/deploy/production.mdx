@@ -1,0 +1,109 @@
+---
+title: "Production deployment"
+description: "Deploy Archetype in production as a full-stack Docker Compose stack — nginx and TLS, Celery workers, the published GHCR images, backups, and upgrades."
+---
+
+Run Archetype in production as a single Docker Compose stack: nginx terminates TLS and reverse-proxies the Next.js frontend, the Django API, and the SIPI IIIF image server, backed by PostgreSQL, Meilisearch, Redis, and a Celery worker. Everything lives in the [`infrastructure/`](/contribute/) repository — the same `compose.yaml` and `just` recipes described below drive dev and prod; production differs only in the [`env_file`](/deploy/configuration/) values you supply.
+
+> This guide uses placeholder hosts like `archetype.example.org`. Substitute your own domain everywhere.
+
+## Topology
+
+`infrastructure/compose.yaml` defines these services:
+
+| Service | Image | Role | Host port |
+|---|---|---|---|
+| `nginx` | `nginx:1.30-alpine` | TLS termination + reverse proxy | `80`, `443` |
+| `frontend` | `ghcr.io/archetype-pal/frontend` | Next.js site | internal `:3000` |
+| `api` | `ghcr.io/archetype-pal/backend` | Django + DRF | internal `:8000` |
+| `celery` | `ghcr.io/archetype-pal/backend` | Async task worker | — |
+| `image_server` | `daschswiss/sipi:v5.0.1` | IIIF image delivery | internal `:1024` |
+| `postgres` | `postgres:18.4-bookworm` | Application database | internal `:5432` |
+| `meilisearch` | `getmeili/meilisearch` | Search | internal `:7700` |
+| `redis` | `redis:8-alpine` | Celery broker/result backend | internal `:6379` |
+| `pg_backup` | `postgres:18-alpine` | Nightly `pg_dump` sidecar | — |
+| `certbot` | `certbot/certbot` | Let's Encrypt issuance/renewal | — |
+
+Only nginx publishes host ports. Postgres, Meilisearch, Redis, and SIPI are reachable **only** over the internal Compose network — publishing them would expose unauthenticated read/write. nginx (`nginx.conf`) routes `/(admin|static|media|api|tinymce)` to the API, `/sipi` to the image server (read-only, control routes denied), and everything else to the frontend.
+
+## Configure the environment
+
+Copy `env_file.example` to `env_file` and set production values. Run all recipes from `infrastructure/`.
+
+```env
+DEBUG=False
+SECRET_KEY=<long-random-string>
+DOMAIN=archetype.example.org
+ALLOWED_HOSTS=archetype.example.org
+CORS_ALLOWED_ORIGINS=https://archetype.example.org
+CSRF_TRUSTED_ORIGINS=https://archetype.example.org
+NEXT_PUBLIC_API_URL=https://archetype.example.org
+IIIF_HOST=https://archetype.example.org/sipi
+
+POSTGRES_PASSWORD=<db-password>
+DATABASE_URL=postgresql://postgres:<db-password>@postgres:5432/local
+REDIS_PASSWORD=<redis-password>
+MEILI_ENV=production
+MEILI_MASTER_KEY=<>=16-byte-key>
+```
+
+Pin the published GHCR images to immutable tags (never mutable `:latest`, which makes `docker compose pull` silently change the running version):
+
+```env
+BACKEND_IMAGE=ghcr.io/archetype-pal/backend:vX.Y.Z
+FRONTEND_IMAGE=ghcr.io/archetype-pal/frontend:vX.Y.Z
+```
+
+See [Configuration](/deploy/configuration/) for the full variable reference.
+
+## Bring the stack up
+
+```bash
+just pull            # fetch the pinned GHCR images
+just up-background   # start the full stack detached
+just migrate         # apply Django migrations
+just reindex         # create Meilisearch schemas + load documents
+```
+
+`just ps` shows service health; `just logs` follows all logs. The Celery worker (`celery -A config worker`) starts automatically; verify it with `just celery_status`.
+
+## TLS with Let's Encrypt
+
+Point an `A` record for your domain at the host first. nginx serves the ACME challenge from `/.well-known/acme-challenge/`, so it must already be running. Then issue the certificate for the `DOMAIN` in `env_file`:
+
+```bash
+just certbot                     # certonly --webroot for $DOMAIN
+docker compose restart nginx     # load the new cert
+```
+
+`nginx.conf` already points at `certs/live/${DOMAIN}/fullchain.pem` and `privkey.pem`. Certificates expire after 90 days — re-run `just certbot` and restart nginx, or wire it into a host cron job.
+
+## Backups
+
+The `pg_backup` sidecar runs `pg_dump` every 24h, gzipped, into `./backups/` (host-mounted), with 14-day retention. For an on-demand dump:
+
+```bash
+just backup
+```
+
+The dump captures **rows only**. Uploaded media under `storage/media/` lives on disk — include it in your filesystem backup (rsync/restic/S3). Meilisearch is derived: rebuild it after any restore. Also rsync `./backups/` off-host for real disaster recovery. Full restore and single-table procedures are in `infrastructure/docs/backup-runbook.md`.
+
+## Upgrades and migrations
+
+Roll forward by bumping the pinned tags, then reconciling schema and search:
+
+```bash
+# edit BACKEND_IMAGE / FRONTEND_IMAGE in env_file to the new version
+just pull
+just up-background
+just migrate
+just reindex          # only if index schemas changed
+```
+
+Because tags are immutable, rollback is just reverting the tag and re-running `just up-background`. Upgrading an existing PostgreSQL 17 volume needs a one-time step — follow `infrastructure/docs/postgresql-18-upgrade.md` before starting the PG18 stack.
+
+## See also
+
+- [Configuration](/deploy/configuration/) — every environment variable
+- [Bring your own corpus](/deploy/corpus/) — loading and indexing your data
+- [The API](/api/) — endpoints served under `/api/v1/`

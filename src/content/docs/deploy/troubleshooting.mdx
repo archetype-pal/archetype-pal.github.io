@@ -1,0 +1,99 @@
+---
+title: "Troubleshooting"
+description: "Symptom-cause-fix recipes for the most common Archetype deployment and dev-environment failures."
+---
+
+Most problems with a fresh Archetype instance are environment setup, not application bugs: unapplied migrations, unbuilt search indexes, or a container that cannot reach the services it needs. This page maps each visible symptom to its cause and the exact fix. It assumes you already have the stack running — if not, start with the [Quickstart](/deploy/) and [Configuration](/deploy/configuration/).
+
+Backend commands use the `just` recipes from `api/`; the frontend runs with `pnpm` from `frontend/`.
+
+## Quick reference
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Home page / carousel / facets return HTTP 500 | Migrations not applied or search indexes not created | `just migrate`, then `just setup-search-indexes` |
+| Search returns nothing (200, empty results) | Indexes exist but hold 0 documents | `just sync-all-search-indexes` |
+| Broken images / "Image not found" | IIIF upstream unreachable, or `ALLOWED_HOSTS` / server-side API URL wrong in containers | Set `NEXT_PUBLIC_IIIF_UPSTREAM`, `INTERNAL_API_URL`, `ALLOWED_HOSTS` |
+| `DisallowedHost` (HTTP 400) in API logs | Request `Host` not in `ALLOWED_HOSTS` | Add the host to `ALLOWED_HOSTS` |
+| Cannot log in to the backoffice | Missing superuser or wrong `CSRF_TRUSTED_ORIGINS` | Create a superuser; align CSRF/CORS origins |
+
+## Home page or facets 500
+
+**Symptom.** The public home page renders but the browser console shows HTTP 500s on endpoints like `GET /api/v1/media/carousel-items/` (`relation ... does not exist`) or `GET /api/v1/search/item-parts/facets/` (Meilisearch `Index ... not found`).
+
+**Cause.** A fresh or under-provisioned backend: Django migrations have not run, and/or the Meilisearch indexes have not been created.
+
+**Fix.** From `api/`:
+
+```bash
+just migrate                  # apply Django migrations
+just setup-search-indexes     # create the Meilisearch indexes
+just sync-all-search-indexes  # populate them
+```
+
+Both endpoints return 200 afterward. A fresh database syncs **0 documents**, so the carousel and search stay empty until you load a corpus — that is expected, not a bug. See [Bring your own corpus](/deploy/corpus/).
+
+## Search returns no results
+
+**Symptom.** Search endpoints respond 200 but results are always empty, even though data exists in the database.
+
+**Cause.** The indexes were created but never populated, or the data changed after the last sync. Meilisearch holds a copy of the searchable data, so writes to Postgres are not reflected until you re-sync.
+
+**Fix.** Re-sync from `api/`:
+
+```bash
+just sync-all-search-indexes            # everything
+just sync-search-index item-parts       # a single index
+```
+
+The index registry (`api/apps/search/registry.py`) is the source of truth for which index types exist.
+
+## Broken images / "Image not found"
+
+**Symptom.** Manuscript image pages show broken tiles or an "Image not found." message. In dev this often appears with **zero** failed requests in the browser network tab, because the error is baked into the server-rendered HTML.
+
+**Cause.** Two independent networking failures, common when the frontend runs in a container where `localhost` means the container itself, not the host publishing the API and IIIF ports:
+
+1. **Server-side API fetch fails.** Next.js server components fetch through `INTERNAL_API_URL`. If that points at `localhost:8000` inside a container it gets `ECONNREFUSED`; if it reaches Django on a host name not in `ALLOWED_HOSTS` it gets a `DisallowedHost` 400 — either way the layout renders "Image not found."
+2. **Image tiles fail.** The browser loads tiles through the same-origin `/iiif-proxy/*` rewrite, which Next.js proxies to `NEXT_PUBLIC_IIIF_UPSTREAM`. If that upstream is unreachable from the server, tiles `ECONNREFUSED`.
+
+**Fix.** Point each URL at a host the process can actually reach. For a containerized frontend with a host-published backend:
+
+```env
+# reachable from the browser
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_IIIF_UPSTREAM=http://host.docker.internal:1024
+# reachable from the Next.js server process (falls back to NEXT_PUBLIC_API_URL)
+INTERNAL_API_URL=http://host.docker.internal:8000
+```
+
+And allow the internal host on the API side (`api/config/.env`):
+
+```env
+ALLOWED_HOSTS=localhost,127.0.0.1,host.docker.internal
+```
+
+Recreate **both** containers after editing env — `docker compose up -d --force-recreate`; a `restart` does not reload `env_file`. In production, use your real service names or DNS instead of `host.docker.internal`. See [Configuration](/deploy/configuration/).
+
+## `DisallowedHost` 400 errors
+
+**Symptom.** API logs show `Invalid HTTP_HOST header: '...'`.
+
+**Cause.** Django rejects any request whose `Host` header is not listed in `ALLOWED_HOSTS` (default `["localhost", "127.0.0.1"]`).
+
+**Fix.** Add every host clients use — your public domain, reverse-proxy name, and any internal container host — to `ALLOWED_HOSTS`, and mirror your browser-facing origins in `CSRF_TRUSTED_ORIGINS`. Note that unrelated agents on the network (metrics collectors, sidecars) can generate this noise by pushing to your API port; if the host is one you do not serve, fix the caller rather than widening `ALLOWED_HOSTS`.
+
+## Cannot log in to the backoffice
+
+**Symptom.** Login at `/login` fails or the session is rejected.
+
+**Cause.** No superuser exists yet, or the browser origin is missing from `CSRF_TRUSTED_ORIGINS` / `CORS_ALLOWED_ORIGINS`.
+
+**Fix.** Create an admin user in the api container:
+
+```bash
+just bash
+python manage.py createsuperuser
+```
+
+Then confirm the frontend origin (e.g. `http://localhost:3000`) appears in both `CSRF_TRUSTED_ORIGINS` (backend) and `CORS_ALLOWED_ORIGINS`. The management API is superuser-gated — a regular account cannot reach backoffice endpoints. For the endpoint surface, see [The API](/api/); to work on the code itself, see [Contributing](/contribute/).

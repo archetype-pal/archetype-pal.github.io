@@ -1,0 +1,70 @@
+---
+title: "Bring your own corpus"
+description: "How to load your own manuscripts into an Archetype instance: model the corpus, ingest images for IIIF, import transcriptions and HTR output, then build the search indexes."
+---
+
+Archetype ships as an empty platform: the code knows how to search, view, and annotate manuscripts, but it holds no manuscripts of its own. This guide walks you through loading a corpus into a running instance — modelling the descriptive records, ingesting page images for IIIF, importing transcriptions (including HTR output), and finally building the Meilisearch indexes that make it all searchable. It assumes you already have the stack up (see the [Quickstart](/deploy/)) and can run `just` recipes against the backend container.
+
+## 1. Model the corpus
+
+The domain lives in `api/apps/manuscripts`, `scribes`, `symbols_structure`, `annotations`, and `publications`. The manuscript spine is a chain of records, each a Django model:
+
+- **`HistoricalItem`** — the intellectual object (a charter, a codex), with `CatalogueNumber`, `HistoricalItemDescription`, and a date assessment.
+- **`CurrentItem`** — the physical shelfmark, held by a **`Repository`**.
+- **`ItemPart`** — a part of a historical item as it survives in a current item (the join between the two, and what most search results key on).
+- **`ItemImage`** — one photographed surface (folio/page) of an item part; its `image` is an `IIIFField`.
+- **`ImageText`** — a `Transcription` or `Translation` attached to an `ItemImage`, stored as TEI in `content`, with an editorial `status` (`Draft`/`Review`/`Live`/`Reviewed`). One row per `(item_image, type)`.
+
+Palaeographic layers sit alongside: `Scribe` → `Hand` (bound to an `ItemPart`), the `Character`/`Allograph`/`Component`/`Feature` taxonomy in `symbols_structure`, and `Graph` in `annotations` — a region on an image (`annotation_type` of `image`, `text`, or `editorial`).
+
+Create the descriptive records through the backoffice UI, the Django admin, or `just shell`. Run migrations first if this is a fresh database:
+
+```bash
+just migrate
+```
+
+See [Data model](/platform/data-model/) for the full field reference.
+
+## 2. Ingest images for IIIF
+
+`ItemImage.image` uses an `IIIFField` with `upload_to="historical_items"`, so image files land under `api/storage/media/historical_items/`. That directory is bind-mounted into the SIPI image server (`./storage/media:/sipi/images` in `infrastructure/compose.yaml`), which serves IIIF Image API tiles. Point the backend at SIPI with the `IIIF_HOST` env var (default `http://localhost:1024/`); the frontend reads `NEXT_PUBLIC_IIIF_UPSTREAM` — see [Configuration](/deploy/configuration/).
+
+Upload full-resolution files through the backoffice image picker, or drop them into the media directory and set each `ItemImage.image` to the stored path. SIPI derives tiles on demand — no pre-tiling step.
+
+## 3. Import transcriptions
+
+Transcriptions are TEI XML in `ImageText.content`. To ingest **HTR output**, POST PAGE-XML or ALTO to the import endpoint on `ImageTextViewSet`:
+
+```http
+POST /api/v1/manuscripts/image-texts/import-htr/
+Content-Type: application/json
+
+{ "item_image": 42, "format": "page", "type": "Transcription",
+  "language": "la", "xml": "<PcGts>…</PcGts>" }
+```
+
+`format` is `"page"` or `"alto"`. The parser (`apps/manuscripts/services/htr`) turns each text line into a `<seg type="line">`, materialises a `text` `Graph` for every line that carries a polygon, and embeds a `corresp="#gid-N"` back-reference. It returns the new draft image-text id; a `409` means that `(image, type)` already exists.
+
+If you are migrating a legacy DigiPal-style `data-dpt` corpus, the manuscripts app ships round-trip commands (run `--dry-run` first, then `--apply`):
+
+```bash
+just bash   # then, inside the api container:
+python manage.py migrate_imagetext_to_tei --apply   # data-dpt HTML → TEI
+python manage.py verify_tei                          # well-formedness gate
+python manage.py embed_annotation_ids --from-graphs --apply  # link text ↔ regions
+python manage.py check_text_links                    # audit text→Graph refs
+```
+
+## 4. Build the search indexes
+
+Nothing is searchable until the Meilisearch indexes exist and are populated. Create them once, then reindex from the database:
+
+```bash
+just setup-search-indexes        # create every index
+just sync-all-search-indexes     # populate all of them
+just sync-search-index item-parts  # or reindex just one
+```
+
+The registry in `apps/search/registry.py` is the single source of truth; valid index segments are `item-parts`, `item-images`, `scribes`, `hands`, `graphs`, `texts`, `clauses`, `people`, and `places`. Re-run the relevant `sync-search-index` after any bulk data change. If searches 500 with `index_not_found`, you skipped `setup-search-indexes`.
+
+Your corpus is now browsable, viewable, and searchable. For the query surface, see [The API](/api/); to extend the model, see [Contributing](/contribute/).

@@ -1,0 +1,108 @@
+---
+title: "Contribution workflow"
+description: "How to make and ship changes across Archetype's git-submodule repos: branching, the pre-commit hooks, backend and frontend CI, and the submodule-pointer discipline at the superproject root."
+---
+
+Archetype is a **git superproject**: the workspace root tracks four component repos as submodules — `api/` (Django backend), `frontend/` (Next.js), `infrastructure/` (Docker Compose), and `site-gh/` (this documentation site). You make code changes **inside a submodule**, push them, and only then record the bumped submodule pointer at the root. This page walks the full loop and the checks that gate it. New here? Start with [Contributing](/contribute/).
+
+## 1. Branch inside the right submodule
+
+Work where the code lives — never edit files from the root and commit them as a lump. `cd` into the submodule and branch there:
+
+```bash
+cd api        # or: cd frontend
+git switch -c fix/charter-facet-count
+```
+
+Each submodule is its own repo with its own history, CI, and hooks. The root repo has no CI gate — it only tracks pointers plus root docs like `CLAUDE.md`.
+
+## 2. Enable the pre-commit hooks (once per clone)
+
+Hooks live in each repo's `.githooks/` and are wired up per-clone via `core.hooksPath`. Run this once in every submodule you work in:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook runs the CI-equivalent fast checks before every commit, so a green local commit almost always means green CI.
+
+**Backend (`api/`)** runs:
+
+```bash
+uvx ruff check              # lint
+uvx ruff format --check .   # formatting
+uv lock --check             # lockfile is in sync
+uv run python scripts/check_architecture_boundaries.py
+```
+
+**Frontend (`frontend/`)** runs:
+
+```bash
+pnpm lint      # ESLint
+pnpm format    # Prettier check
+```
+
+If a hook fails, fix it and re-commit. The usual one-liners:
+
+```bash
+# backend
+uvx ruff check --fix && uvx ruff format .
+# frontend
+pnpm lint:fix && pnpm format:fix
+```
+
+## 3. Make the change and pass CI
+
+CI (GitHub Actions) runs on every pull request into `main`. It is stricter than the hook — notably it also type-checks and runs the full test suites. Reproduce it locally before you push.
+
+**Backend (`api/.github/workflows/ci.yml`)** — three jobs:
+
+| Job | What it runs |
+| --- | --- |
+| `lint` | `uv lock --check`, `uvx ruff check`, `uvx ruff format --check .`, `uvx mypy apps config`, architecture-boundary check |
+| `unit-tests` | builds the api image, then `just pytest-focused` |
+| `integration-tests` | `just coverage` (enforces the coverage gate) |
+
+```bash
+cd api
+uvx mypy apps config    # the hook does NOT run this — CI does
+just pytest-focused     # fast SQLite loop
+just coverage           # full suite + coverage gate
+```
+
+**Frontend (`frontend/.github/workflows/ci.yml`)** — five jobs: `lint` (`pnpm lint`), `format` (`pnpm format`), `test` (`pnpm test`), `build` (`pnpm build` then `pnpm bundle-budget`), and `lighthouse`. The bundle-budget step fails the build when the gzip bundle exceeds `.bundle-budget.json`, so a new route can trip CI even when lint and tests pass:
+
+```bash
+cd frontend
+pnpm lint && pnpm format && pnpm test
+pnpm build && pnpm bundle-budget
+# intentional growth? regenerate the budget and commit it:
+pnpm bundle-budget:update
+```
+
+## 4. Push the submodule and open a PR
+
+Commit inside the submodule, push the branch, and open a PR against that repo's `main`:
+
+```bash
+cd api
+git push -u origin fix/charter-facet-count
+gh pr create --fill
+```
+
+Wait for CI to go green and merge there **first**. The submodule commit must be pushed and reachable before you touch the root.
+
+## 5. Bump the submodule pointer at the root
+
+Back at the workspace root, the merged submodule now shows as a changed pointer. Record it — together with any root-doc changes — in one commit:
+
+```bash
+cd ..
+git add api                      # stages the new submodule SHA
+git commit -m "chore: bump api pointer — fix charter facet count"
+git push
+```
+
+> **Never record a pointer to an unpushed commit.** Always push (and ideally merge) the submodule commit before staging its new SHA at the root, or the pointer will reference a SHA no one else can fetch and every other clone's `git submodule update` will break.
+
+That's the whole loop: branch in the submodule → pass hooks + CI → merge the submodule PR → bump the pointer at the root. See also [Configuration](/deploy/configuration/) and [The API](/api/).

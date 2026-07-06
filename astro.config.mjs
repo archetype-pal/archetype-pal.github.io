@@ -46,6 +46,31 @@ export default defineConfig({
 					items: [{ label: 'Roadmap', slug: 'roadmap' }],
 				},
 				{
+					label: 'Deploy',
+					items: [
+						{ label: 'Running Archetype', slug: 'deploy' },
+						{ label: 'Configuration', slug: 'deploy/configuration' },
+						{ label: 'Bring your own corpus', slug: 'deploy/corpus' },
+						{ label: 'Production deployment', slug: 'deploy/production' },
+						{ label: 'Troubleshooting', slug: 'deploy/troubleshooting' },
+					],
+				},
+				{
+					label: 'API',
+					items: [
+						{ label: 'The API', slug: 'api' },
+						{ label: 'Endpoints', slug: 'api/resources' },
+					],
+				},
+				{
+					label: 'Contribute',
+					items: [
+						{ label: 'Contributing', slug: 'contribute' },
+						{ label: 'Working in the codebase', slug: 'contribute/architecture' },
+						{ label: 'Contribution workflow', slug: 'contribute/workflow' },
+					],
+				},
+				{
 					label: 'About',
 					items: [
 						{ label: 'Overview', slug: 'overview' },

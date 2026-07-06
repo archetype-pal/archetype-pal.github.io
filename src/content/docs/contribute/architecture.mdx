@@ -1,0 +1,74 @@
+---
+title: "Working in the codebase"
+description: "The layering rules and search-registry pattern that govern Archetype's backend, plus the exact commands to run its tests, linters and architecture checks."
+---
+
+Archetype's backend is a layered Django codebase with enforced app boundaries; the frontend is a Next.js app. This page explains the architecture rules you must follow when changing code, and the exact commands to run the tests, linters and boundary checks before you push.
+
+The repo is a git superproject with the backend (`api/`), frontend (`frontend/`), infrastructure (`infrastructure/`) and this docs site wired in as submodules. Make changes inside a component repo, commit and push there first, then bump the submodule pointer at the root. See [Contributing](/contribute/) for the full submodule workflow.
+
+## Backend layout
+
+The Django backend lives in `api/apps/`, one directory per feature app:
+
+```
+api/apps/{common,users,scribes,symbols_structure,annotations,manuscripts,publications,search}
+```
+
+(plus `annotations_w3c`, `iiif_presentation` and `worksets`). Inter-app imports are not free-for-all — they follow a fixed dependency graph. `common` depends on nothing; `search` may read from `manuscripts`, `scribes`, `symbols_structure`, `annotations` and `publications`; `manuscripts` depends only on `common` and `annotations`; and so on. The full graph is declared in `api/scripts/check_architecture_boundaries.py`. Every app under `apps/` (any directory with an `apps.py`) must have an entry there, or the check fails.
+
+Run the boundary check before you push:
+
+```bash
+just check-architecture   # uv run python scripts/check_architecture_boundaries.py
+```
+
+## The layering rules
+
+Keep each layer doing its one job:
+
+- **Views are transport-only.** Validation, HTTP status mapping, and response shape — nothing else. No orchestration, no Celery dispatch.
+- **Application services own orchestration.** Cross-model workflows and all Celery task dispatch live here (e.g. `apps/manuscripts/services/`), not in views.
+- **Domain services own mutation workflows.** Write logic belongs in domain services.
+- **Serializers do not embed write logic.** They shape data in and out; they must not drive mutations.
+
+If you find yourself reaching for a model or task inside a view or a serializer's `create`/`update`, push that logic down into a service instead.
+
+## The search registry pattern
+
+Search is registry-driven: `api/apps/search/registry.py` is the single declarative source of truth for every Meilisearch index. Each `IndexType` maps to one `IndexRegistration` holding the model, the document builder (from `apps/search/documents/`), the filterable/sortable/facet/searchable attribute lists, and the ORM prefetch spec — nothing about an index lives anywhere else.
+
+> **Adding a search index is a three-part edit made together:** the registry entry, the builder function in `apps/search/documents/`, and the tests. Land them in the same change — a half-registered index is a broken one.
+
+After changing indexes, recreate and resync them:
+
+```bash
+just setup-search-indexes           # create the Meilisearch indexes
+just sync-search-index item-parts   # sync one index (positional arg)
+just sync-all-search-indexes        # sync everything
+```
+
+## Running tests and linters
+
+The backend runs via Docker Compose through `just` recipes. `conftest.py` auto-selects SQLite when run outside Docker, so the focused loop is fast:
+
+```bash
+just pytest           # full pytest-django suite
+just pytest-focused    # fast SQLite subset (annotations + search services)
+just pytest-search     # search tests only
+just coverage          # full run, --cov-fail-under=55
+just clean             # ruff check --fix
+```
+
+Frontend tests use Vitest with a jsdom environment:
+
+```bash
+pnpm test          # vitest run
+pnpm lint          # eslint
+pnpm format        # prettier --check
+pnpm bundle-budget # CI gate: fails if the gzip bundle exceeds .bundle-budget.json
+```
+
+Both repos install **pre-commit hooks** that run the CI-equivalent checks (backend: `ruff check`, `ruff format --check`, `uv lock --check`; frontend: `pnpm lint`, `pnpm format`). If a hook fails, fix it (`uvx ruff format .` or `pnpm format:fix && pnpm lint:fix`) and re-commit. The backend bundle-budget gate can trip even when lint and tests pass — rerun `pnpm build && pnpm bundle-budget:update` and commit the refreshed budget after intentional growth.
+
+For running an instance locally, see [Configuration](/deploy/configuration/) and [Bring your own corpus](/deploy/corpus/); for the HTTP surface, see [The API](/api/).

@@ -1,0 +1,96 @@
+---
+title: "Running Archetype"
+description: "A zero-to-running quickstart for a local Archetype stack: backend in Docker via just, frontend with pnpm, migrations, search indexes, and first admin login."
+---
+
+This guide takes you from a clean machine to a running Archetype instance on your laptop: the Django backend in Docker (driven by [`just`](https://github.com/casey/just)), the Next.js frontend with `pnpm`, a migrated database, populated search indexes, and a working admin login. Follow the steps in order — the path is designed to succeed on the first try.
+
+The standard development split is **backend in Docker + frontend on the host**. You do not run Django or Celery directly; the `just` recipes wrap `docker compose` for you.
+
+## Prerequisites
+
+Install these before you start:
+
+- **Docker** with the Compose plugin (`docker compose version`)
+- **just** — the command runner used for every backend recipe (`brew install just`, `cargo install just`, or a prebuilt binary). You can run the underlying `docker compose` commands directly if you prefer.
+- **Node 26+** and **pnpm 11** for the frontend (`corepack enable` picks up the pinned `pnpm@11.9.0`)
+- **uv** + **Python 3.14** — only needed for host-side backend tooling (linting, the architecture check); the stack itself runs entirely in Docker.
+
+## 1. Get the code
+
+The backend and frontend are separate repositories. Clone both side by side:
+
+```bash
+git clone https://github.com/archetype-pal/backend.git api
+git clone https://github.com/archetype-pal/frontend.git frontend
+```
+
+## 2. Start the backend stack
+
+From the backend checkout, bring up Postgres, Meilisearch, Redis, SIPI (the IIIF image server), Celery, and the API:
+
+```bash
+cd api
+just up-bg        # start detached; use `just up` to watch logs
+```
+
+This publishes the API on **http://localhost:8000**, Meilisearch on **:7700**, Postgres on **:5432**, Redis on **:6379**, the SIPI image server on **:1024**, and pgAdmin on **:5050**. The backend reads its environment from `config/.env`; the repo ships a working development file, so you can leave it as-is for now.
+
+## 3. Run the database migrations
+
+```bash
+just migrate
+```
+
+## 4. Create the search indexes
+
+Meilisearch starts empty. Create the index schemas, then load documents from the database:
+
+```bash
+just setup-search-indexes      # create indexes + settings (no documents)
+just sync-all-search-indexes   # load documents from the DB
+```
+
+> A fresh database has no records yet, so the indexes will be empty — that is expected. See [Bring your own corpus](/deploy/corpus/) to import data.
+
+## 5. Create an admin user
+
+```bash
+docker compose run --rm api python manage.py createsuperuser
+```
+
+Follow the prompts to set a username and password.
+
+## 6. Start the frontend
+
+In the frontend checkout, install dependencies, create your environment file, and start the dev server:
+
+```bash
+cd ../frontend
+pnpm install
+cp .env.example .env
+pnpm dev
+```
+
+`.env` needs four variables (defaults in `.env.example` already match the backend above):
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000       # no trailing slash
+NEXT_PUBLIC_IIIF_UPSTREAM=http://localhost:1024
+NEXT_PUBLIC_SITE_URL=https://archetype.example.org
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
+```
+
+The public site is now live at **http://localhost:3000**.
+
+## 7. Log in
+
+Open **http://localhost:3000/login** and sign in with the superuser you created in step 5. You now have a full local stack: public site, backoffice, API, image server, and search.
+
+## Where to go next
+
+- **[Configuration](/deploy/configuration/)** — every backend and frontend environment variable, display-name overrides, and search settings.
+- **[Bring your own corpus](/deploy/corpus/)** — import manuscript images and metadata, then re-run the search sync so records appear.
+- **[Production](/deploy/production/)** — run the full proxied stack from the `infrastructure` repo (`just up-bg`, `just migrate`, `just reindex`, and `just certbot` for TLS) behind nginx on ports 80/443.
+- **[The API](/api/)** — the REST surface under `/api/v1/`, with schema at `/api/v1/schema/` and Swagger UI at `/api/v1/docs/`.
+- **[Contributing](/contribute/)** — repo layout, the submodule workflow, and the test and lint gates.

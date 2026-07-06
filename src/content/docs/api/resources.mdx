@@ -1,0 +1,90 @@
+---
+title: "Endpoints"
+description: "A reference of Archetype's public API endpoint groups — manuscripts, annotations, search — plus its W3C Web Annotation, IIIF, and TEI standards exports."
+---
+
+Every path below is relative to `/api/v1` and deployment-agnostic — prefix it with your instance host (e.g. `https://archetype.example.org/api/v1/…` or `http://localhost:8000/api/v1/…`). The public read API needs no authentication; `management/*` routes are superuser-gated and out of scope here. For the machine-readable contract, load the OpenAPI schema and Swagger UI:
+
+```http
+GET /api/v1/schema/
+GET /api/v1/docs/
+```
+
+For the standards these endpoints implement (W3C Web Annotation, IIIF Presentation & Content Search, TEI), see [Interoperability & Standards](/platform/interoperability/). For an overview of the API surface, see [The API](/api/).
+
+## Manuscripts, images & texts
+
+Mounted under `/api/v1/manuscripts/`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `manuscripts/item-parts/` | List manuscript parts (the primary browsable unit). |
+| GET | `manuscripts/item-parts/{id}/` | Retrieve one part with its images. |
+| GET | `manuscripts/item-images/` | List page/folio images. |
+| GET | `manuscripts/item-images/{id}/` | Retrieve one image. |
+| GET | `manuscripts/image-texts/` | List transcriptions/editions. |
+| GET | `manuscripts/image-texts/{id}/` | Retrieve one transcription. |
+| GET | `manuscripts/image-texts/{id}/regions/` | Regions linked to a transcription. |
+| GET | `manuscripts/image-texts/{id}/tei/` | Download the transcription as **TEI XML** (`application/tei+xml`). |
+
+## Scribes, hands & symbols
+
+Scribes/hands are mounted at `/api/v1/`; the symbol structure lives under `/api/v1/symbols_structure/`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `scribes/`, `scribes/{id}/` | Scribe records. |
+| GET | `hands/`, `hands/{id}/` | Hand records. |
+| GET | `symbols_structure/allographs/` | Allograph list (script model). |
+| GET | `symbols_structure/positions/` | Position list. |
+
+## Annotations (graphs & regions)
+
+Mounted at `/api/v1/`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `manuscripts/graphs/` | Read-only list of graphs (annotated glyph instances). |
+| GET | `manuscripts/graphs/{id}/` | Retrieve one graph with its region geometry. |
+| GET/POST/PATCH | `annotations/graphs/` | Annotator write surface (auth required). |
+
+## Search & discovery
+
+Mounted under `/api/v1/search/`. `{index}` is a hyphenated index segment; the registered indexes are `item-parts`, `item-images`, `scribes`, `hands`, `graphs`, `texts`, `clauses`, `people`, `places`.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `search/{index}/` | Faceted search over an index (query, filters, paging). |
+| GET | `search/{index}/{id}/` | Retrieve a single indexed document. |
+| GET | `search/{index}/facets/` | Facet buckets/counts for the index. |
+| GET | `search/{index}/export/` | Export results; `?export_format=csv` (default), `json`, or `bibtex`. |
+| GET | `search/suggest/` | Autocomplete suggestions. |
+
+## Standards exports
+
+These three route groups emit standards-compliant documents you can hand to external viewers and annotation clients.
+
+**W3C Web Annotation (JSON-LD)** — under `/api/v1/annotations-w3c/`:
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `annotations-w3c/graphs/{id}/` | One region as a W3C Web Annotation. |
+| GET | `annotations-w3c/image-texts/{id}/` | A transcription's linked regions as an `AnnotationPage`. |
+| GET | `annotations-w3c/context/` | Pointer to the W3C annotation `@context`. |
+
+**IIIF** — under `/api/v1/iiif/` (note: the manifest path has **no** trailing slash):
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `iiif/item-parts/{id}/manifest` | IIIF **Presentation 3.0** Manifest for a manuscript part. |
+| GET | `iiif/item-parts/{id}/search?q=` | IIIF **Content Search 2.0** over the part's linked transcription regions. |
+
+```bash
+# Fetch a manifest and a TEI transcription from a local instance
+curl http://localhost:8000/api/v1/iiif/item-parts/1/manifest
+curl http://localhost:8000/api/v1/manuscripts/image-texts/1/tei/
+```
+
+**TEI XML** is served per transcription at `manuscripts/image-texts/{id}/tei/` (see the Manuscripts table above).
+
+The exact response shapes for every route are authoritative in the live OpenAPI schema — always check `/api/v1/schema/` against your instance's version rather than hard-coding fields.

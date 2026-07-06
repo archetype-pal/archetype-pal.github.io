@@ -1,0 +1,79 @@
+---
+title: "The API"
+description: "Reference for Archetype's REST API: how routes are mounted under /api/v1, the public vs. management split, token authentication, and the live OpenAPI schema and Swagger UI."
+---
+
+Every Archetype instance exposes a versioned REST API built on Django REST Framework. All routes are mounted under `/api/v1/` by `api/config/urls.py`, and each instance serves its own live OpenAPI schema and an interactive Swagger UI — so the reference below is a map, and the schema on your host is the source of truth.
+
+Replace `archetype.example.org` with your instance host in every example. On a local dev stack the base URL is `http://localhost:8000`.
+
+## How the API is mounted
+
+`config/urls.py` includes one URLconf per feature app under the `/api/v1/` prefix. The feature apps live in `api/apps/*`:
+
+| Prefix | App | Purpose |
+| --- | --- | --- |
+| `/api/v1/auth/` | `users` | Token login/logout, profile, user management |
+| `/api/v1/search/` | `search` | Meilisearch-backed search, suggest, facets, export |
+| `/api/v1/manuscripts/` | `manuscripts` | Item parts, images, image texts |
+| `/api/v1/scribes/…`, `/api/v1/hands/…` | `scribes` | Scribes and hands |
+| `/api/v1/annotations/…` | `annotations` | Annotation graphs |
+| `/api/v1/annotations-w3c/` | `annotations_w3c` | W3C Web Annotation output |
+| `/api/v1/iiif/` | `iiif_presentation` | IIIF Presentation manifests |
+| `/api/v1/symbols_structure/` | `symbols_structure` | Allographs, components, ontology |
+| `/api/v1/media/` | `publications` | Publications and media |
+
+See [Core endpoints](/api/resources/) for the read paths integrators reach for most.
+
+## Public vs. management (backoffice) split
+
+Every app follows a dual pattern. Read-oriented public endpoints (`item-parts`, `scribes`, `hands`, `annotations/graphs`, `search/<index_type>/`) are anonymously readable. Write/admin endpoints are registered under a `management/` sub-path (for example `/api/v1/manuscripts/management/item-parts/`, `/api/v1/auth/management/users/`).
+
+The global default is DRF's `IsAuthenticatedOrReadOnly` (`config/settings.py`), so anonymous clients get read access to public routes. Management viewsets extend `BasePrivilegedViewSet`, which pins `permission_classes = [IsSuperuser]` — they are usable **only** by a superuser token and are what the Next.js backoffice drives. Anonymous requests are also rate-limited in non-DEBUG deployments (`DRF_THROTTLE_ANON_RATE` / `DRF_THROTTLE_USER_RATE`).
+
+## Authentication
+
+Auth is DRF `TokenAuthentication` plus [Djoser](https://djoser.readthedocs.io/) account flows. There are no sessions or JWTs — you present a token in the `Authorization` header.
+
+Obtain a token with username + password:
+
+```bash
+curl -X POST https://archetype.example.org/api/v1/auth/token/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "USERNAME", "password": "PASSWORD"}'
+# → {"auth_token": "e1c2...abcd"}
+```
+
+Then send it on authenticated (or management) requests. Note the DRF `Token` scheme, not `Bearer`:
+
+```bash
+curl https://archetype.example.org/api/v1/auth/management/users/ \
+  -H "Authorization: Token e1c2...abcd"
+```
+
+Related account endpoints:
+
+- `POST /api/v1/auth/token/login` — create a token
+- `POST /api/v1/auth/token/logout` — invalidate the current token (send the header)
+- `GET  /api/v1/auth/profile` — the authenticated user's profile
+
+Create the first superuser with Django's `createsuperuser` (run it in the api container, e.g. `just bash` then `uv run python manage.py createsuperuser`). See [Configuration](/deploy/configuration/) for the local login shortcut.
+
+## OpenAPI schema and Swagger UI
+
+Every instance publishes its own contract — no external hosting required:
+
+- **Schema (JSON):** `https://archetype.example.org/api/v1/schema/`
+- **Swagger UI:** `https://archetype.example.org/api/v1/docs/`
+
+The schema is assembled from per-app `apps/*/schema.yaml` files, so it reflects exactly the apps your build ships. Fetch it as a machine-readable spec:
+
+```bash
+curl https://archetype.example.org/api/v1/schema/ -o archetype-openapi.json
+```
+
+Swagger UI only loads a same-origin schema; the default is `/api/v1/schema/` on that host.
+
+> Locally, bring the backend up with `just up` from `api/`, then browse `http://localhost:8000/api/v1/docs/`.
+
+For running an instance over your own material, see [Bring your own corpus](/deploy/corpus/). To work on the API itself, see [Contributing](/contribute/).
