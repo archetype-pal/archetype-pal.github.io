@@ -57,13 +57,13 @@ From `api/`, create your env file and bring the stack up:
 ```bash
 cd api
 cp config/test.env config/.env
-just up-bg          # start api, postgres, meilisearch, redis, celery, sipi, pgadmin
+just up-bg          # start api, postgres, meilisearch, redis, celery, sipi
 just migrate        # apply migrations (first run)
 just setup-search-indexes   # create Meilisearch indexes
 just sync-all-search-indexes
 ```
 
-This exposes the API on `:8000`, Meilisearch on `:7700`, Postgres on `:5432`, Redis on `:6379`, and pgAdmin on `:5050`. API docs live at `http://localhost:8000/api/v1/docs`. Useful recipes: `just down`, `just restart-api`, `just shell`, `just pytest-focused`. Run `just` with no arguments to list them all.
+This exposes the API on `:8000`, Meilisearch on `:7700`, Postgres on `:5432`, Redis on `:6379`, and the SIPI image server on `:1024`. API docs live at `http://localhost:8000/api/v1/docs`. Useful recipes: `just down`, `just restart-api`, `just shell`, `just pytest-focused`. Run `just` with no arguments to list them all.
 
 ### 2. Frontend — `pnpm dev` on the host
 
