@@ -34,7 +34,7 @@ cd api
 just up-bg        # start detached; use `just up` to watch logs
 ```
 
-This publishes the API on **http://localhost:8000**, Meilisearch on **:7700**, Postgres on **:5432**, Redis on **:6379**, and the SIPI image server on **:1024**. The backend reads its environment from `config/.env`; the repo ships a working development file, so you can leave it as-is for now.
+This publishes the API on **http://localhost:8000**, Meilisearch on **:7700**, Postgres on **:5432**, Redis on **:6379**, and the SIPI image server on **:8182**. The backend reads its environment from `config/.env`; the repo ships a working development file, so you can leave it as-is for now.
 
 ## 3. Run the database migrations
 
@@ -76,7 +76,7 @@ pnpm dev
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000       # no trailing slash
-NEXT_PUBLIC_IIIF_UPSTREAM=http://localhost:1024
+NEXT_PUBLIC_IIIF_UPSTREAM=http://localhost:8182
 NEXT_PUBLIC_SITE_URL=https://archetype.example.org
 CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
 ```

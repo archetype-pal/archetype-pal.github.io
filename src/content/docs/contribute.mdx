@@ -63,7 +63,7 @@ just setup-search-indexes   # create Meilisearch indexes
 just sync-all-search-indexes
 ```
 
-This exposes the API on `:8000`, Meilisearch on `:7700`, Postgres on `:5432`, Redis on `:6379`, and the SIPI image server on `:1024`. API docs live at `http://localhost:8000/api/v1/docs`. Useful recipes: `just down`, `just restart-api`, `just shell`, `just pytest-focused`. Run `just` with no arguments to list them all.
+This exposes the API on `:8000`, Meilisearch on `:7700`, Postgres on `:5432`, Redis on `:6379`, and the SIPI image server on `:8182`. API docs live at `http://localhost:8000/api/v1/docs`. Useful recipes: `just down`, `just restart-api`, `just shell`, `just pytest-focused`. Run `just` with no arguments to list them all.
 
 ### 2. Frontend — `pnpm dev` on the host
 
@@ -76,7 +76,7 @@ cp .env.example .env
 pnpm dev            # http://localhost:3000
 ```
 
-The default `.env.example` already points at the local backend (`NEXT_PUBLIC_API_URL=http://localhost:8000`, `NEXT_PUBLIC_IIIF_UPSTREAM=http://localhost:1024`). See [Configuration](/deploy/configuration/) for the full list of environment variables and their meanings.
+The default `.env.example` already points at the local backend (`NEXT_PUBLIC_API_URL=http://localhost:8000`, `NEXT_PUBLIC_IIIF_UPSTREAM=http://localhost:8182`). See [Configuration](/deploy/configuration/) for the full list of environment variables and their meanings.
 
 > Missing env vars fail startup — they are validated in `lib/env.ts` and `next.config.mjs`.
 
