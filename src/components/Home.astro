@@ -1,84 +1,134 @@
 ---
-// Homepage: one sentence on what Archetype is, then a door per audience.
+// Homepage: states what Archetype is, what it does, how to run it and where
+// the project stands, each with links onward, so visitors pick their own path.
 // Uses the global --f-* tokens from theme.css, which switch with Starlight's
 // [data-theme]. Rendered inside a `template: splash` page.
 ---
 
 <div class="home">
   <section class="hero shell">
-    <p class="eyebrow">Open software for palaeography</p>
-    <h1>Read the hands of the past.</h1>
-    <p class="lead">Archetype helps scholars search, study and compare historical handwriting, using manuscript images and the texts they carry.</p>
-    <div class="cta-row">
-      <a class="btn primary" href="https://beta.archetype-pal.ink">Try the live corpus <span class="arw">&rarr;</span></a>
-      <a class="btn ghost" href="/about/">What is Archetype?</a>
+    <div>
+      <p class="eyebrow">Open software for palaeography</p>
+      <h1>Read the hands of the past.</h1>
+      <p class="lead">Archetype turns observations about historical handwriting into evidence you can search, compare and cite, anchored to the manuscript image.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://beta.archetype-pal.ink">Try the live corpus <span class="arw">&rarr;</span></a>
+        <a class="btn ghost" href="/researchers/">Read the guide</a>
+      </div>
     </div>
+    <dl class="facts" aria-label="Archetype at a glance">
+      <div><dt>Live corpus</dt><dd>710 charters, 3,000 page images and 12,700 annotated letter-forms from <em>Models of Authority</em> (Scotland, 1100&ndash;1250)</dd></div>
+      <div><dt>Standards</dt><dd>IIIF images, TEI texts, W3C Web Annotations</dd></div>
+      <div><dt>Hosting</dt><dd>Self-hosted, over your own manuscripts</dd></div>
+      <div><dt>Status</dt><dd>Public beta; open-source licence being chosen</dd></div>
+    </dl>
   </section>
 
-  <section class="shell">
-    <h2 class="doors-h">I am a&hellip;</h2>
-    <div class="doors">
-      <a class="door" href="/researchers/">
-        <h3>Researcher</h3>
-        <p>Use Archetype in your work, on our live corpus or your own manuscripts.</p>
-        <span class="go">Start here <span class="arw">&rarr;</span></span>
+  <section class="shell block">
+    <h2>What it does</h2>
+    <div class="caps">
+      <a class="cap" href="/researchers/search/">
+        <h3>Search a collection</h3>
+        <p>By script, scribe, date, place or text, with facets, a timeline and a map.</p>
       </a>
-      <a class="door" href="/contributors/">
-        <h3>Contributor</h3>
-        <p>Install and run Archetype, and help develop it.</p>
-        <span class="go">Start here <span class="arw">&rarr;</span></span>
+      <a class="cap" href="/researchers/annotation/">
+        <h3>Describe the hand</h3>
+        <p>Mark each letter-form on the image and describe it in a shared vocabulary.</p>
       </a>
-      <a class="door" href="/funders/">
-        <h3>Funder</h3>
-        <p>See what already works, who it serves, and where funding would help.</p>
-        <span class="go">Start here <span class="arw">&rarr;</span></span>
+      <a class="cap" href="/researchers/annotation/#bidirectional-text--image-linking">
+        <h3>Link text to image</h3>
+        <p>Tie the phrases of a TEI transcription to the places on the page they read.</p>
+      </a>
+      <a class="cap" href="/researchers/lightbox/">
+        <h3>Compare side by side</h3>
+        <p>Set hands and letter-forms next to each other, and share the arrangement.</p>
       </a>
     </div>
+    <p class="more"><a href="/researchers/">Using Archetype in research <span class="arw">&rarr;</span></a></p>
   </section>
 
-  <section class="shell">
-    <p class="note">Live today: 710 charters, 3,000 page images and 12,700 annotated letter-forms from <em>Models of Authority</em>, the Scottish royal charters of 1100&ndash;1250.</p>
+  <section class="shell block split">
+    <div class="panel">
+      <h2>Run it yourself</h2>
+      <p>Archetype is software, not one website. Any project can run it over its own manuscripts with Docker, and every part of the code is developed in the open on GitHub.</p>
+      <ul class="links">
+        <li><a href="/contributors/local-setup/">Run it locally</a></li>
+        <li><a href="/contributors/production/">Host an instance</a></li>
+        <li><a href="/contributors/api/">Use the API</a></li>
+        <li><a href="/contributors/">Contribute to the code</a></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Where the project stands</h2>
+      <p>Version 3 is a complete rewrite of the DigiPal framework, in development since 2024 and supported by the University of Glasgow's OG(H)AM project and the &Eacute;cole Pratique des Hautes &Eacute;tudes.</p>
+      <ul class="links">
+        <li><a href="/funders/status/">What works today</a></li>
+        <li><a href="/funders/roadmap/">Roadmap &amp; priorities</a></li>
+        <li><a href="/funders/governance/">Governance &amp; sustainability</a></li>
+        <li><a href="/funders/">Supporting the project</a></li>
+      </ul>
+    </div>
   </section>
 </div>
 
 <style>
   .home { color: var(--f-text); font-family: var(--sl-font); line-height: 1.6; padding-bottom: clamp(3rem, 6vw, 5rem); }
-  .home .shell { max-width: 1080px; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.6rem); }
-  .home > * + *, .home .doors > *, .home .door > * { margin-top: 0; }
+  .home .shell { max-width: 1160px; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.6rem); }
+  .home * + *, .home > * + * { margin-top: 0; }
   .home a { text-decoration: none; color: inherit; }
   .home h1, .home h2, .home h3 { font-family: var(--sl-font-headings); font-weight: 600; letter-spacing: -0.012em; margin: 0; text-wrap: balance; }
+  .home .block { padding-top: clamp(2.6rem, 5vw, 4rem); }
+  .home .block > h2, .home .panel h2 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); margin-bottom: 1.2rem; }
 
   .home .eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.19em; text-transform: uppercase; color: var(--f-dim); display: inline-flex; align-items: center; margin: 0 0 1.2rem; }
   .home .eyebrow::before { content: ""; width: 24px; height: 2px; background: var(--f-accent); margin-right: 0.7rem; flex: none; }
 
-  .home .hero { padding-top: clamp(3rem, 8vw, 6rem); padding-bottom: clamp(2.6rem, 6vw, 4.4rem); }
-  .home .hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); line-height: 1.02; max-width: 14ch; }
-  .home .hero .lead { max-width: 46ch; color: var(--f-muted); font-size: clamp(1.08rem, 1.6vw, 1.3rem); margin: 1.4rem 0 0; font-family: var(--sl-font-headings); line-height: 1.5; }
-  .home .cta-row { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 2rem; }
-
+  /* hero */
+  .home .hero { padding-top: clamp(2.8rem, 7vw, 5rem); display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .home .hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.02; max-width: 13ch; }
+  .home .hero .lead { max-width: 44ch; color: var(--f-muted); font-size: clamp(1.08rem, 1.6vw, 1.26rem); margin: 1.4rem 0 0; font-family: var(--sl-font-headings); line-height: 1.5; }
+  .home .cta-row { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.9rem; }
   .home .btn { font-weight: 600; font-size: 0.94rem; border-radius: 8px; padding: 0.72rem 1.2rem; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid transparent; transition: background 0.16s, border-color 0.16s, color 0.16s; }
   .home .btn.primary { background: var(--f-btn-bg); color: var(--f-btn-fg); }
   .home .btn.primary:hover { background: var(--f-btn-bg-hi); }
   .home .btn.ghost { border-color: var(--f-border-strong); color: var(--f-text); }
   .home .btn.ghost:hover { border-color: var(--f-accent); color: var(--f-accent); }
 
-  .home .doors-h { font-size: clamp(1.3rem, 2.2vw, 1.6rem); margin-bottom: 1.1rem; }
-  .home .doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  .home .door { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: 1.6rem; box-shadow: var(--f-shadow); display: flex; flex-direction: column; gap: 0.6rem; transition: border-color 0.18s, box-shadow 0.18s; }
-  .home .door:hover { border-color: var(--f-accent); box-shadow: var(--f-shadow-lift); }
-  .home .door h3 { font-size: 1.5rem; }
-  .home .door p { color: var(--f-muted); font-size: 0.97rem; margin: 0; flex: 1; }
-  .home .door .go { color: var(--f-accent); font-weight: 600; font-size: 0.92rem; display: inline-flex; gap: 0.45rem; align-items: center; margin-top: 0.4rem; }
+  .home .facts { margin: 0; background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; box-shadow: var(--f-shadow); padding: 0.4rem 1.6rem; }
+  .home .facts div { padding: 1rem 0; border-top: 1px solid var(--f-border); }
+  .home .facts div:first-child { border-top: 0; }
+  .home .facts dt { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--f-dim); font-weight: 600; }
+  .home .facts dd { margin: 0.25rem 0 0; padding: 0; font-size: 0.95rem; color: var(--f-text); line-height: 1.45; }
 
-  .home .arw { transition: transform 0.18s; }
-  .home .btn:hover .arw, .home .door:hover .arw { transform: translateX(3px); }
+  /* capabilities */
+  .home .caps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--f-border); border: 1px solid var(--f-border); border-radius: 12px; overflow: hidden; }
+  .home .cap { background: var(--f-surface); padding: 1.4rem 1.4rem 1.5rem; transition: background 0.18s; }
+  .home .cap:hover { background: var(--f-surface-2); }
+  .home .cap:hover h3 { color: var(--f-accent); }
+  .home .cap h3 { font-size: 1.2rem; margin-bottom: 0.45rem; transition: color 0.18s; }
+  .home .cap h3::before { content: ""; display: block; width: 24px; height: 2px; background: var(--f-accent); margin-bottom: 0.8rem; }
+  .home .cap p { color: var(--f-muted); font-size: 0.92rem; margin: 0; line-height: 1.5; }
+  .home .more { margin: 1rem 0 0; }
+  .home .more a, .home .links a { color: var(--f-accent); font-weight: 600; font-size: 0.94rem; }
+  .home .more a:hover, .home .links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-  .home .note { color: var(--f-dim); font-size: 0.92rem; margin: 2.2rem 0 0; max-width: 70ch; }
+  /* run it / project */
+  .home .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .home .panel { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: clamp(1.5rem, 3vw, 2rem); box-shadow: var(--f-shadow); }
+  .home .panel p { color: var(--f-muted); margin: 0 0 1.2rem; font-size: 0.97rem; }
+  .home .links { list-style: none; margin: 0; padding: 1rem 0 0; border-top: 1px solid var(--f-border); display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; }
 
-  @media (max-width: 760px) {
-    .home .doors { grid-template-columns: 1fr; }
+  .home .arw { display: inline-block; transition: transform 0.18s; }
+  .home .btn:hover .arw, .home .more a:hover .arw { transform: translateX(3px); }
+
+  @media (max-width: 960px) {
+    .home .hero, .home .split { grid-template-columns: 1fr; }
+    .home .caps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .home .caps, .home .links { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .home .btn:hover .arw, .home .door:hover .arw { transform: none; }
+    .home .btn:hover .arw, .home .more a:hover .arw { transform: none; }
   }
 </style>
