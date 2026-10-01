@@ -1,15 +1,27 @@
 ---
-title: "Interoperability & Standards"
+title: "Export, reuse & cite"
 description: "How an Archetype instance exports and imports scholarly data through open standards — W3C Web Annotations, IIIF, and TEI — so a corpus is portable, citable, and never locked in."
 ---
 
-A digital manuscript project is only as durable as the formats it commits to. An Archetype instance is built so that the scholarly work it holds — image regions, transcriptions, palaeographic classifications, and the links between them — can leave the platform in the standard vocabularies that libraries, viewers, and other research tools already understand. Nothing is trapped in a proprietary schema. The same data that powers [search and browse](/platform/search/) inside the platform is served, on demand, as W3C Web Annotations, IIIF resources, and TEI documents.
+A digital manuscript project is only as durable as the formats it commits to. An Archetype instance is built so that the scholarly work it holds — image regions, transcriptions, palaeographic classifications, and the links between them — can leave the platform in the standard vocabularies that libraries, viewers, and other research tools already understand. Nothing is trapped in a proprietary schema. The same data that powers [search and browse](/researchers/search/) inside the platform is served, on demand, as W3C Web Annotations, IIIF resources, and TEI documents.
 
-Interoperability here is a *derived view* over the canonical [data model](/platform/data-model/), not a second copy. An image region is a `Graph`; a text-to-region link is a reference embedded in the transcription markup. The standards endpoints translate those canonical objects into open formats at read time, so an export is always faithful to the live corpus rather than a stale dump.
+Interoperability here is a *derived view* over the canonical [data model](/researchers/data-model/), not a second copy. An image region is a `Graph`; a text-to-region link is a reference embedded in the transcription markup. The standards endpoints translate those canonical objects into open formats at read time, so an export is always faithful to the live corpus rather than a stale dump.
+
+## Quick exports for your own research
+
+Most researchers need only these, all available from the public site without an account:
+
+- **Search results** download as CSV, JSON, or BibTeX (for manuscripts, scribes and hands), either the current page or the whole result set. See [Search & browse](/researchers/search/).
+- **A manuscript's glyph annotations** download as CSV from its annotation gallery.
+- **A transcription or translation** downloads as a standalone TEI P5 document, and a published manuscript description as TEI too.
+- **A whole manuscript** opens in any IIIF viewer, such as Mirador, from its manifest URL.
+- **A lightbox arrangement** exports as PDF, images, JSON or TEI. See [Lightbox & worksets](/researchers/lightbox/).
+
+To cite what you used, see [Citing Archetype](/researchers/#citing-archetype). The rest of this page describes the standard formats in detail, for anyone connecting another tool.
 
 ## W3C Web Annotations (JSON-LD)
 
-The [annotation model](/platform/annotation/) — glyphs boxed on a page image, classified against an allograph taxonomy, and linked to points in a transcription — is exposed as [W3C Web Annotations](https://www.w3.org/TR/annotation-model/), the standard the whole annotation ecosystem shares.
+The [annotation model](/researchers/annotation/) — glyphs boxed on a page image, classified against an allograph taxonomy, and linked to points in a transcription — is exposed as [W3C Web Annotations](https://www.w3.org/TR/annotation-model/), the standard the whole annotation ecosystem shares.
 
 - A single region is served as an `Annotation` whose target carries both a `FragmentSelector` (a `xywh=` bounding box) and an `SvgSelector` (the exact polygon), with a motivation chosen by annotation type — `describing` for a palaeographic glyph, `identifying` for a text anchor, `commenting` for an editorial note. Classifications appear as a `SpecificResource` body pointing back to the allograph.
 - A whole transcription is served as an `AnnotationPage`, one annotation per linked element, combining a `TextQuoteSelector` (the exact phrase in the text) with the image region it corresponds to.
@@ -30,4 +42,4 @@ Transcriptions are stored as [TEI P5](https://tei-c.org/), the scholarly standar
 
 ## HTR import (PAGE-XML / ALTO)
 
-Output from handwritten-text-recognition engines can be imported directly through the management API (there is no backoffice screen for it yet). The platform parses both [PAGE-XML](https://github.com/PRImA-Research-Lab/PAGE-XML) and [ALTO](https://www.loc.gov/standards/alto/) — the two formats HTR tools such as Transkribus and eScriptorium emit — into a draft transcription. Each recognised line becomes a TEI `<seg type="line">`, and where the engine supplies a line polygon, the platform materialises a region and wires the `corresp` link automatically, so an HTR pass arrives already connected to the page image. See [annotations](/platform/annotation/) for how those regions then behave in the editor.
+Output from handwritten-text-recognition engines can be imported directly through the management API (there is no backoffice screen for it yet). The platform parses both [PAGE-XML](https://github.com/PRImA-Research-Lab/PAGE-XML) and [ALTO](https://www.loc.gov/standards/alto/) — the two formats HTR tools such as Transkribus and eScriptorium emit — into a draft transcription. Each recognised line becomes a TEI `<seg type="line">`, and where the engine supplies a line polygon, the platform materialises a region and wires the `corresp` link automatically, so an HTR pass arrives already connected to the page image. See [annotations](/researchers/annotation/) for how those regions then behave in the editor.

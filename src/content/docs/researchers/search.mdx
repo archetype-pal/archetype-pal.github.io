@@ -18,7 +18,7 @@ An Archetype instance does not offer one flat search box over "documents." It ex
 | Texts / Clauses | Transcribed text and its diplomatic sub-units |
 | People / Places | Named entities extracted from the transcriptions |
 
-The Graphs collection is what distinguishes palaeographic search from ordinary catalogue search: because every annotated letter records its allograph, its constituent components, their features, and where the glyph sits, you can retrieve script *evidence* directly — every surviving example of a form — rather than the documents that happen to mention it. See [Annotation & TEI](/platform/annotation/) for how that evidence is created and the [Data model](/platform/data-model/) for the vocabulary behind these fields.
+The Graphs collection is what distinguishes palaeographic search from ordinary catalogue search: because every annotated letter records its allograph, its constituent components, their features, and where the glyph sits, you can retrieve script *evidence* directly — every surviving example of a form — rather than the documents that happen to mention it. See [Annotation & TEI](/researchers/annotation/) for how that evidence is created and the [Data model](/researchers/data-model/) for the vocabulary behind these fields.
 
 ## Filtering, faceting and browsing
 
@@ -34,4 +34,4 @@ Free-text search runs across the fields that matter for each collection (transcr
 
 Search is backed by [Meilisearch](https://www.meilisearch.com/) and is **registry-driven**: a single declarative registry (`api/apps/search/registry.py`) is the source of truth for every collection — its model, document builder, and its filterable, sortable, facetable and searchable attribute lists. Adding or changing an index is a one-entry edit; nothing about an index lives anywhere else. Indexes are built and kept current by background workers, with superuser-only management actions to reindex, clear or rebuild, plus in-sync statistics (see `api/docs/search-operations.md`).
 
-Any result set can be exported for downstream research — CSV, JSON, or **BibTeX** for manuscripts, scribes and hands — either the current page or the full set. Manuscript results can also be staged for side-by-side viewing in the [Compare view](/platform/imaging/). For the standards that make exported work portable, see [Interoperability & Standards](/platform/interoperability/).
+Any result set can be exported for downstream research — CSV, JSON, or **BibTeX** for manuscripts, scribes and hands — either the current page or the full set. Manuscript results can also be staged for side-by-side viewing in the [Compare view](/researchers/imaging/). For the standards that make exported work portable, see [Export, reuse & cite](/researchers/interoperability/).

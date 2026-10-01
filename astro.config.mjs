@@ -11,11 +11,36 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [remarkGfm],
 	},
+	// Old URLs from before the site was organised by audience.
+	redirects: {
+		'/platform': '/researchers/',
+		'/platform/search': '/researchers/search/',
+		'/platform/imaging': '/researchers/imaging/',
+		'/platform/annotation': '/researchers/annotation/',
+		'/platform/workflow': '/researchers/workflow/',
+		'/platform/lightbox': '/researchers/lightbox/',
+		'/platform/data-model': '/researchers/data-model/',
+		'/platform/interoperability': '/researchers/interoperability/',
+		'/platform/architecture': '/contributors/architecture/',
+		'/about/palaeography': '/researchers/palaeography/',
+		'/contribute': '/contributors/',
+		'/contribute/architecture': '/contributors/codebase/',
+		'/contribute/workflow': '/contributors/workflow/',
+		'/deploy': '/contributors/local-setup/',
+		'/deploy/configuration': '/contributors/configuration/',
+		'/deploy/corpus': '/contributors/corpus/',
+		'/deploy/production': '/contributors/production/',
+		'/deploy/troubleshooting': '/contributors/troubleshooting/',
+		'/api': '/contributors/api/',
+		'/api/resources': '/contributors/api-endpoints/',
+		'/roadmap': '/funders/roadmap/',
+		'/status': '/funders/status/',
+	},
 	integrations: [
 		starlight({
 			title: 'Archetype',
 			description:
-				'An open platform for palaeography research, manuscript description, and IIIF-driven scholarship — for researchers, libraries, and museums.',
+				'An open platform for palaeography: search, view, annotate and compare manuscript images and the texts they carry.',
 			// Default to light mode; the theme toggle still lets visitors switch to dark.
 			head: [
 				{
@@ -28,58 +53,60 @@ export default defineConfig({
 			customCss: ['./src/styles/theme.css'],
 			sidebar: [
 				{
-					label: 'Platform',
+					label: 'For researchers',
 					items: [
-						{ label: 'Overview', slug: 'platform' },
-						{ label: 'Architecture', slug: 'platform/architecture' },
-						{ label: 'Search & Browse', slug: 'platform/search' },
-						{ label: 'Imaging & IIIF', slug: 'platform/imaging' },
-						{ label: 'Annotation & TEI', slug: 'platform/annotation' },
-						{ label: 'Editorial Workflow', slug: 'platform/workflow' },
-						{ label: 'Lightbox & Collections', slug: 'platform/lightbox' },
-						{ label: 'Data Model', slug: 'platform/data-model' },
-						{ label: 'Interoperability', slug: 'platform/interoperability' },
+						{ label: 'Start here', slug: 'researchers' },
+						{ label: 'Palaeography on Archetype', slug: 'researchers/palaeography' },
+						{ label: 'Search & browse', slug: 'researchers/search' },
+						{ label: 'Images & IIIF', slug: 'researchers/imaging' },
+						{ label: 'Annotation & TEI', slug: 'researchers/annotation' },
+						{ label: 'Editorial workflow', slug: 'researchers/workflow' },
+						{ label: 'Lightbox & worksets', slug: 'researchers/lightbox' },
+						{ label: 'Data model', slug: 'researchers/data-model' },
+						{ label: 'Export, reuse & cite', slug: 'researchers/interoperability' },
 					],
 				},
 				{
-					label: 'Project',
+					label: 'For contributors',
 					items: [
-						{ label: 'Roadmap', slug: 'roadmap' },
-						{ label: "What's shipped", slug: 'status' },
+						{ label: 'Start here', slug: 'contributors' },
+						{ label: 'Run it locally', slug: 'contributors/local-setup' },
+						{ label: 'How it is built', slug: 'contributors/architecture' },
+						{ label: 'Working in the codebase', slug: 'contributors/codebase' },
+						{ label: 'Contribution workflow', slug: 'contributors/workflow' },
+						{
+							label: 'Host an instance',
+							items: [
+								{ label: 'Production deployment', slug: 'contributors/production' },
+								{ label: 'Configuration', slug: 'contributors/configuration' },
+								{ label: 'Load your own corpus', slug: 'contributors/corpus' },
+								{ label: 'Troubleshooting', slug: 'contributors/troubleshooting' },
+							],
+						},
+						{
+							label: 'API',
+							items: [
+								{ label: 'The API', slug: 'contributors/api' },
+								{ label: 'Endpoints', slug: 'contributors/api-endpoints' },
+							],
+						},
 					],
 				},
 				{
-					label: 'Deploy',
+					label: 'For funders',
 					items: [
-						{ label: 'Running Archetype', slug: 'deploy' },
-						{ label: 'Configuration', slug: 'deploy/configuration' },
-						{ label: 'Bring your own corpus', slug: 'deploy/corpus' },
-						{ label: 'Production deployment', slug: 'deploy/production' },
-						{ label: 'Troubleshooting', slug: 'deploy/troubleshooting' },
-					],
-				},
-				{
-					label: 'API',
-					items: [
-						{ label: 'The API', slug: 'api' },
-						{ label: 'Endpoints', slug: 'api/resources' },
-					],
-				},
-				{
-					label: 'Contribute',
-					items: [
-						{ label: 'Contributing', slug: 'contribute' },
-						{ label: 'Working in the codebase', slug: 'contribute/architecture' },
-						{ label: 'Contribution workflow', slug: 'contribute/workflow' },
+						{ label: 'Start here', slug: 'funders' },
+						{ label: 'What works today', slug: 'funders/status' },
+						{ label: 'Roadmap & priorities', slug: 'funders/roadmap' },
+						{ label: 'Governance & sustainability', slug: 'funders/governance' },
 					],
 				},
 				{
 					label: 'About',
 					items: [
 						{ label: 'About Archetype', slug: 'about' },
-						{ label: 'Palaeography on Archetype', slug: 'about/palaeography' },
 						{ label: 'From DigiPal to Archetype', slug: 'about/lineage' },
-						{ label: 'Community & governance', slug: 'about/community' },
+						{ label: 'Community & help', slug: 'about/community' },
 					],
 				},
 			],

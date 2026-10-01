@@ -3,7 +3,7 @@ title: "Troubleshooting"
 description: "Symptom-cause-fix recipes for the most common Archetype deployment and dev-environment failures."
 ---
 
-Most problems with a fresh Archetype instance are environment setup, not application bugs: unapplied migrations, unbuilt search indexes, or a container that cannot reach the services it needs. This page maps each visible symptom to its cause and the exact fix. It assumes you already have the stack running — if not, start with the [Quickstart](/deploy/) and [Configuration](/deploy/configuration/).
+Most problems with a fresh Archetype instance are environment setup, not application bugs: unapplied migrations, unbuilt search indexes, or a container that cannot reach the services it needs. This page maps each visible symptom to its cause and the exact fix. It assumes you already have the stack running — if not, start with the [Run it locally](/contributors/local-setup/) and [Configuration](/contributors/configuration/).
 
 Backend commands use the `just` recipes from `api/` (dev stack) — on a production server, run the same-named recipes from `infrastructure/` instead; the two stacks are separate Compose projects, and a recipe in `api/` never touches production. The frontend runs from `frontend/`, in its dev container (`just up`) or with `pnpm`.
 
@@ -35,7 +35,7 @@ just setup-search-indexes     # create the Meilisearch indexes
 just sync-all-search-indexes  # populate them
 ```
 
-Both endpoints return 200 afterward. A fresh database syncs **0 documents**, so the carousel and search stay empty until you load a corpus — that is expected, not a bug. See [Bring your own corpus](/deploy/corpus/).
+Both endpoints return 200 afterward. A fresh database syncs **0 documents**, so the carousel and search stay empty until you load a corpus — that is expected, not a bug. See [Load your own corpus](/contributors/corpus/).
 
 ## Search returns no results
 
@@ -77,7 +77,7 @@ And allow the internal host on the API side (`api/config/.env`):
 ALLOWED_HOSTS=localhost,127.0.0.1,host.docker.internal
 ```
 
-Recreate **both** stacks after editing env — `just down && just up-bg` in each repo; a `restart` does not reload environment files. In the infrastructure stack, use the service names instead of `host.docker.internal`: `INTERNAL_API_URL=http://api` with `api` in `ALLOWED_HOSTS`. There `NEXT_PUBLIC_IIIF_UPSTREAM` must be the bare site origin, never `…/sipi` (the segment doubles and every image 404s), and it is baked into the frontend image at build time. See [Configuration](/deploy/configuration/).
+Recreate **both** stacks after editing env — `just down && just up-bg` in each repo; a `restart` does not reload environment files. In the infrastructure stack, use the service names instead of `host.docker.internal`: `INTERNAL_API_URL=http://api` with `api` in `ALLOWED_HOSTS`. There `NEXT_PUBLIC_IIIF_UPSTREAM` must be the bare site origin, never `…/sipi` (the segment doubles and every image 404s), and it is baked into the frontend image at build time. See [Configuration](/contributors/configuration/).
 
 ## `DisallowedHost` 400 errors
 
@@ -100,4 +100,4 @@ just bash
 python manage.py createsuperuser
 ```
 
-Then confirm the frontend origin (e.g. `http://localhost:3000`) appears in both `CSRF_TRUSTED_ORIGINS` (backend) and `CORS_ALLOWED_ORIGINS`. The management API is superuser-gated — a regular account cannot reach backoffice endpoints. For the endpoint surface, see [The API](/api/); to work on the code itself, see [Contributing](/contribute/).
+Then confirm the frontend origin (e.g. `http://localhost:3000`) appears in both `CSRF_TRUSTED_ORIGINS` (backend) and `CORS_ALLOWED_ORIGINS`. The management API is superuser-gated — a regular account cannot reach backoffice endpoints. For the endpoint surface, see [The API](/contributors/api/); to work on the code itself, see [For contributors](/contributors/).

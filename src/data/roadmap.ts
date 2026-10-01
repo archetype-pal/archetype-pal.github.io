@@ -35,14 +35,14 @@ export const capabilities: Capability[] = [
     area: 'Search & Browse',
     maturity: 'shipped',
     summary: 'Faceted search across a whole collection by script, scribe, date, place and text, over purpose-built indexes.',
-    platform: '/platform/search/',
+    platform: '/researchers/search/',
   },
   {
     id: 'imaging',
     area: 'Imaging & IIIF',
     maturity: 'shipped',
     summary: 'Deep-zoom examination of high-resolution page images, served and described with IIIF Image & Presentation.',
-    platform: '/platform/imaging/',
+    platform: '/researchers/imaging/',
   },
   {
     id: 'annotation',
@@ -52,7 +52,7 @@ export const capabilities: Capability[] = [
     detail: [
       'Follow-ups: a jump to unlinked passages, a confirm step before a drawn link is saved, and an inline @subtype axis in the TEI editor.',
     ],
-    platform: '/platform/annotation/',
+    platform: '/researchers/annotation/',
   },
   {
     id: 'descriptions',
@@ -60,7 +60,7 @@ export const capabilities: Capability[] = [
     maturity: 'shipped',
     summary: 'Structured TEI msDesc descriptions authored in the backoffice, rendered on the public manuscript page and searchable by facet.',
     detail: ['Deferred to a later version: RNG/Schematron schema validation.'],
-    platform: '/platform/annotation/',
+    platform: '/researchers/annotation/',
   },
   {
     id: 'workflow',
@@ -68,7 +68,7 @@ export const capabilities: Capability[] = [
     maturity: 'shipped',
     summary: 'Moving transcriptions from draft to reviewed to published, with an attributed, dated audit trail.',
     detail: ['Next: a reviewer-assignee picker — the API already records an assignee; only the control to set it is missing.'],
-    platform: '/platform/workflow/',
+    platform: '/researchers/workflow/',
   },
   {
     id: 'lightbox',
@@ -78,14 +78,14 @@ export const capabilities: Capability[] = [
     detail: [
       'Backlog: filter presets, workspace templates, freeform crop, px↔mm measurement calibration, richer image notes, offline use.',
     ],
-    platform: '/platform/lightbox/',
+    platform: '/researchers/lightbox/',
   },
   {
     id: 'data-model',
     area: 'Data Model',
     maturity: 'shipped',
     summary: 'The structured vocabulary a palaeographer works with: manuscripts, hands, glyphs, annotation graphs and TEI texts.',
-    platform: '/platform/data-model/',
+    platform: '/researchers/data-model/',
   },
   {
     id: 'collection-admin',
@@ -104,7 +104,7 @@ export const capabilities: Capability[] = [
       'Next: a reverse W3C-annotation → graph import path.',
       'Next: a IIIF Collection endpoint spanning multiple manuscripts.',
     ],
-    platform: '/platform/interoperability/',
+    platform: '/researchers/interoperability/',
   },
   {
     id: 'stats-qc',
@@ -124,7 +124,7 @@ export const capabilities: Capability[] = [
     summary: 'A future, grant-funded research direction — with the scholar always the author of record.',
     detail: [
       'Today the platform imports externally-produced HTR transcriptions only; it runs no recognition model.',
-      'Not part of the released platform: the programme depends on grant funding, its design is published for comment (GitHub Discussion #7), and exploratory work is kept on a separate branch.',
+      'Not part of the released platform: the programme depends on grant funding. A phased design exists, and exploratory work is kept on a separate branch.',
       'Research directions: handwriting recognition, scribe attribution, and computational dating — every machine suggestion routed through the editorial review workflow.',
     ],
   },

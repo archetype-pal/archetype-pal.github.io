@@ -3,7 +3,7 @@ title: "Production deployment"
 description: "Deploy Archetype in production as a full-stack Docker Compose stack — nginx and TLS, Celery workers, the published GHCR images, upload storage, backups, and upgrades."
 ---
 
-Run Archetype in production as a single Docker Compose stack: nginx terminates TLS and reverse-proxies the Next.js frontend, the Django API, and the SIPI IIIF image server, backed by PostgreSQL, Meilisearch, Redis, and a Celery worker. Everything lives in the [`infrastructure/`](/contribute/) repository, whose `compose.yaml` and `just` recipes are the **only** staging/production stack. The backend's own `compose.yaml` is for local development and CI only; it runs under a separate Compose project (`archetype-dev`, versus `archetype` here), so the two never share containers or volumes.
+Run Archetype in production as a single Docker Compose stack: nginx terminates TLS and reverse-proxies the Next.js frontend, the Django API, and the SIPI IIIF image server, backed by PostgreSQL, Meilisearch, Redis, and a Celery worker. Everything lives in the [`infrastructure`](https://github.com/archetype-pal/infrastructure) repository, whose `compose.yaml` and `just` recipes are the **only** staging/production stack. The backend's own `compose.yaml` is for local development and CI only; it runs under a separate Compose project (`archetype-dev`, versus `archetype` here), so the two never share containers or volumes.
 
 > This guide uses placeholder hosts like `archetype.example.org`. Substitute your own domain everywhere. The public beta instance runs this stack at [beta.archetype-pal.ink](https://beta.archetype-pal.ink).
 
@@ -67,7 +67,7 @@ FRONTEND_IMAGE=ghcr.io/archetype-pal/frontend@sha256:<digest>
 
 > The frontend inlines `NEXT_PUBLIC_*` values at **build** time, so a frontend image only works on the domain it was built for. The published tags are built for the project's own hosts (`:beta` for beta.archetype-pal.ink); for your domain, build `frontend/Dockerfile` with your own `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_IIIF_UPSTREAM`, `NEXT_PUBLIC_SITE_URL` and `CORS_ALLOWED_ORIGINS` build args.
 
-See [Configuration](/deploy/configuration/) for the full variable reference.
+See [Configuration](/contributors/configuration/) for the full variable reference.
 
 ## Bring the stack up
 
@@ -138,6 +138,6 @@ The beta instance deploys itself. The infrastructure repo's `deploy-beta` workfl
 
 ## See also
 
-- [Configuration](/deploy/configuration/) — every environment variable
-- [Bring your own corpus](/deploy/corpus/) — loading and indexing your data
-- [The API](/api/) — endpoints served under `/api/v1/`
+- [Configuration](/contributors/configuration/) — every environment variable
+- [Load your own corpus](/contributors/corpus/) — loading and indexing your data
+- [The API](/contributors/api/) — endpoints served under `/api/v1/`

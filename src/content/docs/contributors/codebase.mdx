@@ -5,17 +5,27 @@ description: "The layering rules and search-registry pattern that govern Archety
 
 Archetype's backend is a layered Django codebase with enforced app boundaries; the frontend is a Next.js app. This page explains the architecture rules you must follow when changing code, and the exact commands to run the tests, linters and boundary checks before you push.
 
-The repo is a git superproject with the backend (`api/`), frontend (`frontend/`), infrastructure (`infrastructure/`) and this docs site wired in as submodules. Make changes inside a component repo, commit and push there first, then bump the submodule pointer at the root. See [Contributing](/contribute/) for the full submodule workflow.
+## Where things live
+
+| Area | Path | Notes |
+| --- | --- | --- |
+| Backend apps | `api/apps/*` | Django feature apps; routes under `/api/v1/*` |
+| Search registry | `api/apps/search/registry.py` | Single source of truth for index types |
+| Public site | `frontend/app/(site)/*` | App Router pages |
+| Backoffice | `frontend/app/backoffice/*` | Staff authoring and management UI |
+| Data access | `frontend/lib/api-fetch.ts`, `frontend/services/backoffice/` | Public fetch layer; backoffice API client |
+| Request logic | `frontend/proxy.ts` | CSP nonce, auth and feature gating (Next.js 16's `middleware.ts`) |
+| Production stack | `infrastructure/compose.yaml` | Full stack behind nginx |
 
 ## Backend layout
 
-The Django backend lives in `api/apps/`, one directory per feature app:
+The Django backend lives in `api/apps/` (the backend repository, cloned as `api/`), one directory per feature app:
 
 ```
-api/apps/{common,users,manuscripts,symbols_structure,scribes,annotations,annotation_standards,publications,pages,worksets,search,uploads}
+apps/{common,users,manuscripts,symbols_structure,scribes,annotations,annotation_standards,publications,pages,worksets,search,uploads}
 ```
 
-(`annotation_standards` serves the IIIF Presentation and W3C Web Annotation output; `uploads` handles chunked image uploads.) Inter-app imports are not free-for-all — they follow a fixed dependency graph. `common` depends on nothing; `search` may read from `manuscripts`, `scribes`, `symbols_structure`, `annotations` and `publications`; `manuscripts` depends only on `common` and `annotations`; and so on. The full graph is declared in `api/scripts/check_architecture_boundaries.py`. Every app under `apps/` (any directory with an `apps.py`) must have an entry there, or the check fails.
+(`annotation_standards` serves the IIIF Presentation and W3C Web Annotation output; `uploads` handles chunked image uploads.) Inter-app imports are not free-for-all — they follow a fixed dependency graph. `common` depends on nothing; `search` may read from `manuscripts`, `scribes`, `symbols_structure`, `annotations` and `publications`; `manuscripts` depends only on `common` and `annotations`; and so on. The full graph is declared in `scripts/check_architecture_boundaries.py`. Every app under `apps/` (any directory with an `apps.py`) must have an entry there, or the check fails.
 
 Run the boundary check before you push:
 
@@ -36,7 +46,7 @@ If you find yourself reaching for a model or task inside a view or a serializer'
 
 ## The search registry pattern
 
-Search is registry-driven: `api/apps/search/registry.py` is the single declarative source of truth for every Meilisearch index. Each `IndexType` maps to one `IndexRegistration` holding the model, the document builder (from `apps/search/documents/`), the filterable/sortable/facet/searchable attribute lists, and the ORM prefetch spec — nothing about an index lives anywhere else.
+Search is registry-driven: `apps/search/registry.py` is the single declarative source of truth for every Meilisearch index. Each `IndexType` maps to one `IndexRegistration` holding the model, the document builder (from `apps/search/documents/`), the filterable/sortable/facet/searchable attribute lists, and the ORM prefetch spec — nothing about an index lives anywhere else.
 
 > **Adding a search index is a three-part edit made together:** the registry entry, the builder function in `apps/search/documents/`, and the tests. Land them in the same change — a half-registered index is a broken one.
 
@@ -70,6 +80,6 @@ just format         # pnpm format → prettier --check
 just bundle-budget  # CI gate: builds, then fails if the gzip bundle exceeds .bundle-budget.json
 ```
 
-Both repos ship **pre-commit hooks** in `.githooks/` that run fast CI-equivalent checks (backend: `ruff check`, `ruff format --check`, `uv lock --check`, the architecture-boundary check; frontend: `pnpm lint`, `pnpm format`). They are not active until you enable them per clone with `git config core.hooksPath .githooks` — see the [Contribution workflow](/contribute/workflow/). If a hook fails, fix it (`uvx ruff format .` or `pnpm format:fix && pnpm lint:fix`) and re-commit. The frontend bundle-budget gate can trip even when lint and tests pass — run `just bundle-budget-update` (or `pnpm build && pnpm bundle-budget:update`) and commit the refreshed budget after intentional growth.
+Both repos ship **pre-commit hooks** in `.githooks/` that run fast CI-equivalent checks (backend: `ruff check`, `ruff format --check`, `uv lock --check`, the architecture-boundary check; frontend: `pnpm lint`, `pnpm format`). They are not active until you enable them per clone with `git config core.hooksPath .githooks` — see the [Contribution workflow](/contributors/workflow/). If a hook fails, fix it (`uvx ruff format .` or `pnpm format:fix && pnpm lint:fix`) and re-commit. The frontend bundle-budget gate can trip even when lint and tests pass — run `just bundle-budget-update` (or `pnpm build && pnpm bundle-budget:update`) and commit the refreshed budget after intentional growth.
 
-For running an instance locally, see [Configuration](/deploy/configuration/) and [Bring your own corpus](/deploy/corpus/); for the HTTP surface, see [The API](/api/).
+For running an instance locally, see [Configuration](/contributors/configuration/) and [Load your own corpus](/contributors/corpus/); for the HTTP surface, see [The API](/contributors/api/).

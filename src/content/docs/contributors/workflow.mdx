@@ -1,0 +1,101 @@
+---
+title: "Contribution workflow"
+description: "How a change gets into Archetype: an issue, a branch, Conventional Commits, the pre-commit hooks, the checks CI runs, and review."
+---
+
+Each repository takes changes through pull requests against its `main` branch. This page walks the loop from an idea to a merged change, and the checks that gate it. New here? Start with [For contributors](/contributors/) and [Run it locally](/contributors/local-setup/).
+
+## 1. Start from an issue
+
+Most changes should have an issue first, so the approach can be agreed before you write code. Look for an existing one, or open one in the repository the change belongs to. Say on the issue that you are taking it.
+
+## 2. Fork and branch
+
+Fork the repository on GitHub (members of the organisation can branch in it directly), then create a branch named for the type of change and, where there is one, the issue number:
+
+```bash
+git switch -c fix-142/charter-facet-count
+```
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org): `feat: …`, `fix: …`, `docs: …`, `refactor: …`, `chore: …`.
+
+## 3. Enable the pre-commit hooks (once per clone)
+
+Hooks live in each repo's `.githooks/` and are wired up per-clone via `core.hooksPath`. They are off until you enable them; run this once in each repository you work in:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook runs the fast CI checks before every commit, so lint and formatting problems surface before CI. It does not run the type-check or the tests.
+
+**Backend (`api/`)** runs:
+
+```bash
+uvx ruff check              # lint
+uvx ruff format --check .   # formatting
+uv lock --check             # lockfile is in sync
+uv run python scripts/check_architecture_boundaries.py
+```
+
+**Frontend (`frontend/`)** runs:
+
+```bash
+pnpm lint      # ESLint
+pnpm format    # Prettier check
+```
+
+If a hook fails, fix it and re-commit. The usual one-liners:
+
+```bash
+# backend
+uvx ruff check --fix && uvx ruff format .
+# frontend
+pnpm lint:fix && pnpm format:fix
+```
+
+## 4. Make the change and pass CI
+
+CI (GitHub Actions) runs on every pull request into `main` and every push to it. It is stricter than the hook — notably it also type-checks and runs the full test suites. Reproduce it locally before you push.
+
+**Backend (`.github/workflows/ci.yml`)** — three jobs:
+
+| Job | What it runs |
+| --- | --- |
+| `lint` | `uv lock --check`, `uvx ruff check`, `uvx ruff format --check .`, `uvx mypy apps config`, architecture-boundary check, `makemigrations --check` (no missing migrations) |
+| `unit-tests` | builds the api image, then `just pytest-focused` |
+| `integration-tests` | `just coverage` (enforces the coverage gate) |
+
+A separate backend `Security` workflow runs CodeQL and a `pip-audit` dependency audit, on pull requests and on a schedule. A newly published vulnerability in a dependency can turn it red on a pull request that changed nothing; the fix is a lockfile upgrade (`uv lock --upgrade-package <name>`), in its own pull request.
+
+```bash
+cd api
+uvx mypy apps config    # the hook does NOT run this — CI does
+just pytest-focused     # fast SQLite loop
+just coverage           # full suite + coverage gate
+```
+
+**Frontend (`.github/workflows/ci.yml`)** — five jobs: `lint` (`pnpm lint`), `format` (`pnpm format`), `test` (`pnpm test`), `build` (`pnpm build` then `pnpm bundle-budget`), and `lighthouse`. The bundle-budget step fails the build when the gzip bundle exceeds `.bundle-budget.json`, so a new route can trip CI even when lint and tests pass:
+
+```bash
+cd frontend
+pnpm lint && pnpm format && pnpm test
+pnpm build && pnpm bundle-budget
+# intentional growth? regenerate the budget and commit it:
+pnpm bundle-budget:update
+```
+
+## 5. Open a pull request
+
+Push your branch and open a pull request against the repository's `main`:
+
+```bash
+git push -u origin fix-142/charter-facet-count
+gh pr create --fill
+```
+
+Keep the description short: what the change does and why, in a few sentences, and `Closes #142`. A maintainer reviews it; CI must be green before it merges.
+
+If a feature needs both an API change and an interface change, open one pull request in each repository and get the backend one merged first, so the frontend never depends on an API that does not exist yet.
+
+See also [Working in the codebase](/contributors/codebase/) and [The API](/contributors/api/).

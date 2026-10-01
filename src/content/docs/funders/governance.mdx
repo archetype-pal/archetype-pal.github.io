@@ -1,0 +1,32 @@
+---
+title: Governance & sustainability
+description: How Archetype is developed and decided, and what protects the work it holds if funding, people or servers change.
+---
+
+A funder backing research software needs to know two things: how decisions are made, and what survives if the money or the people move on. This page answers both.
+
+## How the project is run
+
+- **Developed in the open.** All code, issues and changes are public on GitHub under the [`archetype-pal`](https://github.com/archetype-pal) organisation.
+- **Every change is reviewed and tested.** Changes reach the main branch through pull requests that pass automated tests, linting, type-checking and, on the backend, security scanning. The [Contribution workflow](/contributors/workflow/) describes the checks.
+- **Status is recorded honestly.** The [Roadmap](/funders/roadmap/) and [What works today](/funders/status/) are generated from one dated list of capabilities, checked against the code, so the two pages cannot disagree.
+- **Supported by research institutions.** Archetype 3 is supported by the [OG(H)AM project](https://ogham.glasgow.ac.uk) at the University of Glasgow and the [École Pratique des Hautes Études](https://www.ephe.psl.eu/).
+
+## What protects the work
+
+The design choices that matter most for longevity are the ones that keep the scholarship independent of the software.
+
+- **Open standards for every output.** Images are served with IIIF, texts are stored as TEI, and annotations are published as W3C Web Annotations. A corpus can be exported and read by other tools, or archived, without Archetype running.
+- **The method is documented, not just implemented.** The description of script — character, allograph, component, feature, hand — follows the published DigiPal framework, so the data stays interpretable. See [Palaeography on Archetype](/researchers/palaeography/).
+- **Self-hosted, on modest hardware.** Each institution runs its own instance and owns its data. The public instance runs on a single cloud server, from versioned container images, so a deployment can be rebuilt or rolled back to an exact known version.
+- **Backups by default.** The production stack dumps the database nightly and keeps two weeks of dumps; image files are kept on ordinary disk, where institutional backups can reach them.
+- **Provenance in the data.** Editorial changes carry an attributed, dated audit trail, so the record of who made each scholarly decision travels with the corpus.
+
+## Open questions
+
+- **Licence.** The team is choosing which open-source licence to adopt. Until one is published in the repositories, check with the project before redistributing the code.
+- **Long-term maintenance.** Security updates, dependency upgrades and hosting all need funded time. The [Roadmap](/funders/roadmap/) lists sustained maintenance alongside new features for that reason.
+
+## Credit
+
+Archetype builds directly on the DigiPal framework and the earlier Archetype versions developed by King's Digital Lab at King's College London. See [From DigiPal to Archetype](/about/lineage/).

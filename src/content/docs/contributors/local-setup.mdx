@@ -1,5 +1,5 @@
 ---
-title: "Running Archetype"
+title: "Run it locally"
 description: "A zero-to-running quickstart for a local Archetype stack: backend in Docker via just, frontend in a dev container or with pnpm, migrations, search indexes, and first admin login."
 ---
 
@@ -18,7 +18,7 @@ Install these before you start:
 
 ## 1. Get the code
 
-The backend and frontend are separate repositories. Clone both side by side:
+The backend and frontend are separate repositories. Clone both side by side; the docs call the backend checkout `api/`:
 
 ```bash
 git clone https://github.com/archetype-pal/backend.git api
@@ -52,7 +52,7 @@ just setup-search-indexes      # create indexes + settings (no documents)
 just sync-all-search-indexes   # load documents from the DB
 ```
 
-> A fresh database has no records yet, so the indexes will be empty — that is expected. See [Bring your own corpus](/deploy/corpus/) to import data.
+> A fresh database has no records yet, so the indexes will be empty — that is expected. See [Load your own corpus](/contributors/corpus/) to import data.
 
 ## 5. Create an admin user
 
@@ -98,8 +98,9 @@ Open **http://localhost:3000/login** and sign in with the superuser you created 
 
 ## Where to go next
 
-- **[Configuration](/deploy/configuration/)** — every backend and frontend environment variable, display-name overrides, and search settings.
-- **[Bring your own corpus](/deploy/corpus/)** — import manuscript images and metadata, then re-run the search sync so records appear.
-- **[Production](/deploy/production/)** — run the full proxied stack from the `infrastructure` repo (`just up-bg`, `just migrate`, `just collectstatic`, `just setup-upload-storage`, `just reindex`, and `just certbot` for TLS) behind nginx on ports 80/443.
-- **[The API](/api/)** — the REST surface under `/api/v1/`, with schema at `/api/v1/schema/` and Swagger UI at `/api/v1/docs/`.
-- **[Contributing](/contribute/)** — repo layout, the submodule workflow, and the test and lint gates.
+- **[Working in the codebase](/contributors/codebase/)** — the layering rules, and the test and lint commands.
+- **[Contribution workflow](/contributors/workflow/)** — branching, commit style and the checks CI runs.
+- **[Load your own corpus](/contributors/corpus/)** — import manuscript images and records, then rebuild the search indexes.
+- **[Configuration](/contributors/configuration/)** — every backend and frontend environment variable.
+- **[Production deployment](/contributors/production/)** — the full stack behind nginx, from the `infrastructure` repository.
+- **[The API](/contributors/api/)** — the REST surface, with its schema at `/api/v1/schema/` and Swagger UI at `/api/v1/docs/`.

@@ -5,7 +5,7 @@ description: "Reference of every environment variable and key setting for the fr
 
 Every Archetype deployment is configured through environment variables — a small required core plus a large set of optional overrides for search, storage, security, and dataset vocabulary. This page is a reference for the variables that matter, grouped by component. The three services read config independently: the **frontend** (Next.js) from `frontend/.env`, the **backend** (Django) from `api/config/.env`, and the full-stack **infrastructure** compose from `infrastructure/env_file` (plus a `.env` beside it for Compose interpolation). Start from the shipped templates: `frontend/.env.example`, `api/config/test.env`, and `infrastructure/env_file.example`.
 
-New to this? Start with the [Quickstart](/deploy/), then come back to tune your instance. To load a dataset, see [Bring your own corpus](/deploy/corpus/).
+New to this? Start with the [Run it locally](/contributors/local-setup/), then come back to tune your instance. To load a dataset, see [Load your own corpus](/contributors/corpus/).
 
 ## Frontend (`frontend/.env`)
 
@@ -105,4 +105,4 @@ NEXT_PUBLIC_API_URL=https://archetype.example.org
 
 > After changing `IIIF_HOST`, run `just reindex` from `infrastructure/` so stored thumbnail links pick up the new host.
 
-Next: [Production deployment](/deploy/production/) · [Troubleshooting](/deploy/troubleshooting/) · [The API](/api/) · [Contributing](/contribute/).
+Next: [Production deployment](/contributors/production/) · [Troubleshooting](/contributors/troubleshooting/) · [The API](/contributors/api/) · [For contributors](/contributors/).

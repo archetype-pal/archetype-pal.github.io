@@ -3,13 +3,13 @@ title: "Lightbox & Collections"
 description: "How Archetype's digital lightbox lets scholars assemble persistent worksets, compare hands side by side, annotate freely, and share citable views."
 ---
 
-Palaeographic argument is built by juxtaposition: laying one hand beside another, aligning a doubtful letter-form against a securely dated exemplar, and returning to the same arrangement over weeks of work. Archetype's **lightbox** is a freeform workspace for exactly this. A researcher gathers images and annotated letter-regions from anywhere in an instance, arranges them on an infinite canvas, adjusts and compares them, annotates them, and saves the result — either privately in the browser or as a citable link a colleague or student can open. It is the platform's answer to the light table and the photocopy folder, rebuilt for zoomable [IIIF](/platform/interoperability/) imagery.
+Palaeographic argument is built by juxtaposition: laying one hand beside another, aligning a doubtful letter-form against a securely dated exemplar, and returning to the same arrangement over weeks of work. Archetype's **lightbox** is a freeform workspace for exactly this. A researcher gathers images and annotated letter-regions from anywhere in an instance, arranges them on an infinite canvas, adjusts and compares them, annotates them, and saves the result — either privately in the browser or as a citable link a colleague or student can open. It is the platform's answer to the light table and the photocopy folder, rebuilt for zoomable [IIIF](/researchers/interoperability/) imagery.
 
 ## Collections and persistent worksets
 
 Two independent save tiers serve two audiences, deliberately.
 
-**Collections** are named sets of items (manuscript images and individual glyph-regions) that any visitor assembles while using [Search & Browse](/platform/search/). They persist in the browser (`localStorage`) with no account required, so an anonymous reader can build a working set across a session and carry it into the lightbox.
+**Collections** are named sets of items (manuscript images and individual glyph-regions) that any visitor assembles while using [Search & Browse](/researchers/search/). They persist in the browser (`localStorage`) with no account required, so an anonymous reader can build a working set across a session and carry it into the lightbox.
 
 **Worksets** are the durable, shareable tier. A signed-in user saves the entire lightbox state — every workspace, image position, transform, and embedded collection snapshot — to the server as an opaque JSON payload. Each workset receives an unguessable UUID (`public_id`) and is **Private by default**; only when its owner sets visibility to Public does the citable link resolve for anyone. This makes a workset a stable scholarly object: a figure in an article, a seminar handout, or a teaching collection that a class opens read-only without disturbing their own work.
 
@@ -17,14 +17,14 @@ The lightbox canvas itself supports **multiple workspaces**, per-image z-orderin
 
 ## Comparing hands side by side
 
-Because Archetype models each annotated letter as a region of its source image (see [Data model](/platform/data-model/)), the lightbox can load a single glyph cropped straight from the folio via IIIF region requests — the raw material for comparing hands letter by letter.
+Because Archetype models each annotated letter as a region of its source image (see [Data model](/researchers/data-model/)), the lightbox can load a single glyph cropped straight from the folio via IIIF region requests — the raw material for comparing hands letter by letter.
 
 Comparison mode takes two selected images and offers two views:
 
 - **Side-by-side**, with independent or **locked (synchronised) zoom and pan** — drag or scroll one panel and the other tracks it, so two hands stay registered at the same scale.
 - **Overlay**, stacking the two images with an opacity slider to test whether two forms are the work of one scribe.
 
-Each image carries non-destructive **transforms** — brightness, contrast, saturation, grayscale, invert, rotation, and horizontal/vertical flip — for reading faded ink or normalising lighting across different photographic campaigns. A dedicated **region comparison** view does the same for cropped excerpts saved from the crop tool. To compare whole manuscripts page by page instead, the separate [Compare view](/platform/imaging/) opens up to four of them side by side in Mirador.
+Each image carries non-destructive **transforms** — brightness, contrast, saturation, grayscale, invert, rotation, and horizontal/vertical flip — for reading faded ink or normalising lighting across different photographic campaigns. A dedicated **region comparison** view does the same for cropped excerpts saved from the crop tool. To compare whole manuscripts page by page instead, the separate [Compare view](/researchers/imaging/) opens up to four of them side by side in Mirador.
 
 ## Annotate, note, and share
 
@@ -40,6 +40,6 @@ The workspace exports in several forms for publication and archiving:
 | TEI XML | A `<facsimile>` of `<surface>` elements with IIIF `<graphic>` URLs and per-annotation `<zone>` coordinates |
 | Print | A browser-native, captioned print layout |
 
-The [TEI](/platform/interoperability/) export is the interoperable path: rectangular annotations become zones with `ulx`/`uly`/`lrx`/`lry` bounds, so a lightbox arrangement carries into a TEI-based editorial workflow rather than staying locked in the tool.
+The [TEI](/researchers/interoperability/) export is the interoperable path: rectangular annotations become zones with `ulx`/`uly`/`lrx`/`lry` bounds, so a lightbox arrangement carries into a TEI-based editorial workflow rather than staying locked in the tool.
 
-> The lightbox's annotation layer is a personal working overlay, distinct from the platform's curatorial [W3C Web Annotation](/platform/interoperability/) data. Use worksets for citable scholarly output and the annotation apparatus for the authoritative descriptive record.
+> The lightbox's annotation layer is a personal working overlay, distinct from the platform's curatorial [W3C Web Annotation](/researchers/interoperability/) data. Use worksets for citable scholarly output and the annotation apparatus for the authoritative descriptive record.

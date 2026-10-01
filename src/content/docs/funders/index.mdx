@@ -1,0 +1,52 @@
+---
+title: For funders
+description: The case for Archetype — what it is, what already works, who it serves, and where funding would make the most difference.
+---
+
+Archetype is open software for palaeography: the study of historical handwriting. It lets scholars record what they observe about a script as structured, image-anchored evidence instead of prose, and publish that evidence in open standards that outlive any one website. Version 3 is a complete rewrite, in active development since 2024, with a public instance live today.
+
+## The problem it solves
+
+Claims about handwriting — that two charters were written by the same scribe, that a letter-form dates a document to a decade — are traditionally made in prose and footnotes. They are authoritative but cannot be searched, counted, or checked against the images. The DigiPal method, developed over roughly fifteen years at King's College London, made such claims into data: every letter-form described in a shared vocabulary and anchored to a region of a page image.
+
+The software that carried that method (Archetype versions 1 and 2, built by King's Digital Lab for the [DigiPal](https://www.digipal.eu), [Models of Authority](https://www.modelsofauthority.ac.uk) and [Exon Domesday](https://www.exondomesday.ac.uk) projects) was installed project by project on a web stack of its era, and became hard to adapt and maintain. Version 3 keeps the method and replaces the engineering, so that any project can run it over its own manuscripts.
+
+## What exists today
+
+This is working software, not a proposal.
+
+- **A live public instance.** [beta.archetype-pal.ink](https://beta.archetype-pal.ink) hosts the *Models of Authority* corpus of Scottish royal charters, 1100–1250: about 710 charters, 3,000 page images, 12,700 annotated letter-forms, 700 scribal hands, and 600 published transcriptions and translations, with about 3,400 links between transcribed text and the regions of the page it reads.
+- **A complete research toolset.** Faceted search, deep-zoom IIIF imaging, letter-form annotation, TEI transcription linked to the image, an editorial review workflow with an audit trail, manuscript descriptions in TEI, and a lightbox for comparing hands. [What works today](/funders/status/) lists each capability and its state.
+- **Open standards throughout.** Images are served with IIIF, texts are encoded in TEI, and annotations are published as W3C Web Annotations, so the scholarship can be read by other tools and archived independently of the platform.
+- **Engineering built to be maintained.** Automated tests, linting and type-checking on every change, and security scanning of the backend; versioned container images; automated deployment that rolls back on failure; nightly database backups. The public instance runs on a single modest cloud server.
+- **Steady development.** About 1,800 commits across the three code repositories since mid-2024, from six code contributors.
+
+Archetype 3 is supported by the [OG(H)AM project](https://ogham.glasgow.ac.uk) at the University of Glasgow and the [École Pratique des Hautes Études](https://www.ephe.psl.eu/).
+
+## Who it serves
+
+- **Researchers** in palaeography, diplomatic, codicology and medieval history, who need to make and defend claims about script at the scale of a whole corpus. See [For researchers](/researchers/).
+- **Editorial teams** producing digital editions, who need a draft-to-published workflow with a record of who changed what.
+- **Libraries, archives and museums**, who can publish their manuscripts with expert description on their own servers, in formats their other systems already read.
+- **Teachers**, who can build curated sets of images and letter-forms for the seminar room and share them as links.
+
+## Where funding makes the difference
+
+The platform's core is built. Funding now buys reach, depth and longevity. Each of these is set out on the [Roadmap](/funders/roadmap/):
+
+1. **Annotation statistics and quality control.** Coverage reports per manuscript and per hand, per-annotator activity, and an optional supervisor review step for teams that train student annotators. A design proposal exists, and its first half needs no change to the data model.
+2. **AI-assisted palaeography.** A phased research programme — handwriting recognition, scribe attribution, computational dating — in which every machine suggestion goes through the editorial review workflow, so the scholar remains the author of record. The expert-annotated corpus that such work usually lacks at the start is already live. This programme depends entirely on grant funding.
+3. **Richer interoperability.** Importing W3C annotations from other tools, and IIIF collections spanning many manuscripts.
+4. **A second corpus, and sustained maintenance.** Bringing another collection onto the platform proves its generality and shakes out assumptions; ongoing funding keeps dependencies patched, the public instance running, and the documentation current.
+
+## Being clear about the risks
+
+- **It is a beta.** The software runs a real corpus in public, but has not yet had a formal 1.0 release.
+- **The licence is not yet published.** The team is choosing an open-source licence now. Until it appears in the repositories, the code cannot be assumed reusable.
+- **The team is small.** Continuity depends on funded time. The emphasis on open standards and documented deployment is partly a hedge: the data and the method do not depend on any one person or server.
+
+Read more in [Governance & sustainability](/funders/governance/) and [From DigiPal to Archetype](/about/lineage/).
+
+## Get in touch
+
+To discuss funding, a partnership, or bringing a collection onto Archetype, see [Community & help](/about/community/#contact).

@@ -3,7 +3,7 @@ title: "Data Model"
 description: "How Archetype models the palaeographer's world — manuscripts and their parts, hands and scribes, a glyph-and-allograph taxonomy, annotation graphs, and TEI-encoded texts."
 ---
 
-Archetype's data model is built around the distinctions a manuscript scholar actually makes: between a text as an intellectual work and the physical book that now carries it; between a scribe and the individual stint of writing they produced; between an abstract letter-form and a single inked instance of it on the page. Getting these separations right is what lets a corpus support rigorous palaeographical argument rather than just a gallery of images. This page describes the domain entities and how they connect. For how you interrogate them, see [Search & Browse](/platform/search/); for the open standards they export to, see [Interoperability](/platform/interoperability/).
+Archetype's data model is built around the distinctions a manuscript scholar actually makes: between a text as an intellectual work and the physical book that now carries it; between a scribe and the individual stint of writing they produced; between an abstract letter-form and a single inked instance of it on the page. Getting these separations right is what lets a corpus support rigorous palaeographical argument rather than just a gallery of images. This page describes the domain entities and how they connect. For how you interrogate them, see [Search & Browse](/researchers/search/); for the open standards they export to, see [Interoperability](/researchers/interoperability/).
 
 ## Manuscripts, items, and images
 
@@ -45,6 +45,6 @@ Deleting a graph moves it to a **trash** rather than erasing it, so it can be re
 
 ## TEI-encoded texts
 
-Every item image can carry an **Image Text** — at most one transcription and one translation — moving through an editorial status workflow (Draft → Review → Live/Reviewed) with a full transition log. Text content is held as [TEI](https://tei-c.org/) markup: inline spans for clauses, personal and place names, editorial expansions and supplied text, and line breaks. The link between a word in the text and its region on the image round-trips as a TEI `@corresp` reference to the annotation. Any text can be exported as a standalone, valid TEI P5 document openable in standard TEI tooling — see [Interoperability](/platform/interoperability/) for the full export surface.
+Every item image can carry an **Image Text** — at most one transcription and one translation — moving through an editorial status workflow (Draft → Review → Live/Reviewed) with a full transition log. Text content is held as [TEI](https://tei-c.org/) markup: inline spans for clauses, personal and place names, editorial expansions and supplied text, and line breaks. The link between a word in the text and its region on the image round-trips as a TEI `@corresp` reference to the annotation. Any text can be exported as a standalone, valid TEI P5 document openable in standard TEI tooling — see [Interoperability](/researchers/interoperability/) for the full export surface.
 
 > This model reflects the DigiPal lineage the platform rebuilds. The separations it enforces — item vs. part, scribe vs. hand, character vs. allograph vs. glyph instance — are the ones that make a corpus queryable and its palaeographical claims defensible.

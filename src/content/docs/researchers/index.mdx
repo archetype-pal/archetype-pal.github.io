@@ -1,0 +1,59 @@
+---
+title: For researchers
+description: How palaeographers, historians and editors can use Archetype in their own work — try it on a live corpus, bring your own manuscripts, and reuse and cite what you find.
+---
+
+Archetype is a tool for treating handwriting as evidence. You can search a collection by script, scribe, date or place; zoom into a page down to the pen stroke; mark individual letter-forms and describe them in a shared vocabulary; link a transcription to the exact place on the page it reads; and set hands side by side to compare them. Everything you produce can leave the platform in open formats, so it can be cited and reused.
+
+## Try it on a live corpus
+
+The public beta at **[beta.archetype-pal.ink](https://beta.archetype-pal.ink)** runs Archetype over the *Models of Authority* corpus of Scottish royal charters, 1100–1250. No account is needed to read it. In October 2026 it held:
+
+| | |
+| --- | --- |
+| Charters (manuscript parts) | about 710 |
+| Page images | about 3,000 |
+| Annotated letter-forms | about 12,700 |
+| Scribal hands | about 700 |
+| Published transcriptions and translations | about 600 |
+
+Good first steps: run a search and narrow it with the facets and timeline, open a charter and switch between image and text, and open the glyph search to see every annotated example of one letter-form.
+
+## What you can do
+
+| You want to… | Read |
+| --- | --- |
+| Understand how the platform describes script | [Palaeography on Archetype](/researchers/palaeography/) |
+| Find manuscripts, hands, letter-forms or passages | [Search & browse](/researchers/search/) |
+| Examine images, and compare whole manuscripts | [Images & IIIF](/researchers/imaging/) |
+| Annotate letter-forms and link text to image | [Annotation & TEI](/researchers/annotation/) |
+| Take a transcription from draft to published | [Editorial workflow](/researchers/workflow/) |
+| Compare hands and prepare teaching material | [Lightbox & worksets](/researchers/lightbox/) |
+| Know exactly what is recorded, and how | [Data model](/researchers/data-model/) |
+| Export, reuse and cite your work | [Export, reuse & cite](/researchers/interoperability/) |
+
+Reading is open to everyone. Annotating, transcribing and editing need an account on the instance, which its administrators create.
+
+## Working with your own manuscripts
+
+Archetype is software, not a single website. Any project or institution can run its own copy over its own manuscripts, with its own vocabulary, branding and interface text, in English, French or German. Nothing in the platform is specific to the charters on the beta.
+
+Running an instance needs someone comfortable with servers and Docker, usually a research software engineer or your institution's IT. Point them at [Host an instance](/contributors/production/) and [Load your own corpus](/contributors/corpus/). If you have page images and a catalogue but no technical support, [contact the project](/about/community/) to talk through options.
+
+What you will need to bring:
+
+- **Images** of the pages, as TIFF, JPEG, PNG or JPEG 2000. They are converted and served over IIIF.
+- **Catalogue records**: what each item is, where it is held, its shelfmark and date.
+- **Optionally, transcriptions**, as TEI, or as output from handwriting recognition tools such as Transkribus or eScriptorium (PAGE-XML or ALTO).
+
+## Citing Archetype
+
+When you publish work that used Archetype, cite:
+
+1. **The instance and corpus** you used — for example, *Models of Authority*, beta.archetype-pal.ink — with the date you consulted it. Link to the specific record where you can: search results, manuscript pages and public worksets all have stable URLs.
+2. **The software**, as *Archetype*, with a link to [github.com/archetype-pal](https://github.com/archetype-pal) and the version shown at `/api/v1/version/` on the instance.
+3. **The method**, where you rely on the structured description of script: the DigiPal framework it inherits. See [From DigiPal to Archetype](/about/lineage/).
+
+## Getting help
+
+Report a problem with the platform or suggest a feature by opening an issue on [the frontend repository](https://github.com/archetype-pal/frontend/issues) on GitHub; [Community & help](/about/community/) lists the other ways to reach the project. Errors in a corpus — a wrong date, a misread word — belong to whoever runs that instance; for the beta, report them the same way.

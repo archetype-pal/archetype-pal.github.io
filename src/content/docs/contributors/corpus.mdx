@@ -1,9 +1,9 @@
 ---
-title: "Bring your own corpus"
+title: "Load your own corpus"
 description: "How to load your own manuscripts into an Archetype instance: model the corpus, ingest images for IIIF, import transcriptions and HTR output, then build the search indexes."
 ---
 
-Archetype ships as an empty platform: the code knows how to search, view, and annotate manuscripts, but it holds no manuscripts of its own. This guide walks you through loading a corpus into a running instance — modelling the descriptive records, ingesting page images for IIIF, importing transcriptions (including HTR output), and finally building the Meilisearch indexes that make it all searchable. It assumes you already have the stack up (see the [Quickstart](/deploy/)) and can run `just` recipes against the backend container.
+Archetype ships as an empty platform: the code knows how to search, view, and annotate manuscripts, but it holds no manuscripts of its own. This guide walks you through loading a corpus into a running instance — modelling the descriptive records, ingesting page images for IIIF, importing transcriptions (including HTR output), and finally building the Meilisearch indexes that make it all searchable. It assumes you already have the stack up (see the [Run it locally](/contributors/local-setup/)) and can run `just` recipes against the backend container.
 
 ## 1. Model the corpus
 
@@ -23,13 +23,13 @@ Create the descriptive records through the backoffice UI, the Django admin, or `
 just migrate
 ```
 
-See [Data model](/platform/data-model/) for the full field reference.
+See [Data model](/researchers/data-model/) for the full field reference.
 
 ## 2. Ingest images for IIIF
 
-`ItemImage.image` is an `IIIFField` holding a path relative to the media root (`storage/media/`; field default `upload_to="historical_items"`). The media root is bind-mounted into the SIPI image server, which serves IIIF Image API tiles: at `/sipi/images` in the dev stack (`api/compose.yaml`), and from `MEDIA_HOST_PATH` (default `./storage/media`) at `/sipi/images/sipi` in `infrastructure/compose.yaml`, where nginx also serves it at `/media/`. Point the backend at SIPI with the `IIIF_HOST` env var (default `http://localhost:8182/`); the frontend reads `NEXT_PUBLIC_IIIF_UPSTREAM` — see [Configuration](/deploy/configuration/).
+`ItemImage.image` is an `IIIFField` holding a path relative to the media root (`storage/media/`; field default `upload_to="historical_items"`). The media root is bind-mounted into the SIPI image server, which serves IIIF Image API tiles: at `/sipi/images` in the dev stack (`api/compose.yaml`), and from `MEDIA_HOST_PATH` (default `./storage/media`) at `/sipi/images/sipi` in `infrastructure/compose.yaml`, where nginx also serves it at `/media/`. Point the backend at SIPI with the `IIIF_HOST` env var (default `http://localhost:8182/`); the frontend reads `NEXT_PUBLIC_IIIF_UPSTREAM` — see [Configuration](/contributors/configuration/).
 
-Superusers can upload images from the backoffice. Uploads go up in chunks to `/api/v1/uploads/sessions/`; a Celery task then assembles the file, converts it to JP2 under `uploads/<folder>/`, checks that SIPI can serve a tile, and creates the `ItemImage`. In production, run `just setup-upload-storage` once first (see [Production](/deploy/production/)), and reap abandoned sessions with `python manage.py cleanup_stale_uploads`. Alternatively, drop files into the media directory and set each `ItemImage.image` to the stored path; SIPI derives tiles on demand, with no pre-tiling step.
+Superusers can upload images from the backoffice. Uploads go up in chunks to `/api/v1/uploads/sessions/`; a Celery task then assembles the file, converts it to JP2 under `uploads/<folder>/`, checks that SIPI can serve a tile, and creates the `ItemImage`. In production, run `just setup-upload-storage` once first (see [Production deployment](/contributors/production/)), and reap abandoned sessions with `python manage.py cleanup_stale_uploads`. Alternatively, drop files into the media directory and set each `ItemImage.image` to the stored path; SIPI derives tiles on demand, with no pre-tiling step.
 
 ## 3. Import transcriptions
 
@@ -67,4 +67,4 @@ just sync-search-index item-parts  # or reindex just one
 
 The registry in `apps/search/registry.py` is the single source of truth; valid index segments are `item-parts`, `item-images`, `scribes`, `hands`, `graphs`, `texts`, `clauses`, `people`, and `places`. Re-run the relevant `sync-search-index` after any bulk data change; for a large import, set `SEARCH_AUTO_REINDEX=false` while it runs, then reindex. If searches 500 with `index_not_found`, you skipped `setup-search-indexes`. These recipes exist in both `api/` (dev stack) and `infrastructure/` (production, where `just reindex` runs both steps); run them from the stack you are loading.
 
-Your corpus is now browsable, viewable, and searchable. For the query surface, see [The API](/api/); to extend the model, see [Contributing](/contribute/).
+Your corpus is now browsable, viewable, and searchable. For the query surface, see [The API](/contributors/api/); to extend the model, see [For contributors](/contributors/).

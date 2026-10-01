@@ -27,7 +27,7 @@ Replace `archetype.example.org` with your instance host in every example. On a l
 | `/api/v1/worksets/` | `worksets` | User-owned lightbox worksets |
 | `/api/v1/uploads/` | `uploads` | Chunked image uploads (superuser only) |
 
-See [Core endpoints](/api/resources/) for the read paths integrators reach for most.
+See [Core endpoints](/contributors/api-endpoints/) for the read paths integrators reach for most.
 
 ## Public vs. management (backoffice) split
 
@@ -61,7 +61,7 @@ Related account endpoints:
 - `POST /api/v1/auth/token/logout` — invalidate the current token (send the header)
 - `GET  /api/v1/auth/profile` — the authenticated user's profile
 
-Create the first superuser with Django's `createsuperuser` (run it in the api container, e.g. `just bash` then `python manage.py createsuperuser`). See [Contributing](/contribute/) for local dev login.
+Create the first superuser with Django's `createsuperuser` (run it in the api container, e.g. `just bash` then `python manage.py createsuperuser`). See [For contributors](/contributors/) for local dev login.
 
 ## OpenAPI schema and Swagger UI
 
@@ -70,7 +70,7 @@ Every instance publishes its own contract — no external hosting required:
 - **Schema (JSON):** `https://archetype.example.org/api/v1/schema/`
 - **Swagger UI:** `https://archetype.example.org/api/v1/docs/`
 
-The schema is assembled from per-app `apps/*/schema.yaml` files. Not every route is described there: the standards routes (`annotations-w3c/`, `iiif/`) and the search list, detail, export and suggest routes have no schema entries — see [Endpoints](/api/resources/) for those. Fetch it as a machine-readable spec:
+The schema is assembled from per-app `apps/*/schema.yaml` files. Not every route is described there: the standards routes (`annotations-w3c/`, `iiif/`) and the search list, detail, export and suggest routes have no schema entries — see [Endpoints](/contributors/api-endpoints/) for those. Fetch it as a machine-readable spec:
 
 ```bash
 curl https://archetype.example.org/api/v1/schema/ -o archetype-openapi.json
@@ -80,4 +80,4 @@ Swagger UI only loads a same-origin schema; the default is `/api/v1/schema/` on 
 
 > Locally, bring the backend up with `just up` from `api/`, then browse `http://localhost:8000/api/v1/docs/`.
 
-For running an instance over your own material, see [Bring your own corpus](/deploy/corpus/). To work on the API itself, see [Contributing](/contribute/).
+For running an instance over your own material, see [Load your own corpus](/contributors/corpus/). To work on the API itself, see [For contributors](/contributors/).

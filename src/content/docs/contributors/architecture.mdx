@@ -19,8 +19,8 @@ An Archetype instance is a small set of cooperating services, each with one job:
 - **PostgreSQL** — the system of record. All curated data — manuscripts, hands and scribes, the graphical symbol taxonomy, annotations, and published pages — lives here.
 - **Meilisearch** — the search index that powers fast, faceted discovery over the corpus. It is a derived store, rebuilt from PostgreSQL, never the source of truth.
 - **Celery + Redis** — background task processing. When curators change data, re-indexing and other slow work — such as converting an uploaded image to JPEG 2000 — run asynchronously through Celery workers, with Redis as the message broker, so the editing interface stays responsive.
-- **SIPI** — the IIIF image server. It serves manuscript images from the filesystem over the [IIIF Image API](/platform/interoperability/), enabling deep zoom and region requests without shipping full-resolution files.
-- **Frontend (Next.js + React)** — the web client (see [Search & Browse](/platform/search/)). It renders the public site and the backoffice, in English, French or German, using server-side rendering for fast, indexable public pages.
+- **SIPI** — the IIIF image server. It serves manuscript images from the filesystem over the [IIIF Image API](/researchers/interoperability/), enabling deep zoom and region requests without shipping full-resolution files.
+- **Frontend (Next.js + React)** — the web client (see [Search & Browse](/researchers/search/)). It renders the public site and the backoffice, in English, French or German, using server-side rendering for fast, indexable public pages.
 - **nginx** — the reverse proxy and TLS terminator that presents the whole stack as one origin and keeps internal services off the public network.
 
 ### How a request flows
@@ -31,7 +31,7 @@ Writes follow a deliberately separated path. The backend keeps a clear internal 
 
 ## Domain organisation and standards
 
-The backend is organised into feature apps that mirror the scholarly domain — manuscripts, scribes, a graphical symbols/structure taxonomy, annotations, worksets, publications, pages, image uploads, search, and users — described in full on the [Data model](/platform/data-model/) page. One app, `annotation_standards`, exists specifically to speak open standards: annotations are exposed in the [W3C Web Annotation](/platform/interoperability/) model, and manuscript images are published as [IIIF Presentation API](/platform/interoperability/) manifests with content search. This means the platform's core scholarly output — where a feature sits on a page, and what it means — is legible to any conformant viewer or aggregator, not locked inside one application.
+The backend is organised into feature apps that mirror the scholarly domain — manuscripts, scribes, a graphical symbols/structure taxonomy, annotations, worksets, publications, pages, image uploads, search, and users — described in full on the [Data model](/researchers/data-model/) page. One app, `annotation_standards`, exists specifically to speak open standards: annotations are exposed in the [W3C Web Annotation](/researchers/interoperability/) model, and manuscript images are published as [IIIF Presentation API](/researchers/interoperability/) manifests with content search. This means the platform's core scholarly output — where a feature sits on a page, and what it means — is legible to any conformant viewer or aggregator, not locked inside one application.
 
 ## Build and deployment
 

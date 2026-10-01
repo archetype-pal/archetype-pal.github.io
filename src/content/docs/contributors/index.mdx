@@ -1,0 +1,38 @@
+---
+title: For contributors
+description: How to run Archetype, find your way around its repositories, and get a change merged — for developers, research software engineers and anyone hosting an instance.
+---
+
+Archetype is developed in the open on GitHub under the [`archetype-pal`](https://github.com/archetype-pal) organisation. This section is for anyone who wants to run the software or change it: developers fixing a bug or adding a feature, research software engineers setting up an instance for a project, and writers improving these docs.
+
+## Ways to contribute
+
+- **Code.** Fix a bug or build a feature in the backend or frontend. Issues labelled [`good first issue`](https://github.com/search?q=org%3Aarchetype-pal+label%3A%22good+first+issue%22+state%3Aopen&type=issues) are a good place to start.
+- **Hosting and operations.** Improve the Docker Compose stack, the deployment scripts, or the guides for running an instance.
+- **Documentation.** This site is its own repository; corrections are welcome.
+- **Scholarship and data.** Corrections, transcriptions, script descriptions, and feedback from real editorial work. This needs no code, and is often the most valuable input. [Open an issue](https://github.com/archetype-pal/frontend/issues) describing what you found.
+- **Feedback from an instance.** If you run Archetype over your own corpus, telling the project what worked and what did not is itself a contribution.
+
+## The repositories
+
+| Repository | What it holds | Stack |
+| --- | --- | --- |
+| [`backend`](https://github.com/archetype-pal/backend) | The API: domain model, search, IIIF and W3C output, background jobs | Python 3.14, Django 6, Django REST Framework, Celery, PostgreSQL, Meilisearch, Redis |
+| [`frontend`](https://github.com/archetype-pal/frontend) | The public site and the staff backoffice | TypeScript, Next.js 16, React 19, TanStack Query, Tailwind CSS |
+| [`infrastructure`](https://github.com/archetype-pal/infrastructure) | The production Docker Compose stack, nginx, TLS and backups | Docker Compose, nginx, SIPI |
+| [`archetype-pal.github.io`](https://github.com/archetype-pal/archetype-pal.github.io) | This site | Astro, Starlight |
+
+Each repository has its own issues, CI and release images. A change to the API and the interface that uses it is two pull requests, one per repository; land the backend one first.
+
+## Where to go next
+
+1. **[Run it locally](/contributors/local-setup/)** — the backend and frontend on your machine, with a working login, in about fifteen minutes.
+2. **[How it is built](/contributors/architecture/)** — the services and how a request flows through them.
+3. **[Working in the codebase](/contributors/codebase/)** — the layering rules, the search registry, and the test and lint commands.
+4. **[Contribution workflow](/contributors/workflow/)** — branching, commit style, the checks CI runs, and review.
+
+Hosting an instance for a project rather than developing? Go to [Production deployment](/contributors/production/), then [Load your own corpus](/contributors/corpus/). Building on the data? See [The API](/contributors/api/).
+
+## Getting help
+
+Open an issue in the repository closest to the problem. For a deployment that will not come up, check [Troubleshooting](/contributors/troubleshooting/) first: most failures are a missing migration, an unbuilt search index, or a container that cannot reach another one.

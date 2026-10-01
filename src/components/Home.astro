@@ -1,7 +1,6 @@
 ---
-// Stakeholder-first formal homepage. Uses the global --f-* tokens from theme.css,
+// Audience-first homepage: researchers, contributors, funders. Uses the global --f-* tokens from theme.css,
 // which switch with Starlight's [data-theme]. Rendered inside a `template: splash` page.
-import Architecture from './Architecture.astro';
 ---
 
 <div class="home">
@@ -10,10 +9,10 @@ import Architecture from './Architecture.astro';
       <div>
         <p class="eyebrow">An open platform for palaeography</p>
         <h1>Read the hands<br />of the past.</h1>
-        <p class="lead">Archetype lets scholars search, view, annotate, and teach with manuscript images and the texts they carry &mdash; built for researchers, libraries, and museums.</p>
+        <p class="lead">Archetype lets scholars search, view, annotate, and teach with manuscript images and the texts they carry &mdash; built for researchers, editorial teams, libraries and museums.</p>
         <div class="cta-row">
-          <a class="btn primary" href="/platform/">Explore the platform <span class="arw">&rarr;</span></a>
-          <a class="btn ghost" href="/deploy/">For developers <span class="arw">&rarr;</span></a>
+          <a class="btn primary" href="https://beta.archetype-pal.ink">Try the live corpus <span class="arw">&rarr;</span></a>
+          <a class="btn ghost" href="#start">Find your way in <span class="arw">&darr;</span></a>
         </div>
       </div>
       <aside class="creds" aria-label="Why Archetype is built to last">
@@ -28,6 +27,62 @@ import Architecture from './Architecture.astro';
     </div>
   </section>
 
+
+  <section class="block shell" id="start">
+    <div class="sechead"><p class="eyebrow">Find your way in</p><h2>What brings you here?</h2></div>
+    <div class="doors">
+      <div class="door">
+        <p class="eyebrow">Researchers</p>
+        <h3>Use it in your research</h3>
+        <p class="sub">Search, annotate and compare manuscripts, on our live corpus or your own, and cite what you find.</p>
+        <ul>
+          <li><a href="/researchers/">Start here</a></li>
+          <li><a href="/researchers/palaeography/">How script is described</a></li>
+          <li><a href="/researchers/interoperability/">Export, reuse &amp; cite</a></li>
+        </ul>
+        <a class="go" href="/researchers/">For researchers <span class="arw">&rarr;</span></a>
+      </div>
+      <div class="door">
+        <p class="eyebrow">Contributors</p>
+        <h3>Run it and help build it</h3>
+        <p class="sub">Install Archetype locally, host an instance for a project, or send a change to the code or docs.</p>
+        <ul>
+          <li><a href="/contributors/local-setup/">Run it locally</a></li>
+          <li><a href="/contributors/production/">Host an instance</a></li>
+          <li><a href="/contributors/workflow/">Contribution workflow</a></li>
+        </ul>
+        <a class="go" href="/contributors/">For contributors <span class="arw">&rarr;</span></a>
+      </div>
+      <div class="door">
+        <p class="eyebrow">Funders</p>
+        <h3>Decide whether to back it</h3>
+        <p class="sub">What already works, who it serves, how it is run, and where funding would make the difference.</p>
+        <ul>
+          <li><a href="/funders/">The case for Archetype</a></li>
+          <li><a href="/funders/status/">What works today</a></li>
+          <li><a href="/funders/roadmap/">Roadmap &amp; priorities</a></li>
+        </ul>
+        <a class="go" href="/funders/">For funders <span class="arw">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block shell">
+    <div class="proof">
+      <div class="proof-text">
+        <p class="eyebrow">Live today</p>
+        <h2>A real corpus, in public</h2>
+        <p class="sub">The public beta runs Archetype over <em>Models of Authority</em>, the Scottish royal charters of 1100&ndash;1250. Figures from October 2026.</p>
+      </div>
+      <dl class="stats">
+        <div><dt>Charters</dt><dd>710</dd></div>
+        <div><dt>Page images</dt><dd>3,000</dd></div>
+        <div><dt>Annotated letter-forms</dt><dd>12,700</dd></div>
+        <div><dt>Scribal hands</dt><dd>700</dd></div>
+      </dl>
+    </div>
+  </section>
+
   <section class="block shell">
     <div class="sechead">
       <p class="eyebrow">What it does today</p>
@@ -35,15 +90,15 @@ import Architecture from './Architecture.astro';
       <p class="sub">Everything here is live in the platform now &mdash; the tools scholars use to work closely with the written record.</p>
     </div>
     <div class="feat-grid">
-      <a class="feat" href="/platform/search/"><h3>Search the corpus</h3><p>Find manuscripts by script, scribe, date or repository with fast, faceted search across an entire collection.</p></a>
-      <a class="feat" href="/platform/imaging/"><h3>Examine every stroke</h3><p>Standards-based IIIF deep-zoom renders high-resolution images down to the finest detail of the pen.</p></a>
-      <a class="feat" href="/platform/annotation/"><h3>Annotate the hand</h3><p>Mark up glyphs, allographs and scribal features directly on the image, and browse them in a gallery.</p></a>
-      <a class="feat" href="/platform/data-model/"><h3>Describe hands &amp; scribes</h3><p>Catalogue scribal hands, allographs and their components as structured, searchable data.</p></a>
-      <a class="feat" href="/platform/annotation/"><h3>Tie text to image</h3><p>Link transcriptions to the exact region they describe, on a TEI-canonical model of the text.</p></a>
-      <a class="feat" href="/platform/lightbox/"><h3>Compare hands side by side</h3><p>Assemble worksets and set scribal hands next to one another in a digital lightbox, with notes and shareable views.</p></a>
-      <a class="feat" href="/platform/workflow/"><h3>Edit with an audit trail</h3><p>Move transcriptions from draft to reviewed to published &mdash; every change attributed and dated.</p></a>
-      <a class="feat" href="/platform/interoperability/"><h3>Publish to standards</h3><p>Export images and annotations as IIIF manifests, TEI, and W3C Web Annotations for reuse anywhere.</p></a>
-      <a class="feat" href="/platform/lightbox/"><h3>Teach and share</h3><p>Build curated worksets for the seminar room and share them without exposing your working files.</p></a>
+      <a class="feat" href="/researchers/search/"><h3>Search the corpus</h3><p>Find manuscripts by script, scribe, date or repository with fast, faceted search across an entire collection.</p></a>
+      <a class="feat" href="/researchers/imaging/"><h3>Examine every stroke</h3><p>Standards-based IIIF deep-zoom renders high-resolution images down to the finest detail of the pen.</p></a>
+      <a class="feat" href="/researchers/annotation/"><h3>Annotate the hand</h3><p>Mark up glyphs, allographs and scribal features directly on the image, and browse them in a gallery.</p></a>
+      <a class="feat" href="/researchers/data-model/"><h3>Describe hands &amp; scribes</h3><p>Catalogue scribal hands, allographs and their components as structured, searchable data.</p></a>
+      <a class="feat" href="/researchers/annotation/"><h3>Tie text to image</h3><p>Link transcriptions to the exact region they describe, on a TEI-canonical model of the text.</p></a>
+      <a class="feat" href="/researchers/lightbox/"><h3>Compare hands side by side</h3><p>Assemble worksets and set scribal hands next to one another in a digital lightbox, with notes and shareable views.</p></a>
+      <a class="feat" href="/researchers/workflow/"><h3>Edit with an audit trail</h3><p>Move transcriptions from draft to reviewed to published &mdash; every change attributed and dated.</p></a>
+      <a class="feat" href="/researchers/interoperability/"><h3>Publish to standards</h3><p>Export images and annotations as IIIF manifests, TEI, and W3C Web Annotations for reuse anywhere.</p></a>
+      <a class="feat" href="/researchers/lightbox/"><h3>Teach and share</h3><p>Build curated worksets for the seminar room and share them without exposing your working files.</p></a>
     </div>
   </section>
 
@@ -54,35 +109,8 @@ import Architecture from './Architecture.astro';
         <h2>The road ahead</h2>
         <p class="sub">Beyond today's platform, the roadmap sets out the goals we're working toward &mdash; annotation analytics and quality control, richer interoperability, and a grant-dependent AI-assisted research programme with the scholar always the author of record.</p>
       </div>
-      <a class="btn ghost rb-cta" href="/roadmap/">See the full roadmap <span class="arw">&rarr;</span></a>
+      <a class="btn ghost rb-cta" href="/funders/roadmap/">See the full roadmap <span class="arw">&rarr;</span></a>
     </div>
-  </section>
-
-  <section class="block shell">
-    <div class="sechead"><p class="eyebrow">Two ways in</p><h2>Where would you like to start?</h2></div>
-    <div class="lanes">
-      <a class="lane" href="/platform/">
-        <p class="eyebrow">Researchers &amp; institutions</p>
-        <h3>Explore the platform</h3>
-        <p class="sub">See what Archetype offers for manuscript research and teaching, the scholarship behind it, and where the project is headed.</p>
-        <span class="go">Discover more <span class="arw">&rarr;</span></span>
-      </a>
-      <a class="lane" href="/deploy/">
-        <p class="eyebrow">Developers</p>
-        <h3>Run your own instance</h3>
-        <p class="sub">Quickstart with Docker, bring your own corpus, configure the services and build on the API &mdash; on your server, your data.</p>
-        <span class="go">Start deploying <span class="arw">&rarr;</span></span>
-      </a>
-    </div>
-  </section>
-
-  <section class="block shell">
-    <div class="sechead">
-      <p class="eyebrow">Under the hood</p>
-      <h2>How it's built</h2>
-      <p class="sub">For the technically minded: the same open stack runs whether you host one charter or a national collection &mdash; nothing here assumes a particular deployment.</p>
-    </div>
-    <Architecture />
   </section>
 </div>
 
@@ -139,25 +167,40 @@ import Architecture from './Architecture.astro';
   .home .roadband .sub { color: var(--f-muted); margin: 0.7rem 0 0; max-width: 64ch; font-size: 1rem; font-family: var(--sl-font-headings); }
   .home .roadband .rb-cta { justify-self: end; }
 
-  /* lanes */
-  .home .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .home .lane { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: 1.9rem 1.9rem 1.6rem; box-shadow: var(--f-shadow); transition: border-color 0.18s, box-shadow 0.18s; }
-  .home .lane:hover { border-color: var(--f-accent); box-shadow: var(--f-shadow-lift); }
-  .home .lane .eyebrow { margin-bottom: 0.9rem; }
-  .home .lane h3 { font-size: 1.55rem; }
-  .home .lane .sub { color: var(--f-muted); margin: 0.6rem 0 1.1rem; font-size: 0.95rem; font-family: var(--sl-font-headings); }
-  .home .lane .go { color: var(--f-accent); font-weight: 600; display: inline-flex; gap: 0.45rem; align-items: center; font-size: 0.92rem; }
-  .home .lane .go .arw { transition: transform 0.18s; }
-  .home .lane:hover .go .arw { transform: translateX(3px); }
+  /* audience doors */
+  .home .doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .home .door { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; padding: 1.7rem 1.7rem 1.5rem; box-shadow: var(--f-shadow); display: flex; flex-direction: column; transition: border-color 0.18s, box-shadow 0.18s; }
+  .home .door:hover { border-color: var(--f-accent); box-shadow: var(--f-shadow-lift); }
+  .home .door .eyebrow { margin-bottom: 0.9rem; }
+  .home .door h3 { font-size: 1.45rem; }
+  .home .door .sub { color: var(--f-muted); margin: 0.6rem 0 1rem; font-size: 0.95rem; font-family: var(--sl-font-headings); }
+  .home .door ul { list-style: none; margin: 0 0 1.2rem; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; border-top: 1px solid var(--f-border); padding-top: 1rem; }
+  .home .door li a { font-size: 0.93rem; color: var(--f-text); border-bottom: 1px solid transparent; }
+  .home .door li a:hover { color: var(--f-accent); border-bottom-color: var(--f-accent); }
+  .home .door .go { margin-top: auto; color: var(--f-accent); font-weight: 600; display: inline-flex; gap: 0.45rem; align-items: center; font-size: 0.92rem; }
+  .home .door .go .arw { transition: transform 0.18s; }
+  .home .door .go:hover .arw { transform: translateX(3px); }
 
+  .home .doors > *, .home .stats > *, .home .door ul > * { margin-top: 0; }
+
+  /* live-corpus figures */
+  .home .proof { background: var(--f-surface); border: 1px solid var(--f-border); border-radius: 12px; box-shadow: var(--f-shadow); padding: clamp(1.8rem, 3.4vw, 2.8rem); display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(1.4rem, 3vw, 2.6rem); align-items: center; }
+  .home .proof .eyebrow { margin-bottom: 0.8rem; }
+  .home .proof h2 { font-size: clamp(1.6rem, 2.6vw, 2.05rem); }
+  .home .proof .sub { color: var(--f-muted); margin: 0.7rem 0 0; font-size: 1rem; font-family: var(--sl-font-headings); }
+  .home .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--f-border); border: 1px solid var(--f-border); border-radius: 10px; overflow: hidden; margin: 0; }
+  .home .stats div { background: var(--f-surface); padding: 1.1rem 1.3rem; }
+  .home .stats dt { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--f-dim); font-weight: 600; }
+  .home .stats dd { margin: 0.3rem 0 0; padding: 0; margin-inline-start: 0; font-family: var(--sl-font-headings); font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 600; color: var(--f-text); }
 
   @media (max-width: 860px) {
     .home .herogrid { grid-template-columns: 1fr; }
     .home .roadband { grid-template-columns: 1fr; }
     .home .roadband .rb-cta { justify-self: start; }
-    .home .lanes { grid-template-columns: 1fr; }
+    .home .doors { grid-template-columns: 1fr; }
+    .home .proof { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .home .btn:hover, .home .lane:hover { transform: none; }
+    .home .btn:hover .arw, .home .door .go:hover .arw { transform: none; }
   }
 </style>
