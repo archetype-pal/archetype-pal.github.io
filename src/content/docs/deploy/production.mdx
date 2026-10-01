@@ -1,11 +1,11 @@
 ---
 title: "Production deployment"
-description: "Deploy Archetype in production as a full-stack Docker Compose stack — nginx and TLS, Celery workers, the published GHCR images, backups, and upgrades."
+description: "Deploy Archetype in production as a full-stack Docker Compose stack — nginx and TLS, Celery workers, the published GHCR images, upload storage, backups, and upgrades."
 ---
 
-Run Archetype in production as a single Docker Compose stack: nginx terminates TLS and reverse-proxies the Next.js frontend, the Django API, and the SIPI IIIF image server, backed by PostgreSQL, Meilisearch, Redis, and a Celery worker. Everything lives in the [`infrastructure/`](/contribute/) repository — the same `compose.yaml` and `just` recipes described below drive dev and prod; production differs only in the [`env_file`](/deploy/configuration/) values you supply.
+Run Archetype in production as a single Docker Compose stack: nginx terminates TLS and reverse-proxies the Next.js frontend, the Django API, and the SIPI IIIF image server, backed by PostgreSQL, Meilisearch, Redis, and a Celery worker. Everything lives in the [`infrastructure/`](/contribute/) repository, whose `compose.yaml` and `just` recipes are the **only** staging/production stack. The backend's own `compose.yaml` is for local development and CI only; it runs under a separate Compose project (`archetype-dev`, versus `archetype` here), so the two never share containers or volumes.
 
-> This guide uses placeholder hosts like `archetype.example.org`. Substitute your own domain everywhere.
+> This guide uses placeholder hosts like `archetype.example.org`. Substitute your own domain everywhere. The public beta instance runs this stack at [beta.archetype-pal.ink](https://beta.archetype-pal.ink).
 
 ## Topology
 
@@ -13,18 +13,20 @@ Run Archetype in production as a single Docker Compose stack: nginx terminates T
 
 | Service | Image | Role | Host port |
 |---|---|---|---|
-| `nginx` | `nginx:1.30-alpine` | TLS termination + reverse proxy | `80`, `443` |
-| `frontend` | `ghcr.io/archetype-pal/frontend` | Next.js site | internal `:3000` |
-| `api` | `ghcr.io/archetype-pal/backend` | Django + DRF | internal `:8000` |
-| `celery` | `ghcr.io/archetype-pal/backend` | Async task worker | — |
+| `nginx` | `nginx:1.31-alpine` | TLS termination + reverse proxy | `80`, `443` |
+| `frontend` | `ghcr.io/archetype-pal/frontend` (`FRONTEND_IMAGE`) | Next.js site | internal `:3000` |
+| `api` | `ghcr.io/archetype-pal/backend` (`BACKEND_IMAGE`) | Django + DRF | internal `:80` |
+| `celery` | `ghcr.io/archetype-pal/backend` (`BACKEND_IMAGE`) | Async task worker (search sync, image-upload ingest) | — |
 | `image_server` | `daschswiss/sipi:v5.0.1` | IIIF image delivery | internal `:1024` |
-| `postgres` | `postgres:18.4-bookworm` | Application database | internal `:5432` |
-| `meilisearch` | `getmeili/meilisearch` | Search | internal `:7700` |
-| `redis` | `redis:8-alpine` | Celery broker/result backend | internal `:6379` |
+| `postgres` | `postgres:18.6-bookworm` (`POSTGRES_IMAGE`) | Application database | internal `:5432` |
+| `meilisearch` | `getmeili/meilisearch:v1.50.0` | Search | internal `:7700` |
+| `redis` | `redis:8.10.1-alpine` | Celery broker/result backend, lock cache | internal `:6379` |
 | `pg_backup` | `postgres:18-alpine` | Nightly `pg_dump` sidecar | — |
-| `certbot` | `certbot/certbot` | Let's Encrypt issuance/renewal | — |
+| `certbot` | `certbot/certbot:v5.8.0` | Let's Encrypt issuance/renewal | — |
 
-Only nginx publishes host ports. Postgres, Meilisearch, Redis, and SIPI are reachable **only** over the internal Compose network — publishing them would expose unauthenticated read/write. nginx (`nginx.conf`) routes `/(admin|static|media|api|tinymce)` to the API, `/sipi` to the image server (read-only, control routes denied), and everything else to the frontend.
+Only nginx publishes host ports. Postgres, Meilisearch, Redis, and SIPI are reachable **only** over the internal Compose network — publishing them would expose unauthenticated read/write. nginx (`nginx.conf`) routes `/(admin|static|api/v1/|tinymce)` to the API, serves `/media/` straight from the media mount (Django only serves media with `DEBUG` on), sends `/sipi` to the image server (read-only methods, control routes denied), and passes everything else — including the frontend's own `/api/*` route handlers — to the frontend.
+
+The image corpus is bind-mounted into `api`, `celery`, `image_server` and `nginx` from `MEDIA_HOST_PATH` (default `./storage/media`), so you can keep a large corpus outside the infrastructure checkout.
 
 ## Configure the environment
 
@@ -34,38 +36,55 @@ Copy `env_file.example` to `env_file` and set production values. Run all recipes
 DEBUG=False
 SECRET_KEY=<long-random-string>
 DOMAIN=archetype.example.org
-ALLOWED_HOSTS=archetype.example.org
+ALLOWED_HOSTS=archetype.example.org,api
 CORS_ALLOWED_ORIGINS=https://archetype.example.org
 CSRF_TRUSTED_ORIGINS=https://archetype.example.org
-NEXT_PUBLIC_API_URL=https://archetype.example.org
 IIIF_HOST=https://archetype.example.org/sipi
+INTERNAL_API_URL=http://api
 
 POSTGRES_PASSWORD=<db-password>
 DATABASE_URL=postgresql://postgres:<db-password>@postgres:5432/local
 REDIS_PASSWORD=<redis-password>
+CELERY_BROKER_URL=redis://:<redis-password>@redis:6379/0
+CELERY_RESULT_BACKEND=redis://:<redis-password>@redis:6379/0
+CACHE_URL=redis://:<redis-password>@redis:6379/1
 MEILI_ENV=production
 MEILI_MASTER_KEY=<>=16-byte-key>
+MEILISEARCH_API_KEY=<same-as-MEILI_MASTER_KEY>
 ```
 
-Pin the published GHCR images to immutable tags (never mutable `:latest`, which makes `docker compose pull` silently change the running version):
+`ALLOWED_HOSTS` includes `api` because the frontend's server-side fetches reach Django at `INTERNAL_API_URL=http://api` with `Host: api`. The api reads the Celery and cache URLs from `env_file`, and their defaults carry no Redis password, so set them there.
+
+The Postgres credentials, `MEILI_ENV` and `REDIS_PASSWORD` are also Compose **interpolation** variables, so they must be in a `.env` file next to `compose.yaml` as well as in `env_file`. Image pins go in `.env` too.
+
+Pin the published GHCR images to an immutable tag or digest (never mutable `:latest`, which makes `docker compose pull` silently change the running version). CI publishes `:latest` plus a `:sha-<commit>` tag for every build:
 
 ```env
-BACKEND_IMAGE=ghcr.io/archetype-pal/backend:vX.Y.Z
-FRONTEND_IMAGE=ghcr.io/archetype-pal/frontend:vX.Y.Z
+# .env
+BACKEND_IMAGE=ghcr.io/archetype-pal/backend:sha-<commit>
+FRONTEND_IMAGE=ghcr.io/archetype-pal/frontend@sha256:<digest>
 ```
+
+> The frontend inlines `NEXT_PUBLIC_*` values at **build** time, so a frontend image only works on the domain it was built for. The published tags are built for the project's own hosts (`:beta` for beta.archetype-pal.ink); for your domain, build `frontend/Dockerfile` with your own `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_IIIF_UPSTREAM`, `NEXT_PUBLIC_SITE_URL` and `CORS_ALLOWED_ORIGINS` build args.
 
 See [Configuration](/deploy/configuration/) for the full variable reference.
 
 ## Bring the stack up
 
 ```bash
-just pull            # fetch the pinned GHCR images
-just up-background   # start the full stack detached
-just migrate         # apply Django migrations
-just reindex         # create Meilisearch schemas + load documents
+just pull                   # fetch the pinned GHCR images
+just up-bg                  # start the full stack detached
+just migrate                # resync id sequences, then apply Django migrations
+just collectstatic          # collect static assets (after every deploy/image bump)
+just setup-upload-storage   # create + chown the upload directories
+just reindex                # create Meilisearch schemas + load documents
 ```
 
+`collectstatic` is not optional: with `DEBUG=False`, a missing static manifest makes every DRF endpoint opened in a browser return 500. `setup-upload-storage` creates `storage/uploads_tmp/` and `storage/media/{uploads,carousel,partners,branding}/` owned by the containers' unprivileged `archetype` user; without it, backoffice image, carousel, partner and logo uploads fail.
+
 `just ps` shows service health; `just logs` follows all logs. The Celery worker (`celery -A config worker`) starts automatically; verify it with `just celery_status`.
+
+Upload sessions that never complete leave chunk files in `storage/uploads_tmp/`. Nothing schedules their cleanup; reap them by hand with `docker compose exec api python manage.py cleanup_stale_uploads` (default age `UPLOADS_STALE_AFTER_DAYS`, 7 days).
 
 ## TLS with Let's Encrypt
 
@@ -78,6 +97,10 @@ docker compose restart nginx     # load the new cert
 
 `nginx.conf` already points at `certs/live/${DOMAIN}/fullchain.pem` and `privkey.pem`. Certificates expire after 90 days — re-run `just certbot` and restart nginx, or wire it into a host cron job.
 
+### Alternative: Cloudflare Tunnel
+
+The beta host publishes no web ports at all. Two overlays replace TLS-at-nginx with a Cloudflare Tunnel: `compose.tunnel.yaml` switches nginx to plain HTTP (`nginx.tunnel.conf`), and `compose.cloudflared.yaml` adds a `cloudflared` container that reaches `nginx:80` over the Compose network and drops nginx's host ports. Select them with `COMPOSE_FILE=compose.yaml:compose.tunnel.yaml:compose.cloudflared.yaml` in `.env` (plus `CLOUDFLARE_TUNNEL_ID` and `CLOUDFLARE_CREDENTIALS_FILE`), and every `just` recipe picks them up. Set `SECURE_SSL_REDIRECT=False` in `env_file`, since TLS ends at Cloudflare. The full host build is in `infrastructure/docs/beta-deployment.md`.
+
 ## Backups
 
 The `pg_backup` sidecar runs `pg_dump` every 24h, gzipped, into `./backups/` (host-mounted), with 14-day retention. For an on-demand dump:
@@ -86,21 +109,32 @@ The `pg_backup` sidecar runs `pg_dump` every 24h, gzipped, into `./backups/` (ho
 just backup
 ```
 
-The dump captures **rows only**. Uploaded media under `storage/media/` lives on disk — include it in your filesystem backup (rsync/restic/S3). Meilisearch is derived: rebuild it after any restore. Also rsync `./backups/` off-host for real disaster recovery. Full restore and single-table procedures are in `infrastructure/docs/backup-runbook.md`.
+Manual dumps (`local-manual-…`) are reaped on the same 14-day schedule; copy one outside `./backups/` if it must last longer. A failed nightly dump leaves only a `FAILED` line in `docker compose logs pg_backup`, so watch the age of the newest dump.
+
+The dump captures **rows only**. Uploaded media lives on disk under `MEDIA_HOST_PATH` (default `storage/media/`) — include that path in your filesystem backup (rsync/restic/S3); for backoffice uploads the converted JP2 is the only copy. Meilisearch is derived: rebuild it with `just sync-all-search-indexes` from `infrastructure/` after any restore. Also rsync `./backups/` off-host for real disaster recovery. Full restore and single-table procedures are in `infrastructure/docs/backup-runbook.md`.
 
 ## Upgrades and migrations
 
-Roll forward by bumping the pinned tags, then reconciling schema and search:
+Roll forward by bumping the pinned images, then reconciling schema, static files and search:
 
 ```bash
-# edit BACKEND_IMAGE / FRONTEND_IMAGE in env_file to the new version
+# edit BACKEND_IMAGE / FRONTEND_IMAGE in .env to the new version
 just pull
-just up-background
-just migrate
-just reindex          # only if index schemas changed
+just up-bg
+docker compose restart nginx   # nginx resolves api/frontend once at startup
+just migrate                   # always
+just collectstatic             # always
+just setup-search-indexes      # if a release adds facets, filters or sort fields
+just reindex                   # instead, if the indexed documents changed shape
 ```
 
-Because tags are immutable, rollback is just reverting the tag and re-running `just up-background`. Upgrading an existing PostgreSQL 17 volume needs a one-time step — follow `infrastructure/docs/postgresql-18-upgrade.md` before starting the PG18 stack.
+Re-run `just setup-upload-storage` on upgrades too; it is idempotent and newer releases prepare more directories. nginx keeps proxying to the old container IPs after `api` or `frontend` is recreated (502s) until it is restarted.
+
+Because pins are immutable, rollback is just reverting them and re-running `just up-bg`. Upgrading an existing PostgreSQL 17 volume needs a one-time step — follow `infrastructure/docs/postgresql-18-upgrade.md` (`just postgres-upgrade-17-to-18`) before starting the PG18 stack.
+
+### Continuous deployment (beta)
+
+The beta instance deploys itself. The infrastructure repo's `deploy-beta` workflow SSHes to the host and runs `scripts/deploy.sh` with image pins resolved to digests — on every push to `main`, every 15 minutes (a no-op unless new `backend:latest` / `frontend:beta` images were published), or on manual dispatch with explicit images, which is also how to roll back. `deploy.sh` writes the pins to `.env`, pulls, restarts (including nginx), migrates, collects static, then smoke-tests through nginx; on any failure it restores the previous pins and restarts on them.
 
 ## See also
 

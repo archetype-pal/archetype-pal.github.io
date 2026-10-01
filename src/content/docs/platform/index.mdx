@@ -10,8 +10,8 @@ Archetype is an open platform for studying manuscripts as evidence: searching a 
 | Capability | What it gives scholars | Built on |
 | --- | --- | --- |
 | [Search & Browse](/platform/search/) | Faceted search across a whole collection by script, scribe, date or repository | Meilisearch, a registry-driven index model |
-| [Imaging & IIIF](/platform/imaging/) | Deep-zoom examination of high-resolution manuscript images | IIIF Image & Presentation, a SIPI image server |
-| [Annotation & TEI](/platform/annotation/) | Marking up glyphs and scribal features, and linking transcription to image | An annotation graph and a TEI-canonical text model |
+| [Imaging & IIIF](/platform/imaging/) | Deep-zoom examination of high-resolution manuscript images, and comparing whole manuscripts side by side | IIIF Image & Presentation, a SIPI image server, Mirador |
+| [Annotation & TEI](/platform/annotation/) | Marking up glyphs and scribal features, linking transcription to image, and describing manuscripts in TEI msDesc | An annotation graph and a TEI-canonical text model |
 | [Editorial Workflow](/platform/workflow/) | Moving transcriptions from draft to reviewed to published, with provenance | Status transitions and a dated audit trail |
 | [Lightbox & Collections](/platform/lightbox/) | Comparing hands side by side and building teaching worksets | Persistent, shareable client-side workspaces |
 | [Data Model](/platform/data-model/) | The structured vocabulary of manuscripts, hands, glyphs and texts | The domain model shared by every subsystem |
@@ -24,4 +24,4 @@ Archetype is deliberately standards-first, so the scholarship it produces is not
 
 ## Deployment-agnostic by design
 
-Nothing in this section assumes a particular dataset or a particular server. Archetype is software you run over *your own* manuscripts: the same capabilities apply whether an instance holds a single charter or a national collection. For how to stand one up, see [Running Archetype](/deploy/); for how it is assembled, see [Architecture](/platform/architecture/).
+Nothing in this section assumes a particular dataset or a particular server. Archetype is software you run over *your own* manuscripts: the same capabilities apply whether an instance holds a single charter or a national collection. Project-specific copy — the site title, footer and home-page text — is edited per instance as site labels in **Backoffice → Translations**, and the interface ships in English, French and German. For how to stand one up, see [Running Archetype](/deploy/); for how it is assembled, see [Architecture](/platform/architecture/).

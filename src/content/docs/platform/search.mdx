@@ -11,8 +11,8 @@ An Archetype instance does not offer one flat search box over "documents." It ex
 
 | Collection | What a scholar searches for |
 | --- | --- |
-| Manuscripts (item parts) | Physical volumes and booklets by repository, shelfmark, date, format |
-| Images | Individual folios/pages, including which scripts and features they carry |
+| Manuscripts (item parts) | Physical volumes and booklets by repository, shelfmark, date, format — and, from published TEI msDesc descriptions, material, script, decoration, seal and place of origin |
+| Images | Individual folios/pages, including the script components, features and tags they carry |
 | Scribes / Hands | Identified scribes and the hands attributed to manuscripts |
 | Graphs | Annotated glyphs — searchable by allograph, character, component, feature and position |
 | Texts / Clauses | Transcribed text and its diplomatic sub-units |
@@ -28,10 +28,10 @@ Dates are first-class. Results carry a normalised numeric range (`date_min`/`dat
 
 ## Full-text and advanced query
 
-Free-text search runs across the fields that matter for each collection (transcribed content, labels, shelfmarks, names). Matching can require all terms or tolerate the last one, and an exact-phrase mode is available. For transcribed text, keyword-in-context snippets are returned — the matched passage cropped and highlighted around the hit. An **advanced query builder** composes nested AND/OR groups of conditions (`is`, `is not`, greater/less than, between, contains, starts-with, is-empty) over a collection's filterable fields, and a global suggestion endpoint offers grouped type-ahead across every collection at once.
+Free-text search runs across the fields that matter for each collection (transcribed content, labels, shelfmarks, names). Matching can require all terms or tolerate the last one, and an exact-phrase mode is available. Matched terms are highlighted in results. An **advanced query builder** composes nested AND/OR groups of conditions (`is`, `is not`, greater/less than, between, contains, starts-with, is-empty) over a collection's filterable fields, and a global suggestion endpoint offers grouped type-ahead across every collection at once — for transcribed text, with keyword-in-context snippets cropped and highlighted around the hit.
 
 ## How it works
 
 Search is backed by [Meilisearch](https://www.meilisearch.com/) and is **registry-driven**: a single declarative registry (`api/apps/search/registry.py`) is the source of truth for every collection — its model, document builder, and its filterable, sortable, facetable and searchable attribute lists. Adding or changing an index is a one-entry edit; nothing about an index lives anywhere else. Indexes are built and kept current by background workers, with superuser-only management actions to reindex, clear or rebuild, plus in-sync statistics (see `api/docs/search-operations.md`).
 
-Any result set can be exported for downstream research — CSV, JSON, or **BibTeX** for manuscripts, scribes and hands — either the current page or the full set. For the standards that make exported work portable, see [Interoperability & Standards](/platform/interoperability/).
+Any result set can be exported for downstream research — CSV, JSON, or **BibTeX** for manuscripts, scribes and hands — either the current page or the full set. Manuscript results can also be staged for side-by-side viewing in the [Compare view](/platform/imaging/). For the standards that make exported work portable, see [Interoperability & Standards](/platform/interoperability/).

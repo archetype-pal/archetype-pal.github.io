@@ -53,13 +53,13 @@ pnpm lint:fix && pnpm format:fix
 
 ## 3. Make the change and pass CI
 
-CI (GitHub Actions) runs on every pull request into `main`. It is stricter than the hook — notably it also type-checks and runs the full test suites. Reproduce it locally before you push.
+CI (GitHub Actions) runs on every pull request into `main` and every push to it. It is stricter than the hook — notably it also type-checks and runs the full test suites. Reproduce it locally before you push.
 
 **Backend (`api/.github/workflows/ci.yml`)** — three jobs:
 
 | Job | What it runs |
 | --- | --- |
-| `lint` | `uv lock --check`, `uvx ruff check`, `uvx ruff format --check .`, `uvx mypy apps config`, architecture-boundary check |
+| `lint` | `uv lock --check`, `uvx ruff check`, `uvx ruff format --check .`, `uvx mypy apps config`, architecture-boundary check, `makemigrations --check` (no missing migrations) |
 | `unit-tests` | builds the api image, then `just pytest-focused` |
 | `integration-tests` | `just coverage` (enforces the coverage gate) |
 

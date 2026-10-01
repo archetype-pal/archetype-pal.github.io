@@ -3,18 +3,18 @@ title: "Configuration"
 description: "Reference of every environment variable and key setting for the frontend, backend, and infrastructure, with example env snippets and configuration gotchas."
 ---
 
-Every Archetype deployment is configured through environment variables — a small required core plus a large set of optional overrides for search, storage, security, and dataset vocabulary. This page is a reference for the variables that matter, grouped by component. The three services read config independently: the **frontend** (Next.js) from `frontend/.env`, the **backend** (Django) from `api/config/.env`, and the full-stack **infrastructure** compose from `infrastructure/env_file`. Copy the shipped `*.example` files and edit from there.
+Every Archetype deployment is configured through environment variables — a small required core plus a large set of optional overrides for search, storage, security, and dataset vocabulary. This page is a reference for the variables that matter, grouped by component. The three services read config independently: the **frontend** (Next.js) from `frontend/.env`, the **backend** (Django) from `api/config/.env`, and the full-stack **infrastructure** compose from `infrastructure/env_file` (plus a `.env` beside it for Compose interpolation). Start from the shipped templates: `frontend/.env.example`, `api/config/test.env`, and `infrastructure/env_file.example`.
 
 New to this? Start with the [Quickstart](/deploy/), then come back to tune your instance. To load a dataset, see [Bring your own corpus](/deploy/corpus/).
 
 ## Frontend (`frontend/.env`)
 
-The frontend validates its required variables at build and startup (`lib/env.ts`, `next.config.mjs`) and **throws on any missing one**, so the app fails fast rather than booting misconfigured.
+The frontend validates its required variables at build and startup (`lib/env.ts`, `next.config.mjs`) and **throws on any missing one**, so the app fails fast rather than booting misconfigured. In a production image the `NEXT_PUBLIC_*` values and `CORS_ALLOWED_ORIGINS` are Docker **build args** baked in at build time (`frontend/Dockerfile`), not runtime settings.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_API_URL` | yes | Public (browser-facing) backend base URL. **No trailing slash.** Used for data fetches, media, and API rewrites. |
-| `NEXT_PUBLIC_IIIF_UPSTREAM` | yes | Base URL of the Sipi IIIF image server, proxied via `/iiif-proxy`. Trailing slash is stripped automatically. |
+| `NEXT_PUBLIC_IIIF_UPSTREAM` | yes | Base URL of the Sipi IIIF image server, proxied via `/iiif-proxy`. Trailing slash is stripped automatically. Behind the infrastructure nginx, use the **bare origin** — never `…/sipi`, or the segment doubles and every image 404s. |
 | `NEXT_PUBLIC_SITE_URL` | yes | Canonical public site URL for metadata, sitemap, and robots. |
 | `CORS_ALLOWED_ORIGINS` | yes | Comma-separated origins allowed on the frontend's own `/api/*` routes. |
 | `INTERNAL_API_URL` | no | Server-only base for SSR / server-component / route-handler fetches. Not a `NEXT_PUBLIC_` var — never reaches the browser. Falls back to `NEXT_PUBLIC_API_URL` when unset. |
@@ -22,18 +22,19 @@ The frontend validates its required variables at build and startup (`lib/env.ts`
 ```env
 # frontend/.env
 NEXT_PUBLIC_API_URL=https://api.archetype.example.org
-NEXT_PUBLIC_IIIF_UPSTREAM=https://archetype.example.org/sipi
+NEXT_PUBLIC_IIIF_UPSTREAM=https://archetype.example.org
 NEXT_PUBLIC_SITE_URL=https://archetype.example.org
 CORS_ALLOWED_ORIGINS=https://archetype.example.org
-# Containerized dev only: reach the API from inside the frontend container
-# INTERNAL_API_URL=http://host.docker.internal:8000
+# Server-side fetches: http://api in the infrastructure stack,
+# http://host.docker.internal:8000 for the containerized dev frontend
+# INTERNAL_API_URL=http://api
 ```
 
-> **Server-vs-client URL split.** Inside a container, `localhost` is the container itself, so browser-facing `NEXT_PUBLIC_API_URL` is unreachable from the Next server. Set `INTERNAL_API_URL` (e.g. `http://host.docker.internal:8000`) to point server-side fetches at a container-reachable host. On host dev and single-origin production, leave it unset.
+> **Server-vs-client URL split.** Inside a container, `localhost` is the container itself, so browser-facing `NEXT_PUBLIC_API_URL` is unreachable from the Next server. Set `INTERNAL_API_URL` to point server-side fetches at a container-reachable host: `http://host.docker.internal:8000` for the dev container (already set in `frontend/compose.yml`), `http://api` in the infrastructure stack. On host-run `pnpm dev`, leave it unset.
 
 ## Backend (`api/config/.env`)
 
-Django reads config via `django-environ` in `api/config/settings.py`. Copy the shape of `api/config/test.env` for a fresh file.
+Django reads config via `django-environ` in `api/config/settings.py`. Create the file with `cp config/test.env config/.env`; the dev `just` recipes refuse to run without it and pass it to `docker compose` as `--env-file`.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -46,13 +47,17 @@ Django reads config via `django-environ` in `api/config/settings.py`. Copy the s
 | `MEILISEARCH_URL` | `http://localhost:7700` | Meilisearch endpoint (compose-internal: `http://meilisearch:7700`). |
 | `MEILISEARCH_API_KEY` | empty | Master key; required in production. |
 | `MEILISEARCH_INDEX_PREFIX` | empty | Prefix to namespace indexes on a shared Meilisearch. |
-| `IIIF_HOST` | `http://localhost:1024/` | Sipi base URL the API embeds in IIIF/thumbnail links. |
+| `IIIF_HOST` | `http://localhost:8182/` | Browser-facing Sipi base URL the API embeds in IIIF/thumbnail links. |
+| `IIIF_INTERNAL_HOST` | `IIIF_HOST` | Server-to-server Sipi address for the API's own `info.json` probes (compose sets `http://image_server:1024/sipi` in production). |
+| `UPLOADS_SIPI_BASE_URL` | `IIIF_HOST` | Sipi address the Celery worker uses to tile-check a converted upload (compose sets `http://image_server:1024/sipi` in production). |
+| `UPLOADS_STALE_AFTER_DAYS` | `7` | Age at which `cleanup_stale_uploads` reaps unfinished upload sessions. |
 | `CELERY_BROKER_URL` / `CELERY_RESULT_BACKEND` | `redis://redis:6379/0` | Celery broker + result store. |
 | `CACHE_URL` | `redis://redis:6379/1` | Redis cache backing the search-reindex lock. |
-| `DRF_THROTTLE_ANON_RATE` / `DRF_THROTTLE_USER_RATE` | `100/hour` / `1000/hour` | DRF rate limits. |
-| `SEARCH_AUTO_REINDEX` | `True` | Auto-reindex on model changes. |
+| `DRF_THROTTLE_ANON_RATE` / `DRF_THROTTLE_USER_RATE` | `3000/hour` / `30000/hour` | DRF rate limits. |
+| `SEARCH_AUTO_REINDEX` | `True` | Auto-reindex on model changes. Set `false` to pause during bulk imports, then `just reindex`. |
+| `SECURE_SSL_REDIRECT` | `True` | HTTPS redirect when `DEBUG` is off. Set `False` when TLS ends upstream (e.g. Cloudflare Tunnel). |
 
-Dataset vocabulary (item types, hair types, repository types, field display names, `SITE_NAME`, `ENABLE_PUBLICATIONS_APP`) is also set here — see [Bring your own corpus](/deploy/corpus/).
+Dataset vocabulary choices (`HISTORICAL_ITEM_TYPES`, `HISTORICAL_ITEM_HAIR_TYPES`, `REPOSITORY_TYPES`, `CHARACTER_ITEM_TYPES`) and `SITE_NAME` are also set here, as comma-separated lists. Model display labels are not env vars: superusers edit them in the backoffice, and they are stored in the database.
 
 ```env
 # api/config/.env
@@ -67,20 +72,22 @@ MEILISEARCH_API_KEY=<meili-master-key>
 IIIF_HOST=https://archetype.example.org/sipi
 ```
 
-> **`DisallowedHost` / `ALLOWED_HOSTS`.** Every hostname that reaches Django — public domain, plus `host.docker.internal` for containerized SSR — must be listed, or requests 400 with `DisallowedHost`. In dev, `MEDIA_ROOT` is `storage/media/` under `api/`.
+> **`DisallowedHost` / `ALLOWED_HOSTS`.** Every hostname that reaches Django — public domain, plus `host.docker.internal` for the containerized dev frontend or `api` in the infrastructure stack — must be listed, or requests 400 with `DisallowedHost`. In dev, `MEDIA_ROOT` is `storage/media/` under `api/`.
 
 ## Infrastructure (`infrastructure/env_file`)
 
-The full-stack compose (nginx, Postgres, Meilisearch, Redis, Sipi, api, frontend, celery) reads a single `env_file`. Copy `infrastructure/env_file.example`. It carries the backend and frontend values above plus deployment-only knobs:
+The full-stack compose (nginx, Postgres, Meilisearch, Redis, Sipi, api, frontend, celery) passes a single `env_file` to its services. Copy `infrastructure/env_file.example`. It carries the backend and frontend values above plus deployment-only knobs. Variables that `compose.yaml` itself interpolates — the Postgres credentials, `MEILI_ENV`, `REDIS_PASSWORD`, `MEDIA_HOST_PATH` and the image pins — are read from a `.env` file beside `compose.yaml`, so put them there too:
 
 | Variable | Purpose |
 | --- | --- |
 | `DOMAIN` | Public domain nginx serves (`localhost` for local). |
-| `POSTGRES_DB` / `POSTGRES_USER` / `POSTGRES_PASSWORD` | Postgres container credentials — **keep aligned with `DATABASE_URL`**. |
-| `MEILI_ENV` / `MEILI_MASTER_KEY` | `development` (keyless) or `production` with a random key (≥16 bytes). Meilisearch is not exposed on the host. |
-| `REDIS_PASSWORD` | Redis auth; when set, include it in the Celery/Redis URLs. |
+| `POSTGRES_DB` / `POSTGRES_USER` / `POSTGRES_PASSWORD` | Postgres container credentials (`.env`) — **keep aligned with `DATABASE_URL`**. |
+| `MEILI_ENV` / `MEILI_MASTER_KEY` | `development` (keyless) or `production` with a random key (≥16 bytes). `MEILISEARCH_API_KEY` must match the master key. Meilisearch is not exposed on the host. |
+| `REDIS_PASSWORD` | Redis auth; the celery service builds its broker URLs from it, but the api reads `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` and `CACHE_URL` from `env_file`, so include the password there. |
 | `SIPI_JWT_SECRET` (42 chars) / `SIPI_ADMIN_USER` / `SIPI_ADMIN_PASSWORD` | Sipi hardening — override the vendored demo defaults in production. |
-| `BACKEND_IMAGE` / `FRONTEND_IMAGE` | Pin container images to an immutable tag or `@sha256:` digest. |
+| `BACKEND_IMAGE` / `FRONTEND_IMAGE` | Pin container images to an immutable tag (`:sha-<commit>`) or `@sha256:` digest (`.env`). |
+| `MEDIA_HOST_PATH` | Host path of the image corpus, mounted into api, celery, Sipi and nginx (default `./storage/media`). |
+| `INTERNAL_API_URL` | `http://api`, with `api` added to `ALLOWED_HOSTS`. |
 
 ```env
 # infrastructure/env_file
@@ -89,7 +96,10 @@ POSTGRES_PASSWORD=<pass>
 DATABASE_URL="postgresql://postgres:<pass>@postgres:5432/local"
 MEILI_ENV=production
 MEILI_MASTER_KEY=<meili-master-key>
+MEILISEARCH_API_KEY=<meili-master-key>
 IIIF_HOST=https://archetype.example.org/sipi
+ALLOWED_HOSTS=archetype.example.org,api
+INTERNAL_API_URL=http://api
 NEXT_PUBLIC_API_URL=https://archetype.example.org
 ```
 

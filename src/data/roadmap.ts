@@ -17,7 +17,7 @@ export interface Capability {
   platform?: string;
 }
 
-export const lastVerified = '2026-07-06';
+export const lastVerified = '2026-10-01';
 
 export const maturityMeta: Record<
   Maturity,
@@ -49,6 +49,17 @@ export const capabilities: Capability[] = [
     area: 'Annotation & TEI',
     maturity: 'shipped',
     summary: 'Marking up glyphs and scribal features on the image, and linking transcription to the exact region on a TEI model.',
+    detail: [
+      'Follow-ups: a jump to unlinked passages, a confirm step before a drawn link is saved, and an inline @subtype axis in the TEI editor.',
+    ],
+    platform: '/platform/annotation/',
+  },
+  {
+    id: 'descriptions',
+    area: 'Manuscript descriptions',
+    maturity: 'shipped',
+    summary: 'Structured TEI msDesc descriptions authored in the backoffice, rendered on the public manuscript page and searchable by facet.',
+    detail: ['Deferred to a later version: RNG/Schematron schema validation.'],
     platform: '/platform/annotation/',
   },
   {
@@ -56,6 +67,7 @@ export const capabilities: Capability[] = [
     area: 'Editorial Workflow',
     maturity: 'shipped',
     summary: 'Moving transcriptions from draft to reviewed to published, with an attributed, dated audit trail.',
+    detail: ['Next: a reviewer-assignee picker — the API already records an assignee; only the control to set it is missing.'],
     platform: '/platform/workflow/',
   },
   {
@@ -63,7 +75,9 @@ export const capabilities: Capability[] = [
     area: 'Lightbox & Collections',
     maturity: 'shipped',
     summary: 'Persistent worksets, side-by-side comparison of hands, sticky notes and shareable views for research and teaching.',
-    detail: ['Backlog: auto-save, main-canvas pinch-to-zoom, filter presets, workspace templates.'],
+    detail: [
+      'Backlog: filter presets, workspace templates, freeform crop, px↔mm measurement calibration, richer image notes, offline use.',
+    ],
     platform: '/platform/lightbox/',
   },
   {
@@ -72,6 +86,13 @@ export const capabilities: Capability[] = [
     maturity: 'shipped',
     summary: 'The structured vocabulary a palaeographer works with: manuscripts, hands, glyphs, annotation graphs and TEI texts.',
     platform: '/platform/data-model/',
+  },
+  {
+    id: 'collection-admin',
+    area: 'Collection management',
+    maturity: 'shipped',
+    summary: 'A staff backoffice for the corpus itself: resumable image upload per item part, served as lossless JP2 over IIIF; moving an image to another item part; and per-language site labels for project-specific copy such as the home page.',
+    detail: ['Not yet: a sub-folder chooser and semi-automatic bulk assignment of uploads to item parts.'],
   },
   {
     id: 'interop',
@@ -93,22 +114,8 @@ export const capabilities: Capability[] = [
     detail: [
       'Coverage reporting per manuscript and per hand.',
       'Per-annotator statistics and activity.',
-      'A supervisor review step and a quality-control queue.',
+      'An optional, off-by-default supervisor review step and quality-control queue.',
     ],
-  },
-  {
-    id: 'realtime',
-    area: 'Real-time collaboration',
-    maturity: 'planned',
-    summary: 'Let multiple editors work the same material without collisions.',
-    detail: ['A websocket layer to broadcast and merge live annotation edits.'],
-  },
-  {
-    id: 'observability',
-    area: 'Observability & operations',
-    maturity: 'planned',
-    summary: 'Make an instance easy to run reliably in production.',
-    detail: ['OpenTelemetry tracing, aggregate dashboards, and on-call documentation.'],
   },
   {
     id: 'ai',
@@ -117,6 +124,7 @@ export const capabilities: Capability[] = [
     summary: 'A future, grant-funded research direction — with the scholar always the author of record.',
     detail: [
       'Today the platform imports externally-produced HTR transcriptions only; it runs no recognition model.',
+      'Not part of the released platform: the programme depends on grant funding, its design is published for comment (GitHub Discussion #7), and exploratory work is kept on a separate branch.',
       'Research directions: handwriting recognition, scribe attribution, and computational dating — every machine suggestion routed through the editorial review workflow.',
     ],
   },

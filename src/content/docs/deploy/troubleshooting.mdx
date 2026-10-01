@@ -5,7 +5,7 @@ description: "Symptom-cause-fix recipes for the most common Archetype deployment
 
 Most problems with a fresh Archetype instance are environment setup, not application bugs: unapplied migrations, unbuilt search indexes, or a container that cannot reach the services it needs. This page maps each visible symptom to its cause and the exact fix. It assumes you already have the stack running — if not, start with the [Quickstart](/deploy/) and [Configuration](/deploy/configuration/).
 
-Backend commands use the `just` recipes from `api/`; the frontend runs with `pnpm` from `frontend/`.
+Backend commands use the `just` recipes from `api/` (dev stack) — on a production server, run the same-named recipes from `infrastructure/` instead; the two stacks are separate Compose projects, and a recipe in `api/` never touches production. The frontend runs from `frontend/`, in its dev container (`just up`) or with `pnpm`.
 
 ## Quick reference
 
@@ -16,6 +16,10 @@ Backend commands use the `just` recipes from `api/`; the frontend runs with `pnp
 | Broken images / "Image not found" | IIIF upstream unreachable, or `ALLOWED_HOSTS` / server-side API URL wrong in containers | Set `NEXT_PUBLIC_IIIF_UPSTREAM`, `INTERNAL_API_URL`, `ALLOWED_HOSTS` |
 | `DisallowedHost` (HTTP 400) in API logs | Request `Host` not in `ALLOWED_HOSTS` | Add the host to `ALLOWED_HOSTS` |
 | Cannot log in to the backoffice | Missing superuser or wrong `CSRF_TRUSTED_ORIGINS` | Create a superuser; align CSRF/CORS origins |
+| Every search 500s (production) | `MEILISEARCH_API_KEY` does not match `MEILI_MASTER_KEY` | Set both to the same key in `env_file` |
+| API pages 500 in a browser but return JSON to `curl` (production) | Static files not collected (`Missing staticfiles manifest entry`) | `just collectstatic` from `infrastructure/` |
+| 502 from nginx after a deploy (production) | nginx still points at the old api/frontend containers | `docker compose restart nginx` |
+| Image upload 503 "not writable by the service user", or carousel/logo upload 500 | Upload directories missing or host-owned | `just setup-upload-storage` from `infrastructure/` |
 
 ## Home page or facets 500
 
@@ -57,12 +61,12 @@ The index registry (`api/apps/search/registry.py`) is the source of truth for wh
 1. **Server-side API fetch fails.** Next.js server components fetch through `INTERNAL_API_URL`. If that points at `localhost:8000` inside a container it gets `ECONNREFUSED`; if it reaches Django on a host name not in `ALLOWED_HOSTS` it gets a `DisallowedHost` 400 — either way the layout renders "Image not found."
 2. **Image tiles fail.** The browser loads tiles through the same-origin `/iiif-proxy/*` rewrite, which Next.js proxies to `NEXT_PUBLIC_IIIF_UPSTREAM`. If that upstream is unreachable from the server, tiles `ECONNREFUSED`.
 
-**Fix.** Point each URL at a host the process can actually reach. For a containerized frontend with a host-published backend:
+**Fix.** Point each URL at a host the process can actually reach. For a containerized frontend with a host-published backend (these are the values `frontend/compose.yml` already sets):
 
 ```env
 # reachable from the browser
 NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_IIIF_UPSTREAM=http://host.docker.internal:1024
+NEXT_PUBLIC_IIIF_UPSTREAM=http://host.docker.internal:8182
 # reachable from the Next.js server process (falls back to NEXT_PUBLIC_API_URL)
 INTERNAL_API_URL=http://host.docker.internal:8000
 ```
@@ -73,7 +77,7 @@ And allow the internal host on the API side (`api/config/.env`):
 ALLOWED_HOSTS=localhost,127.0.0.1,host.docker.internal
 ```
 
-Recreate **both** containers after editing env — `docker compose up -d --force-recreate`; a `restart` does not reload `env_file`. In production, use your real service names or DNS instead of `host.docker.internal`. See [Configuration](/deploy/configuration/).
+Recreate **both** stacks after editing env — `just down && just up-bg` in each repo; a `restart` does not reload environment files. In the infrastructure stack, use the service names instead of `host.docker.internal`: `INTERNAL_API_URL=http://api` with `api` in `ALLOWED_HOSTS`. There `NEXT_PUBLIC_IIIF_UPSTREAM` must be the bare site origin, never `…/sipi` (the segment doubles and every image 404s), and it is baked into the frontend image at build time. See [Configuration](/deploy/configuration/).
 
 ## `DisallowedHost` 400 errors
 
@@ -89,7 +93,7 @@ Recreate **both** containers after editing env — `docker compose up -d --force
 
 **Cause.** No superuser exists yet, or the browser origin is missing from `CSRF_TRUSTED_ORIGINS` / `CORS_ALLOWED_ORIGINS`.
 
-**Fix.** Create an admin user in the api container:
+**Fix.** Create an admin user in the api container (from `api/`, or `infrastructure/` in production):
 
 ```bash
 just bash

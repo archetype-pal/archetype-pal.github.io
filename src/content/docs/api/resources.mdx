@@ -20,12 +20,16 @@ Mounted under `/api/v1/manuscripts/`.
 | --- | --- | --- |
 | GET | `manuscripts/item-parts/` | List manuscript parts (the primary browsable unit). |
 | GET | `manuscripts/item-parts/{id}/` | Retrieve one part with its images. |
-| GET | `manuscripts/item-images/` | List page/folio images. |
+| GET | `manuscripts/item-parts/{id}/tei/` | Download the part's published manuscript description (msDesc) as **TEI XML**. |
+| GET | `manuscripts/item-images/` | List page/folio images; filter with `?item_part=`. |
 | GET | `manuscripts/item-images/{id}/` | Retrieve one image. |
-| GET | `manuscripts/image-texts/` | List transcriptions/editions. |
+| GET | `manuscripts/item-images/{id}/transcription/`, `…/translation/` | The image's single transcription or translation. |
+| GET | `manuscripts/image-texts/` | List transcriptions/translations; filter with `?item_image=`, `?type=`. |
 | GET | `manuscripts/image-texts/{id}/` | Retrieve one transcription. |
 | GET | `manuscripts/image-texts/{id}/regions/` | Regions linked to a transcription. |
 | GET | `manuscripts/image-texts/{id}/tei/` | Download the transcription as **TEI XML** (`application/tei+xml`). |
+
+Anonymous callers only see texts whose status is Live or Reviewed; drafts return 404.
 
 ## Scribes, hands & symbols
 
@@ -34,7 +38,7 @@ Scribes/hands are mounted at `/api/v1/`; the symbol structure lives under `/api/
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `scribes/`, `scribes/{id}/` | Scribe records. |
-| GET | `hands/`, `hands/{id}/` | Hand records. |
+| GET | `hands/`, `hands/{id}/` | Hand records; filter with `?item_part=`, `?item_part_images=`, `?scribe=`. |
 | GET | `symbols_structure/allographs/` | Allograph list (script model). |
 | GET | `symbols_structure/positions/` | Position list. |
 
@@ -44,9 +48,11 @@ Mounted at `/api/v1/`.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `manuscripts/graphs/` | Read-only list of graphs (annotated glyph instances). |
+| GET | `manuscripts/graphs/` | Read-only list of graphs (annotated glyph instances); unpaginated, filter with `?item_image=`, `?annotation_type=`, `?hand=`, `?allograph=`, `?id__in=`. |
 | GET | `manuscripts/graphs/{id}/` | Retrieve one graph with its region geometry. |
-| GET/POST/PATCH | `annotations/graphs/` | Annotator write surface (auth required). |
+| POST/PATCH/DELETE | `annotations/graphs/` | Annotator write surface (auth required; no GET). |
+
+Anonymous callers do not see editorial annotations.
 
 ## Search & discovery
 
@@ -57,8 +63,28 @@ Mounted under `/api/v1/search/`. `{index}` is a hyphenated index segment; the re
 | GET | `search/{index}/` | Faceted search over an index (query, filters, paging). |
 | GET | `search/{index}/{id}/` | Retrieve a single indexed document. |
 | GET | `search/{index}/facets/` | Facet buckets/counts for the index. |
-| GET | `search/{index}/export/` | Export results; `?export_format=csv` (default), `json`, or `bibtex`. |
+| GET | `search/{index}/export/` | Export results; `?export_format=csv` (default), `json`, or `bibtex` (item parts, scribes and hands only). |
 | GET | `search/suggest/` | Autocomplete suggestions. |
+
+## Site content & configuration
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `version/` | The running build's `version` and `commit`. |
+| GET | `site-labels/` | Customisable UI labels, as `{"labels": {key: {en, fr}}}`. |
+| GET | `app-settings/` | Public site-feature settings. |
+| GET | `pages/`, `pages/{slug}/` | Editable site pages. |
+| GET | `media/publications/`, `media/events/` (by slug) | Publications and events. |
+| GET | `media/carousel-items/`, `media/partners/` | Home-page carousel and partner lists. |
+| GET | `worksets/{public_id}/` | A public lightbox workset (listing and editing your own needs auth). |
+
+## Management highlights
+
+These superuser-only routes back the backoffice; the schema documents them in full.
+
+- `manuscripts/management/item-images/` — create, edit and delete images. Changing `item_part` moves the image to another manuscript part; this is refused while the image has hand attributions (annotations with a hand, or linked hands). The list also accepts `?has_text=`, `?has_transcription=`, `?has_translation=`.
+- `uploads/sessions/` — chunked image upload: `POST` a session (`item_part`, `filename`, `size`, optional `locus`, `tags`, `subfolder`), `PUT` each chunk to `sessions/{id}/chunks/{n}/`, then `POST sessions/{id}/finalize/` and poll `GET sessions/{id}/`. Accepts `.tif`, `.tiff`, `.jpg`, `.jpeg`, `.png`, `.jp2`.
+- `site-labels/` and `app-settings/` accept `PUT` from a superuser.
 
 ## Standards exports
 
@@ -85,6 +111,6 @@ curl http://localhost:8000/api/v1/iiif/item-parts/1/manifest
 curl http://localhost:8000/api/v1/manuscripts/image-texts/1/tei/
 ```
 
-**TEI XML** is served per transcription at `manuscripts/image-texts/{id}/tei/` (see the Manuscripts table above).
+**TEI XML** is served per transcription at `manuscripts/image-texts/{id}/tei/`, and per manuscript part (its msDesc description) at `manuscripts/item-parts/{id}/tei/` (see the Manuscripts table above).
 
-The exact response shapes for every route are authoritative in the live OpenAPI schema — always check `/api/v1/schema/` against your instance's version rather than hard-coding fields.
+Where the live OpenAPI schema covers a route, its response shape there is authoritative — check `/api/v1/schema/` against your instance's version rather than hard-coding fields. The search list/detail/export/suggest routes and the standards routes are not in the schema.
