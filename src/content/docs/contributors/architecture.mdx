@@ -15,7 +15,7 @@ The diagram above shows the moving parts. Below is what each layer does and how 
 
 An Archetype instance is a small set of cooperating services, each with one job:
 
-- **API (Django + DRF)** — the authoritative application server. It owns the domain model, enforces permissions, and exposes a versioned REST API under `/api/v1/*`, with a machine-readable OpenAPI schema at `/api/v1/schema/` and interactive docs at `/api/v1/docs/`. It runs on Python 3.14, managed with `uv`, and is served as an ASGI application (uvicorn).
+- **API (Django + DRF)** — the authoritative application server. It owns the domain model, enforces permissions, and exposes a versioned REST API under `/api/v1/*`, with a machine-readable OpenAPI schema at `/api/v1/schema/` and interactive docs at `/api/v1/docs/`. It runs on Python 3.15, managed with `uv`, and is served as an ASGI application (uvicorn).
 - **PostgreSQL** — the system of record. All curated data — manuscripts, hands and scribes, the graphical symbol taxonomy, annotations, and published pages — lives here.
 - **Meilisearch** — the search index that powers fast, faceted discovery over the corpus. It is a derived store, rebuilt from PostgreSQL, never the source of truth.
 - **Celery + Redis** — background task processing. When curators change data, re-indexing and other slow work — such as converting an uploaded image to JPEG 2000 — run asynchronously through Celery workers, with Redis as the message broker, so the editing interface stays responsive.

@@ -75,7 +75,7 @@ Frontend tests use Vitest with a jsdom environment. Each `just` recipe runs insi
 
 ```bash
 just test           # pnpm test   → vitest run
-just lint           # pnpm lint   → eslint
+just lint           # pnpm lint   → oxlint
 just format         # pnpm format → prettier --check
 just bundle-budget  # CI gate: builds, then fails if the gzip bundle exceeds .bundle-budget.json
 ```
