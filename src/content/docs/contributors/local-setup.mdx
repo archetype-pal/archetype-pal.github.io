@@ -13,7 +13,7 @@ Install these before you start:
 
 - **Docker** with the Compose plugin (`docker compose version`)
 - **just** — the command runner used for every backend recipe (`brew install just`, `cargo install just`, or a prebuilt binary). You can run the underlying `docker compose` commands directly if you prefer.
-- **Node 26+** and **pnpm 11** — only if you run the frontend on the host instead of its dev container (`corepack enable` picks up the pinned `pnpm@11.9.0`)
+- **Node 26+** and **pnpm 12** — only if you run the frontend on the host instead of its dev container. Install the pinned version with `npm install -g pnpm@12.15.0`; pnpm 11 can't switch itself to 12.
 - **uv** + **Python 3.15** — only needed for host-side backend tooling (linting, the architecture check); the stack itself runs entirely in Docker. Use a current uv (`uv self update`): older releases can't download Python 3.15.1.
 
 ## 1. Get the code
