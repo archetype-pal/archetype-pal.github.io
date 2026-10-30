@@ -134,7 +134,7 @@ Because pins are immutable, rollback is just reverting them and re-running `just
 
 ### Continuous deployment (beta)
 
-The beta instance deploys itself. The infrastructure repo's `deploy-beta` workflow SSHes to the host and runs `scripts/deploy.sh` with image pins resolved to digests — on every push to `main`, every 15 minutes (a no-op unless new `backend:latest` / `frontend:beta` images were published), or on manual dispatch with explicit images, which is also how to roll back. `deploy.sh` writes the pins to `.env`, pulls, restarts (including nginx), migrates, collects static, then smoke-tests through nginx; on any failure it restores the previous pins and restarts on them.
+The beta instance deploys itself, from the host. A systemd timer (`host/archetype-poll.timer` in the infrastructure repo) checks the registry every three minutes and, when the digest behind `backend:latest` or `frontend:beta` changes, runs `scripts/deploy.sh` with both pinned by digest. The repo's `deploy-beta` workflow covers the rest: every push to `main` redeploys the current images with the new config, and a manual run with explicit images is how to roll back (the pin holds until the next image is published). `deploy.sh` writes the pins to `.env`, pulls, restarts (including nginx), migrates, collects static, applies the search index settings, then smoke-tests through nginx; on any failure it restores the previous pins and restarts on them.
 
 ## See also
 

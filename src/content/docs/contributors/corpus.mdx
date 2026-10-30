@@ -45,13 +45,12 @@ Content-Type: application/json
 
 `format` is `"page"` or `"alto"`. The parser (`apps/manuscripts/services/htr`) turns each text line into a `<seg type="line">`, materialises a `text` `Graph` for every line that carries a polygon, and embeds a `corresp="#gid-N"` back-reference. It returns the new draft image-text id; a `409` means that `(image, type)` already exists.
 
-If you are migrating a legacy DigiPal-style `data-dpt` corpus, the manuscripts app ships round-trip commands (run `--dry-run` first, then `--apply`):
+If you are migrating a legacy DigiPal-style `data-dpt` corpus, the manuscripts app ships round-trip commands (run `--dry-run` first, then `--apply`). Migration `0027` embeds the graph-side text↔region links while `migrate` runs, so the by-hand steps start after it:
 
 ```bash
 just bash   # then, inside the api container:
 python manage.py migrate_imagetext_to_tei --apply   # data-dpt HTML → TEI
 python manage.py verify_tei                          # well-formedness gate
-python manage.py embed_annotation_ids --from-graphs --apply  # link text ↔ regions
 python manage.py check_text_links                    # audit text→Graph refs
 ```
 
