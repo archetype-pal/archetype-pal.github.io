@@ -23,10 +23,8 @@ Mounted under `/api/v1/manuscripts/`.
 | GET | `manuscripts/item-parts/{id}/tei/` | Download the part's published manuscript description (msDesc) as **TEI XML**. |
 | GET | `manuscripts/item-images/` | List page/folio images; filter with `?item_part=`. |
 | GET | `manuscripts/item-images/{id}/` | Retrieve one image. |
-| GET | `manuscripts/item-images/{id}/transcription/`, `…/translation/` | The image's single transcription or translation. |
 | GET | `manuscripts/image-texts/` | List transcriptions/translations; filter with `?item_image=`, `?type=`. |
 | GET | `manuscripts/image-texts/{id}/` | Retrieve one transcription. |
-| GET | `manuscripts/image-texts/{id}/regions/` | Regions linked to a transcription. |
 | GET | `manuscripts/image-texts/{id}/tei/` | Download the transcription as **TEI XML** (`application/tei+xml`). |
 
 Anonymous callers only see texts whose status is Live or Reviewed; drafts return 404.
@@ -40,7 +38,6 @@ Scribes/hands are mounted at `/api/v1/`; the symbol structure lives under `/api/
 | GET | `scribes/`, `scribes/{id}/` | Scribe records. |
 | GET | `hands/`, `hands/{id}/` | Hand records; filter with `?item_part=`, `?item_part_images=`, `?scribe=`. |
 | GET | `symbols_structure/allographs/` | Allograph list (script model). |
-| GET | `symbols_structure/positions/` | Position list. |
 
 ## Annotations (graphs & regions)
 

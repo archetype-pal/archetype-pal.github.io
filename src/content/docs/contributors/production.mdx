@@ -24,7 +24,7 @@ Run Archetype in production as a single Docker Compose stack: nginx terminates T
 | `pg_backup` | `postgres:18-alpine` | Nightly `pg_dump` sidecar | — |
 | `certbot` | `certbot/certbot:v5.8.0` | Let's Encrypt issuance/renewal | — |
 
-Only nginx publishes host ports. Postgres, Meilisearch, Redis, and SIPI are reachable **only** over the internal Compose network — publishing them would expose unauthenticated read/write. nginx (`nginx.conf`) routes `/(admin|static|api/v1/|tinymce)` to the API, serves `/media/` straight from the media mount (Django only serves media with `DEBUG` on), sends `/sipi` to the image server (read-only methods, control routes denied), and passes everything else — including the frontend's own `/api/*` route handlers — to the frontend.
+Only nginx publishes host ports. Postgres, Meilisearch, Redis, and SIPI are reachable **only** over the internal Compose network — publishing them would expose unauthenticated read/write. nginx (`nginx.conf`) routes `/static` and `/api/v1/` to the API, serves `/media/` straight from the media mount (Django only serves media with `DEBUG` on), sends `/sipi` to the image server (read-only methods, control routes denied), and passes everything else — including the frontend's own `/api/*` route handlers — to the frontend.
 
 The image corpus is bind-mounted into `api`, `celery`, `image_server` and `nginx` from `MEDIA_HOST_PATH` (default `./storage/media`), so you can keep a large corpus outside the infrastructure checkout.
 
