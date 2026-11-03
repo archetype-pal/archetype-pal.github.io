@@ -54,7 +54,7 @@ Django reads config via `django-environ` in `api/config/settings.py`. Create the
 | `CELERY_BROKER_URL` / `CELERY_RESULT_BACKEND` | `redis://redis:6379/0` | Celery broker + result store. |
 | `CACHE_URL` | `redis://redis:6379/1` | Redis cache backing the search-reindex lock. |
 | `DRF_THROTTLE_ANON_RATE` / `DRF_THROTTLE_USER_RATE` | `3000/hour` / `30000/hour` | DRF rate limits. |
-| `SEARCH_AUTO_REINDEX` | `True` | Auto-reindex on model changes. Set `false` to pause during bulk imports, then `just reindex`. |
+| `SEARCH_AUTO_SYNC` | `True` | Push each model change to the search indexes. Set `false` to pause during bulk imports, then `just reindex`. |
 | `SECURE_SSL_REDIRECT` | `True` | HTTPS redirect when `DEBUG` is off. Set `False` when TLS ends upstream (e.g. Cloudflare Tunnel). |
 
 Dataset vocabulary choices (`HISTORICAL_ITEM_TYPES`, `HISTORICAL_ITEM_HAIR_TYPES`, `REPOSITORY_TYPES`, `CHARACTER_ITEM_TYPES`) and `SITE_NAME` are also set here, as comma-separated lists. Model display labels are not env vars: superusers edit them in the backoffice, and they are stored in the database.
