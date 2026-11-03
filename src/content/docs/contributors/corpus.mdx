@@ -64,6 +64,6 @@ just sync-all-search-indexes     # populate all of them
 just sync-search-index item-parts  # or reindex just one
 ```
 
-The registry in `apps/search/registry.py` is the single source of truth; valid index segments are `item-parts`, `item-images`, `scribes`, `hands`, `graphs`, `texts`, `clauses`, `people`, and `places`. Re-run the relevant `sync-search-index` after any bulk data change; for a large import, set `SEARCH_AUTO_REINDEX=false` while it runs, then reindex. If searches 500 with `index_not_found`, you skipped `setup-search-indexes`. These recipes exist in both `api/` (dev stack) and `infrastructure/` (production, where `just reindex` runs both steps); run them from the stack you are loading.
+The registry in `apps/search/registry.py` is the single source of truth; valid index segments are `item-parts`, `item-images`, `scribes`, `hands`, `graphs`, `texts`, `clauses`, `people`, and `places`. Re-run the relevant `sync-search-index` after any bulk data change; for a large import, set `SEARCH_AUTO_SYNC=false` while it runs, then reindex. If searches 500 with `index_not_found`, you skipped `setup-search-indexes`. These recipes exist in both `api/` (dev stack) and `infrastructure/` (production, where `just reindex` runs both steps); run them from the stack you are loading.
 
 Your corpus is now browsable, viewable, and searchable. For the query surface, see [The API](/contributors/api/); to extend the model, see [For contributors](/contributors/).
